@@ -167,7 +167,6 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		Where c.situacao = 'ATIVO' ".$pcwhere.$pcordem."";
        */
 
-		
 		$query = "select a.id,a.nometitular, a.datainicio Data_Inicio, d.valor as ValordoPlano,
 		sum(b.vlrpago) TotalPago,
 		TIMESTAMPDIFF(MONTH,a.datainicio,now()) TotalMeses,
