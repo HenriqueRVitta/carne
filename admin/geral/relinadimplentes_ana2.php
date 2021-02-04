@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Modulo Carne *
 
-		Relatório dos pagamentos registrados
+		RelatÃ³rio dos pagamentos registrados
 
 */
 
@@ -14,7 +14,7 @@
 
 	ini_set('memory_limit', '-1');
 		
-// Definições da barra de progresso
+// DefiniÃ§Ãµes da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -157,7 +157,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		}
 	
 	
-		// Começa aqui a listar os registros
+		// Comeï¿½a aqui a listar os registros
 		/*
        $query = "SELECT c.id, c.nometitular, c.registro, c.nrocarne, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim,
 		space(1) as desclocal, space(1) as localpagto, space(10) as databaixa, 0.00 as vlrpago, space(1) as nome FROM carne_titular c
@@ -180,7 +180,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		and a.situacao = 'ATIVO'".$pcwhere." group by a.nometitular,b.idcliente";
 
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' align='center' align='center' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
@@ -315,16 +315,16 @@ if($_POST['gerarexecel'] == 2) {
 	
 $dadosXls = $header.$lcString.$footer;
 
-// Definimos o nome do arquivo que será exportado  
+// Definimos o nome do arquivo que serï¿½ exportado  
 $arquivo = "InadimplenentesCarne".$date.".xls";  
-// Configurações header para forçar o download  
+// Configuraï¿½ï¿½es header para forï¿½ar o download  
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment;filename="'.$arquivo.'"');
 header('Cache-Control: max-age=0');
-// Se for o IE9, isso talvez seja necessário
+// Se for o IE9, isso talvez seja necessï¿½rio
 header('Cache-Control: max-age=1');
        
-// Envia o conteúdo do arquivo  
+// Envia o conteï¿½do do arquivo  
 echo $dadosXls;
 	
 
