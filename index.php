@@ -4,9 +4,9 @@ header("Content-Type: text/html; charset=ISO-8859-1",true);
  * No Banco de Dados MYSQL execute
  * ALTER DATABASE `sua_base` CHARSET = Latin1 COLLATE = latin1_swedish_ci
  * 
- * Não distingue letras minúsculas e maiúsculas e nem caracteres acentuados e 
- * com cedilha, ou seja, o registro que contém a palavra “Intuição” será retornado 
- * quando houver uma procura pela palavra “intúicao”.;
+ * Nï¿½o distingue letras minï¿½sculas e maiï¿½sculas e nem caracteres acentuados e 
+ * com cedilha, ou seja, o registro que contï¿½m a palavra ï¿½Intuiï¿½ï¿½oï¿½ serï¿½ retornado 
+ * quando houver uma procura pela palavra ï¿½intï¿½icaoï¿½.;
  * 
  */
 
@@ -15,7 +15,7 @@ header("Content-Type: text/html; charset=ISO-8859-1",true);
          Desenvolvedorle: Carlos Henrique R Vitta
 
          Este software, tem como finalidade proporcionar aos colaboradores da MCJ
-         (Gerentes,Tï¿½cnicos e desenvolvedores) o registro das tarefas executadas
+         (Gerentes,TÃ©cnicos e desenvolvedores) o registro das tarefas executadas
          nos projetos desenvolvidos pela empresa
 */
 
@@ -222,7 +222,7 @@ if ($_SESSION['s_logado']) {
 			print "<option value=-1 selected></option>";
 			
 			$query = "SELECT id,razao from cadastro_unidades order by razao";
-			$resul = mysql_query($query) or die('Nao foi possivel ler as informaoes de Local de Atuação!');;
+			$resul = mysql_query($query) or die('Nao foi possivel ler as informaoes de Local de Atuaï¿½ï¿½o!');;
 			while ($rownivel = mysql_fetch_array($resul)){
 				print "<option value='".$rownivel['id']."' selected>".substr($rownivel['razao'],0,45)."</option>";
 			}
@@ -231,7 +231,7 @@ if ($_SESSION['s_logado']) {
 print "<br><div class='banner'>
 <font size='5' face='Sans-Serif'".$copyright2."><b>"."M&oacute;dulo Carn&ecirc;"."</b></font><br><br>
 <font size='2' face='Sans-Serif' color='#1E90FF'".$copyright2."><b>"."Vers&atilde;o 2.20.08"."</b></font><br>
-<font size='1' face='Sans-Serif' color='#1E90FF'".$copyright1."><b><br>"."&copy; copyright - MCJ Assessoria Hospitalar e Informática LTDA Todos os Direitos Reservados"."</b></font>
+<font size='1' face='Sans-Serif' color='#1E90FF'".$copyright1."><b><br>"."&copy; copyright - MCJ Assessoria Hospitalar e Informï¿½tica LTDA Todos os Direitos Reservados"."</b></font>
 </div>";
 print "</td></tr>";	
 ///<img class='profile-img' src='//ssl.gstatic.com/accounts/ui/avatar_2x.png' style=\"{vertical-align:middle;}\" height='30' width='30' border='0' alt=''>
@@ -244,7 +244,7 @@ print "</td></tr>";
 		$conec->desconecta('MYSQL');
 	}
 
-print "<tr><td colspan='2' align='center' >"."<font size='1' face='Sans-Serif' color='#1E90FF'".$copyright1."><b>"."&copy; copyright - MCJ Assessoria Hospitalar e Informática LTDA Todos os Direitos Reservados"."</b></font></td></tr>";
+print "<tr><td colspan='2' align='center' >"."<font size='1' face='Sans-Serif' color='#1E90FF'".$copyright1."><b>"."&copy; copyright - MCJ Assessoria Hospitalar e Informï¿½tica LTDA Todos os Direitos Reservados"."</b></font></td></tr>";
 
 print "</table>";
 

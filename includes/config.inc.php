@@ -4,11 +4,11 @@
 
 // configurar de acordo com as suas necessidades
 
-// Configurações vitais
+// Configuraï¿½ï¿½es vitais
 
 
 //Usuario do banco
-define ( "SQL_USER", "root"); // Usuário do Banco de Dados 
+define ( "SQL_USER", "root"); // Usuï¿½rio do Banco de Dados 
 
 //Senha do banco
 define ( "SQL_PASSWD", "mcjroot");// Senha do Banco de Dados
@@ -21,13 +21,13 @@ define ( "SQL_SERVER", "192.168.108.250"); // 192.168.108.250 IP ou nome Servido
 //Nome do banco
 //define ( "SQL_DB", "1433_tres_coracoes"); 
 //define ( "SQL_DB", "1772_promedico"); 
-// define ( "SQL_DB", "carnepromedico");
-define ( "SQL_DB", "1084_itaguara");
+ define ( "SQL_DB", "carnepromedico");
+//define ( "SQL_DB", "1084_itaguara");
 //define ( "SQL_DB", "1489_saude_harmonia");
 //define ( "SQL_DB", "1805_dominus");
 
 /*
-define ( "SQL_USER", "carnemcj"); // Usuário do Banco de Dados 
+define ( "SQL_USER", "carnemcj"); // Usuï¿½rio do Banco de Dados 
 define ( "SQL_PASSWD", "mcjuser@2017");// Senha do Banco de Dados
 define ( "SQL_SERVER", "carnemcj.mysql.dbaas.com.br"); // 192.168.108.250 IP ou nome Servidor
 define ( "SQL_DB", "carnemcj"); // Banco de dados

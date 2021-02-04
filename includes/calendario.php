@@ -1,6 +1,6 @@
 
 
-		<!-- Começa aqui o calendário -->
+		<!-- Comeï¿½a aqui o calendï¿½rio -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 			<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
 			<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
@@ -8,19 +8,19 @@
 		$(function() {
 		    $( "#calendario1" ).datepicker({
 		        showOn: "button",
-		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendário
-		        buttonImageOnly: true,	 // Mostrando ícone para ativar o calendário
-		        showButtonPanel: false,	 // Calendário com barra de botões de ação true ou false
+		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendï¿½rio
+		        buttonImageOnly: true,	 // Mostrando ï¿½cone para ativar o calendï¿½rio
+		        showButtonPanel: false,	 // Calendï¿½rio com barra de botï¿½es de aï¿½ï¿½o true ou false
 				changeMonth: true,		 // Permitindo selecionar outros meses e anos
 				changeYear: true,		 // Permitindo selecionar outros meses e anos
 				showOtherMonths: true,	 // Mostrando datas dos meses seguinte e anterior
 				selectOtherMonths: true, // Mostrando datas dos meses seguinte e anterior
-				numberOfMonths: 1,		 // Exibindo mais de um mês
+				numberOfMonths: 1,		 // Exibindo mais de um mï¿½s
 				dateFormat: 'dd/mm/yy',	 // Definindo o formato da data
-				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado','Domingo'],
 				dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-				monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+				monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
 				monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 		    });
 		});
@@ -30,22 +30,66 @@
 		$(function() {
 		    $( "#calendario2" ).datepicker({
 		        showOn: "button",
-		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendário
-		        buttonImageOnly: true,	 // Mostrando ícone para ativar o calendário
-		        showButtonPanel: false,	 // Calendário com barra de botões de ação true ou false
+		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendï¿½rio
+		        buttonImageOnly: true,	 // Mostrando ï¿½cone para ativar o calendï¿½rio
+		        showButtonPanel: false,	 // Calendï¿½rio com barra de botï¿½es de aï¿½ï¿½o true ou false
 				changeMonth: true,		 // Permitindo selecionar outros meses e anos
 				changeYear: true,		 // Permitindo selecionar outros meses e anos
 				showOtherMonths: true,	 // Mostrando datas dos meses seguinte e anterior
 				selectOtherMonths: true, // Mostrando datas dos meses seguinte e anterior
-				numberOfMonths: 1,		 // Exibindo mais de um mês
+				numberOfMonths: 1,		 // Exibindo mais de um mï¿½s
 				dateFormat: 'dd/mm/yy',	 // Definindo o formato da data
-				dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado','Domingo'],
 				dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-				monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+				monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
 				monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 		    });
 		});
 		</script>
-		
+
+		<script>
+		$(function() {
+		    $( "#calendario3" ).datepicker({
+		        showOn: "button",
+		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendï¿½rio
+		        buttonImageOnly: true,	 // Mostrando ï¿½cone para ativar o calendï¿½rio
+		        showButtonPanel: false,	 // Calendï¿½rio com barra de botï¿½es de aï¿½ï¿½o true ou false
+				changeMonth: true,		 // Permitindo selecionar outros meses e anos
+				changeYear: true,		 // Permitindo selecionar outros meses e anos
+				showOtherMonths: true,	 // Mostrando datas dos meses seguinte e anterior
+				selectOtherMonths: true, // Mostrando datas dos meses seguinte e anterior
+				numberOfMonths: 1,		 // Exibindo mais de um mï¿½s
+				dateFormat: 'dd/mm/yy',	 // Definindo o formato da data
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado','Domingo'],
+				dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+				monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+		    });
+		});
+		</script>
+
+		<script>
+		$(function() {
+		    $( "#calendario4" ).datepicker({
+		        showOn: "button",
+		        buttonImage: "../../includes/icons/calendario.png",	// imagem pra chamar o calendï¿½rio
+		        buttonImageOnly: true,	 // Mostrando ï¿½cone para ativar o calendï¿½rio
+		        showButtonPanel: false,	 // Calendï¿½rio com barra de botï¿½es de aï¿½ï¿½o true ou false
+				changeMonth: true,		 // Permitindo selecionar outros meses e anos
+				changeYear: true,		 // Permitindo selecionar outros meses e anos
+				showOtherMonths: true,	 // Mostrando datas dos meses seguinte e anterior
+				selectOtherMonths: true, // Mostrando datas dos meses seguinte e anterior
+				numberOfMonths: 1,		 // Exibindo mais de um mï¿½s
+				dateFormat: 'dd/mm/yy',	 // Definindo o formato da data
+				dayNames: ['Domingo','Segunda','Terï¿½a','Quarta','Quinta','Sexta','Sï¿½bado','Domingo'],
+				dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+				dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sï¿½b','Dom'],
+				monthNames: ['Janeiro','Fevereiro','Marï¿½o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+		    });
+		});
+		</script>
+
 <?php

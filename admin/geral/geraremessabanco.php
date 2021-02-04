@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e InformÃ¡tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 05/9/2020 09:15 GLPI 20074
 
-		* Módulo Carnê *
+		* MÃ³dulo CarnÃª *
 
-		Opção de geração de Remessas para Banco CNAB400 ou CNAB250 
+		OpÃ§Ãµes de geraÃ§Ã£o de Remessas para Banco CNAB400 ou CNAB250 
 
 */
 	session_start();
@@ -60,6 +60,11 @@
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Data Final".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datafim' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario2' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
 		print "</TR><TR>";		
+		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Inicio Contrato".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='iniciocontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario3' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
+		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Fim Contrato".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='fimcontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario4' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
+		print "</TR><TR>";			
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Banco Emissor".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='bancoemissor' id='bancoemissor' >";
@@ -85,19 +90,32 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 
+	$iniciocontrato = Fdate($_POST['iniciocontrato']);
+	$fimcontrato = Fdate($_POST['fimcontrato']);
+
 	print "<INPUT type='text' name='inicio' class='text4' value='".$dtinicial."' hidden='hidden'>";
 	print "<INPUT type='text' name='fim' class='text4' value='".$dtfinal."' hidden='hidden'>";
 
 	$mesano = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	
-	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
+	/*$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
 				c.descricao, d.valor, d.valor_dependente
 				from carne_titular a
 				left Join carne_contratos b on b.idtitular = a.id
 				left Join carne_tipoplano c on c.id = b.plano
 				left Join carne_competenciaplano d on d.idplano = b.plano
 				where a.ultimomescarne = '".$mesano."' order by a.nometitular";
-	
+ */
+
+	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
+				c.descricao, d.valor, d.valor_dependente
+				from carne_titular a
+				left Join carne_contratos b on b.idtitular = a.id
+				left Join carne_tipoplano c on c.id = b.plano
+				left Join carne_competenciaplano d on d.idplano = b.plano
+				where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' order by a.nometitular";
+
+
 	$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
 	
 	if (mysql_num_rows($commit) == 0){
@@ -147,6 +165,12 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 			if(empty($row['cpf'])) {
 				$Checked='';
 			}
+
+			$plano = $row['descricao'];
+			if(empty($row['descricao'])){
+				$plano = "FALTA INFORMAR PLANO NO CADASTRO";
+			}
+
 			$Print.="<tr class='".$trClass."' id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 			//$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['idretorno']."' id='selecionado'> </td>";
 			$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['id']."' </td>";
@@ -154,7 +178,7 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 			$Print.="<td class='line' width='30%'>".$row['nometitular']."</td>";
 			$Print.="<td class='line' width='10%'>".$row['mesano']."</td>";
 			$Print.="<td class='line' width='10%'>".$row['diavencto']."</td>";			
-			$Print.="<td class='line' width='30%'>".$row['descricao']."</td>";			
+			$Print.="<td class='line' width='30%'>".$plano."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor']."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor_dependente']."</td>";
 			$Print.="</tr>";
@@ -189,7 +213,7 @@ print "</form>";
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 // Verifica se marcou algum CheckBox
 function verificaChecks() {
@@ -281,6 +305,8 @@ return false;
 	
 		var ok = validaForm('calendario1','','Data Inicial',1);
 		var ok = validaForm('calendario2','','Data Final',1);
+		var ok = validaForm('calendario3','','Inicio Contrato',1);
+		var ok = validaForm('calendario4','','Fim Contrato',1);
 		var ok = validaForm('idmesano','','Mes e Ano',1);
 
 		var bancoemissor = document.getElementById("bancoemissor").value;
