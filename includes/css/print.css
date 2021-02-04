@@ -1,0 +1,13 @@
+@media print {
+    body {
+        display: block;
+    }
+
+    table{
+        white-space: nowrap;
+    }
+    
+    thead {
+        display: table-header-group;
+    }
+}

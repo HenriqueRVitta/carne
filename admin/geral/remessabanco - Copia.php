@@ -1,0 +1,92 @@
+<?php
+//REALIZANDO TESTES
+
+if($contador==1){
+	include 'src/Arquivo.php';
+}
+
+//configurando o arquivo de remessa
+$config['codigo_empresa'] = $convenio; //'1054508';
+$config['razao_social'] = substr($dadosboleto["cedente"],0,29); //'Agnetech Soluções empresariais';
+$config['numero_remessa'] = $remessa; //'2165';
+$config['data_gravacao'] = date('d').date('m').date('y'); //'280815';
+
+$arquivo = new Arquivo();
+//configurando remessa
+$arquivo->config($config);
+
+//for ($i = 0; $i < 20; $i++) {
+
+	$ex = explode("/", $data_venc);
+	$dia = $ex[0];
+	$mes = $ex[1];
+	$ano = $ex[2];
+	$Vencto = $dia.$mes.substr($ano,2,2);
+	$dtemissao = date('d').date('m').date('y');
+
+	$valor_boleto=str_replace(".","",$valor_boleto);
+	$cep = substr($rowcliente['cep'],0,5);
+	$sufixoCep = substr($rowcliente['cep'],5,3);
+
+	//agencia é 4 digitos
+	$agencia = formata_numero($dadosboleto["agencia"],4,0);
+	//conta é 6 digitos
+	$conta = formata_numero($dadosboleto["conta"],6,0);
+	//dv da conta
+	$conta_dv = formata_numero($dadosboleto["conta_dv"],1,0);
+
+	//adicionando boleto
+	$boleto['agencia'] 						= $agencia;
+	$boleto['agencia_dv'] 					= $dadosboleto["agencia_dv"];
+	$boleto['razao_conta_corrente']			= '07050';
+	$boleto['conta'] 						= $conta;
+	$boleto['conta_dv'] 					= $conta_dv;
+	$boleto['carteira'] 					= '009';
+	$boleto['numero_controle'] 				= $rowcliente['id'];
+	$boleto['habilitar_debito_compensacao'] = true;
+	$boleto['habilitar_multa'] 				= true;
+	$boleto['percentual_multa'] 			= '0';
+	$boleto['nosso_numero'] 				= $NossoNumero; //'61551964';
+	$boleto['nosso_numero_dv'] 				= $Dv; //'P';
+	$boleto['desconto_dia']	 				= '0';
+	$boleto['rateio'] 						= false;
+	$boleto['numero_documento'] 			= $rowcliente['id'];
+	$boleto['vencimento'] 					= $Vencto;
+	$boleto['valor'] 						= $valor_boleto;
+	$boleto['data_emissao_titulo'] 			= $dtemissao;
+	$boleto['valor_dia_atraso'] 			= '0';
+	$boleto['data_limite_desconto'] 		= $dtemissao;
+	$boleto['valor_desconto'] 				= '0';
+	$boleto['valor_iof'] 					= '0';
+	$boleto['valor_abatimento_concedido'] 	= '0';
+	$boleto['tipo_inscricao_pagador'] 		= 'CPF';
+	$boleto['numero_inscricao'] 			= $dadosboleto["cpf"];
+	$boleto['nome_pagador'] 				= $dadosboleto["sacado"];
+	$boleto['endereco_pagador'] 			= $dadosboleto["endereco1"];
+	$boleto['primeira_mensagem'] 			= '';
+	$boleto['cep_pagador'] 					= $cep;
+	$boleto['sufixo_cep_pagador'] 			= $sufixoCep;
+	$boleto['sacador_segunda_mensagem'] 	= '';
+	
+	//adicionando boleto
+	$arquivo->add_boleto($boleto);
+
+
+//}
+	
+		
+for ($i = 1; $i < 99; $i++) {
+	$seq = str_pad($i, 2, '0', STR_PAD_LEFT);
+	$arquivogravacao = $dirarquivoremessa.'/'.'CB'.date('d').date('m').$seq;
+	if(!file_exists($arquivogravacao.".REM")) {
+		break;
+	}
+}
+
+
+//$arquivo->setFilename('E:/Webserver/carne/admin/geral/src/CB171101');
+$arquivo->setFilename($arquivogravacao);
+
+$arquivo->save();
+
+

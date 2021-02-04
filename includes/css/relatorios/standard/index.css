@@ -1,0 +1,3 @@
+.auto_zebra tbody tr:nth-child(odd){
+    background: rgba(250, 170, 73, 0.3);
+}

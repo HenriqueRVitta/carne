@@ -1,0 +1,120 @@
+* {
+   margin: 0;	
+   padding: 0;	
+   text-decoration: none; 
+   list-style: none;	  	
+}
+
+html, body{
+	height: 100%;
+}
+
+body{
+	background: black;
+	color: white;
+	font: normal 14px Georgia, "Times New Roman", Times, serif; 
+	letter-spacing: 0.75px; 
+}
+
+#estrutura{
+	position: relative;
+	width: 966px;			
+	margin: 0 auto;		
+	border: 2px solid green;
+	min-height: 100%;
+}
+
+* html #estrutura {
+	height: 100%;	/* hack para IE6 que trata height como min-height */
+}
+
+#topo {
+	height: 150px;
+}
+
+#topo #logo {	
+	float: left;
+	width: 300px;
+	height: 120px;
+	text-align: center;
+	line-height: 120px;
+}
+
+#topo #logo a, #topo #logo a img{
+	display: block;
+	width: 300px;
+	height: 120px;
+	border: none;
+	color: white;
+	background: #333;
+}
+
+#topo .banner_superior{
+	float: left;
+	margin: 10px;
+	width: 640px;
+	height: 100px;
+	background: #333;
+	text-align: center;
+	line-height: 100px;
+}
+
+#topo #menu {
+	clear: both;
+	float: left;
+}
+
+#topo #menu ul {
+	float: left;
+	display: inline;
+}
+
+#topo #menu ul li {
+	float: left;
+}
+
+#menu ul li .link_menu {
+	display: block;
+	color: white;
+	background: #006;
+	width: 138px;
+	height: 30px;
+	line-height: 30px;   
+	text-align: center;
+}
+
+#menu ul li .link_menu:hover {
+	background: #006C00;
+	font-weight: bold;
+	text-transform: capitalize;
+	letter-spacing: 3px;
+}
+
+#menu ul li .link_menu:active {
+	width: 130px;
+	height: 25px;
+	padding-left: 8px;
+	padding-top: 5px;
+	line-height: 25px;
+	color: #030;
+}
+
+
+#site {
+	width: 946px;
+	margin: 10px;
+}
+
+#rodape {
+	position: absolute;
+	background: #333;
+	height: 60px;
+	text-align: center;
+	line-height: 60px;
+	border-top: 2px solid red;
+	width: 100%;
+}
+
+.clear {
+	clear:both;
+}
