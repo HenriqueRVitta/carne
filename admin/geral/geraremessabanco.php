@@ -107,6 +107,7 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 				where a.ultimomescarne = '".$mesano."' order by a.nometitular";
  */
 
+ 
 	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
 				c.descricao, d.valor, d.valor_dependente
 				from carne_titular a
