@@ -109,7 +109,7 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 
  
 	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
-				c.descricao, d.valor, d.valor_dependente
+				c.descricao, d.valor, d.valor_dependente, b.datacontrato
 				from carne_titular a
 				left Join carne_contratos b on b.idtitular = a.id
 				left Join carne_tipoplano c on c.id = b.plano
@@ -137,7 +137,7 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 		$Print.= "<table id='pagtos' name='pagtos' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='#87CEFA' style='font-size:12'>";
 
 		
-		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mes/Ano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD></tr>";
+		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mes/Ano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD></tr>";
 		
 		$j=2;
 		$nContador = 0;
@@ -172,6 +172,8 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 				$plano = "FALTA INFORMAR PLANO NO CADASTRO";
 			}
 
+			$datacontrato = date('d-m-Y', strtotime($row['datacontrato']));
+
 			$Print.="<tr class='".$trClass."' id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 			//$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['idretorno']."' id='selecionado'> </td>";
 			$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['id']."' </td>";
@@ -179,6 +181,7 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 			$Print.="<td class='line' width='30%'>".$row['nometitular']."</td>";
 			$Print.="<td class='line' width='10%'>".$row['mesano']."</td>";
 			$Print.="<td class='line' width='10%'>".$row['diavencto']."</td>";			
+			$Print.="<td class='line' width='10%'>".$datacontrato."</td>";
 			$Print.="<td class='line' width='30%'>".$plano."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor']."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor_dependente']."</td>";
