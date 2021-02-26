@@ -73,7 +73,7 @@ remessa:
     nome_banco:
       pos: [103,132]
       picture: 'X(30)'
-      default: 'BANCO ITAU SA'
+      default: 'SICOOB'
     brancos_05:
       pos: [133,142]
       picture: 'X(10)'

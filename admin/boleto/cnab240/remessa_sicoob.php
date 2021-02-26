@@ -40,8 +40,8 @@ $remessa->header->tipo_inscricao = 2;
 $remessa->header->inscricao_numero = $rowempresa['cnpj'];
 $remessa->header->agencia = $agencia;
 $remessa->header->conta = $conta;
-$remessa->header->dac = 9;
-$remessa->header->nome_empresa = 'MACWEB SOLUTIONS LTDA';
+$remessa->header->dac = $conta_dv;
+$remessa->header->nome_empresa = retira_acentos_UTF8($rowempresa['razao']);
 $remessa->header->data_geracao = date('dmY');
 $remessa->header->hora_geracao = date('His');
 $remessa->header->numero_sequencial_arquivo_retorno = 1;
@@ -56,19 +56,19 @@ $lote->header->tipo_registro = 1;
 $lote->header->tipo_operacao = 'R';
 $lote->header->tipo_servico = '01';
 $lote->header->zeros_01 = 0;
-$lote->header->versao_layout_lote = '030';
+$lote->header->versao_layout_lote = '040';
 $lote->header->brancos_01 = '';
 $lote->header->tipo_inscricao = 2;
-$lote->header->inscricao_empresa = '05346078000186';
+$lote->header->inscricao_empresa = $rowempresa['cnpj'];;
 $lote->header->brancos_02 = '0';
 $lote->header->zeros_02 = 0;
-$lote->header->agencia = 2932;
+$lote->header->agencia = $agencia;
 $lote->header->brancos_03 = '';
 $lote->header->zeros_03 = 0;
-$lote->header->conta = '24992';
+$lote->header->conta = $conta;;
 $lote->header->brancos_04 = '';
-$lote->header->dac = 9;
-$lote->header->nome_empresa = 'MACWEB SOLUTIONS LTDA';
+$lote->header->dac = $conta_dv;
+$lote->header->nome_empresa = retira_acentos_UTF8($rowempresa['razao']);
 $lote->header->brancos_05 = '';
 $lote->header->numero_sequencial_arquivo_retorno = 1;
 $lote->header->data_gravacao = date('dmY');
@@ -80,9 +80,9 @@ $detalhe = $lote->novoDetalhe();
 $detalhe->segmento_p->lote_servico = $lote->sequencial;
 $detalhe->segmento_p->numero_sequencial_registro_lote = 1;
 $detalhe->segmento_p->codigo_ocorrencia = '01';
-$detalhe->segmento_p->agencia = 2932;
-$detalhe->segmento_p->conta = 24992;
-$detalhe->segmento_p->dac = 9;
+$detalhe->segmento_p->agencia = $agencia;
+$detalhe->segmento_p->conta = $conta;
+$detalhe->segmento_p->dac = $conta_dv;
 $detalhe->segmento_p->carteira = 109;
 $detalhe->segmento_p->nosso_numero = 12345678;
 $detalhe->segmento_p->dac_nosso_numero = 3;
@@ -145,4 +145,16 @@ $remessa->trailer->total_registros = 6; //total da quantidade de Registros no ar
 
 // gera arquivo
 $remessaFile = new RemessaFile($remessa);
-$remessaFile->generate(__DIR__.'/remessas/out/itaucobranca240.rem');
+$dirarquivoremessa = __DIR__.'/remessas/out/';
+
+for ($i = 1; $i < 99; $i++) {
+	$seq = str_pad($i, 2, '0', STR_PAD_LEFT);
+	$arquivogravacao = $dirarquivoremessa.'CB'.date('d').date('m').$seq;
+	if(!file_exists($arquivogravacao.".REM")) {
+		break;
+	}
+}
+
+$cfile = $arquivogravacao.".REM";
+//$remessaFile->generate(__DIR__.'/remessas/out/itaucobranca240.rem');
+$remessaFile->generate($cfile);
