@@ -30,15 +30,23 @@
 	} else
 		$cellStyle = "cellpadding='5' cellspacing='1'";
 
-		$dtinicial = date("d/m/Y"); 
-		$dtfinal = date("d/m/Y");
+		$dtinicial = date("d/m/Y",strtotime('+ 1 month')); 
+		$dtfinal = date("d/m/Y",strtotime('+ 365 days'));
 		
 		$mesano = date('m/Y');
 		
+		$dtinicialcontrato = date("d/m/Y"); 
+		$dtfinalcontrato = date("t/m/Y");
 		
-		//$dtinicial = '28/10/2019';
-		//$dtfinal = '28/10/2019';
-		
+		// Data vencto de Contrato a cada 15 dias
+		$diaDoMes = explode("/",$dtinicialcontrato);
+		if($diaDoMes[0] <= 15){
+			$dtinicialcontrato = "01"."/".$diaDoMes[1]."/".$diaDoMes[2];
+			$dtfinalcontrato = "15"."/".$diaDoMes[1]."/".$diaDoMes[2];
+		} else {
+			$dtinicialcontrato = "16"."/".$diaDoMes[1]."/".$diaDoMes[2];
+		}
+
 		
 	if(isset($_POST['datainicio'])) {
 
@@ -54,6 +62,10 @@
 		print "<TR>";
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."M&ecirc;s/Ano de Vencto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='mesano' class='text4' onkeyup=\"maskIt(this,event,'##/####')\" id='idmesano' value='".$mesano."'></td>";
+		print "<td class='line' width='15%'>
+		Lote RPS<input type='checkbox' name='loterps' value='0'</td>";
+		print "<td class='line' width='15%'>Boleto<input type='checkbox' name='boleto' checked='checked' value='1'>
+		Remessa<input type='checkbox' name='remessa' checked='checked' value='2'</td>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicial Boleto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
@@ -61,13 +73,13 @@
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datafim' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario2' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Inicio Contrato".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='iniciocontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario3' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='iniciocontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario3' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicialcontrato."'></td>";
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Fim Contrato".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='fimcontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario4' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='fimcontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario4' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinalcontrato."'></td>";
 		print "</TR><TR>";			
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Banco Emissor".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
-		print "<select class='select2' name='bancoemissor' id='bancoemissor' >";
+		print "<select class='select2' name='bancoemissor_' id='bancoemissor_' >";
 		print "<option value=''></option>";  
 		print "<option value='Sicoob' selected>Sicoob</option>";  
 		print "<option value='Bradesco'>Bradesco</option>";  
@@ -85,7 +97,8 @@
 if(isset($_POST['mesano'])) {
 	
 	
-print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/RecepcionarLoteRps.php' onSubmit=\"return verificaChecks(); return false;\">";
+//print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/RecepcionarLoteRps.php' onSubmit=\"return verificaChecks(); return false;\">";
+print "<FORM name='geraremessabanco' method='POST' target='_blank' action='../boleto/boleto_bancoob_cnab240.php' onSubmit=\"return verificaChecks(); return false;\">";
 
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
@@ -95,6 +108,10 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 
 	print "<INPUT type='text' name='inicio' class='text4' value='".$dtinicial."' hidden='hidden'>";
 	print "<INPUT type='text' name='fim' class='text4' value='".$dtfinal."' hidden='hidden'>";
+
+	print "<select class='select2' name='bancoemissor' id='bancoemissor' hidden='hidden'>";
+	print "<option value='".$_POST['bancoemissor_']."'>".$_POST['bancoemissor_']."</option>";  
+	print "</select>";
 
 	$mesano = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	
@@ -131,13 +148,13 @@ print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/Rece
 			$cellStyle = "cellpadding='5' cellspacing='1'";
 
 		$Print = "<table width='100%'><tr><td>";
-		$Print.= "<input type='submit' style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center;' value='Gerar Remessa' name='submit' id='idsubmit'>";
+		$Print.= "<input type='submit' style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center;' value='Gerar Boleto com Arquivo Remessa' name='submit' id='idsubmit'>";
 		$Print.= "</td></tr></table>";
 			
 		$Print.= "<table id='pagtos' name='pagtos' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='#87CEFA' style='font-size:12'>";
 
 		
-		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mes/Ano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD></tr>";
+		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mês/Vencto"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD></tr>";
 		
 		$j=2;
 		$nContador = 0;

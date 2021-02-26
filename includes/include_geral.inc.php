@@ -1,6 +1,9 @@
 <?php 
 ##INCLUDES GERAIS
 
+if(!isset($_SESSION['s_usuario'])) {
+	header('Location: ../../index.php');
+}
 
 	include ("../../includes/classes/headers.class.php");
 	include ("../../includes/classes/conecta.class.php");

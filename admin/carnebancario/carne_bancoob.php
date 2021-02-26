@@ -81,6 +81,7 @@
 	$resulConfig = mysql_query($queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
 	$rowconfig = mysql_fetch_array($resulConfig);
 	
+	$dirarquivoremessa = $rowconfig['dirarquivoremessa'];
 
 	// Qtde de Dependentes
 	
@@ -292,14 +293,14 @@ $dadosboleto["conta_dv"] = $conta_dv; 	// Digito do Num da conta
 
 
 // DADOS PERSONALIZADOS - Bradesco
-$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente Números)
+$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente Nï¿½meros)
 $dadosboleto["conta_cedente_dv"] = $conta_dv; // Digito da ContaCedente do Cliente
 
 // DADOS PERSONALIZADOS - SICOOB
 $dadosboleto["convenio"] = $convenio; // Num do convÃªnio - REGRA: No mÃ¡ximo 7 dÃ­gitos
 
 if($bancoEmissor=='Sicoob') {
-	$dadosboleto["carteira"] = "01";  // Código da Carteira: pode ser 01-Simples com Registro 03-Garantida Caucionada
+	$dadosboleto["carteira"] = "01";  // Cï¿½digo da Carteira: pode ser 01-Simples com Registro 03-Garantida Caucionada
 }
 
 // SEUS DADOS
@@ -380,7 +381,7 @@ $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 
     $lcFileUrl = 'remessas/'.$arquivogravacaoUrl.".REM";
     
-    // A linha abaixo irá abrir uma janela popup com $width de largura e $height de altura, centralizada na tela
+    // A linha abaixo irï¿½ abrir uma janela popup com $width de largura e $height de altura, centralizada na tela
     printf( "<script>window.open( '%s' , '_blank' , 'width=%d,height=%d,left='+( ( screen.availWidth / 2 ) - %f ) + ' , top='+( ( screen.availHeight / 2 ) - %f) + '' );</script>" , 'downloadremessa.php?arquivo='.$lcFileUrl."" , $width , $height , $width / 2 , $height / 2 );
      	
 

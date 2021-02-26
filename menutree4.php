@@ -59,7 +59,7 @@
   border-top: 1px solid #93bbce;
   cursor: pointer;
   z-index: 2;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-decoration: none;
   color: #ffffff;
@@ -208,6 +208,19 @@
 	            <ul>
 	               <li class='last'><a href='admin/geral/tipodependente.php' target="centro"><span>Tipo de Dependente</span></a></li>
 	               <li class='last'><a href='admin/geral/plano.php' target="centro"><span>Tipo de Plano</span></a></li>
+	               <li class='last'><a href='admin/geral/localpagto.php' target="centro"><span>Local de Pagamento</span></a></li>
+	               <li class='last'><a href='admin/geral/grupo.php' target="centro"><span>Grupo</span></a></li>
+	               <li class='last'><a href='admin/geral/taxas.php' target="centro"><span>Taxas</span></a></li>
+	               <li class='last'><a href='admin/geral/vendedor.php' target="centro"><span>Vendedor</span></a></li>
+	               <li class='last'><a href='admin/geral/usuarios.php' target="centro"><span>Usuários</span></a></li>
+
+	            </ul>
+	         </li>
+
+	         <li class='has-sub'><a href='#'><span>Relatórios do Cadastro</span></a>
+	            <ul>
+	               <li class='last'><a href='admin/geral/relcadastros.php' target="centro"><span>Titular e Dependente</span></a></li>
+	               <li class='last'><a href='admin/geral/relcartaocontribuinte.php' target="centro"><span>Tipo de Plano</span></a></li>
 	            </ul>
 	         </li>
 
@@ -215,16 +228,50 @@
          </li>
          <li class='has-sub'><a href='#'><span>Financeiro</span></a>
             <ul>
-               <li><a href='#'><span>Controle de Pagamento</span></a></li>
-               <li class='last'><a href='#'><span>Gerar Boleto Cobran&ccedil;a</span></a></li>
+
+                <li class='has-sub'><a href='#'><span>Controle de Pagamentos</span></a>
+                  <ul>
+                    <li class='last'><a href='admin/geral/pagamentoslista.php' target="centro"><span>Registro de Pagamentos</span></a></li>
+                    <li class='last'><a href='admin/geral/relpagamentos.php' target="centro"><span>Relatórios de Pagamentos</span></a></li>
+                    <li class='last'><a href='admin/geral/relgerarboleto.php' target="centro"><span>Gerar Carnê Cobrança</span></a></li>
+                    <li class='last'><a href='admin/geral/exportafinanceiro.php' target="centro"><span>Exportar Financeiro</span></a></li>
+                    <li class='last'><a href='admin/geral/pagamentogrupo.php' target="centro"><span>Pagamentos por Grupo</span></a></li>
+                  </ul>
+              </li>
+
+              <li class='has-sub'><a href='#'><span>Parcelamento de Carnê</span></a>
+                  <ul>
+                    <li class='last'><a href='admin/geral/geraparcelacarne.php' target="centro"><span>Gerar Parcelas de Carnê</span></a></li>
+                    <li class='last'><a href='admin/geral/relcarneparcelado.php' target="centro"><span>Relatório Carnê Parcelado</span></a></li>
+                  </ul>
+              </li>
+
+              <li class='has-sub'><a href='#'><span>Cobrança Bancária</span></a>
+                  <ul>
+                    <li class='last'><a href='admin/geral/relgerarboletobancario.php' target="centro"><span>Gerar Boleto Banco</span></a></li>
+                    <li class='last'><a href='admin/geral/relgerarcarnebancario.php' target="centro"><span>Gerar Carnê Banco</span></a></li>
+                    <li class='last'><a href='admin/geral/geraremessabanco.php' target="centro"><span>Gerar Remessa Banco</span></a></li>
+                    <li class='last'><a href='admin/geral/nfsegerar.php' target="centro"><span>Gerar NFSe</span></a></li>
+                    <li class='last'><a href='admin/geral/arquivoretorno.php' target="centro"><span>Arquivo Retorno</span></a></li>
+                  </ul>
+              </li>
+
             </ul>
          </li>
    </li>
    <li class='has-sub'><a href='#'><span>Configura&ccedil;&otilde;es</span></a>
             <ul>
-               <li><a href='admin/geral/configuracoes.php' target="centro"><span>Editar Configura&ccedil;&otilde;es</span></a></li>
+               <li><a href='admin/geral/configuracoes.php' target="centro"><span>Parâmetros Sistema</span></a></li>
+               <li><a href='admin/geral/configuracoesnfse.php' target="centro"><span>Parâmetros NFSe</span></a></li>
+               <li><a href='admin/geral/configuracoesbancaria.php' target="centro"><span>Cobrança Bancária</span></a></li>
             </ul>
    </li>
+   <li class='has-sub'><a href='#'><span>Utilitários</span></a>
+           <ul>
+               <li><a href='admin/geral/relauditoria.php' target="centro"><span>Auditor do Sistema</span></a></li>
+           </ul>
+   </li>
+
 </ul>
 </div>
 </body>
