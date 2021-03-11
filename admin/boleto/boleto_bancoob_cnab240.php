@@ -1,5 +1,4 @@
 <?php
-
     // +----------------------------------------------------------------------+
     // | BoletoPhp - Versão Beta                                              |
     // +----------------------------------------------------------------------+
@@ -37,6 +36,9 @@
     // https://www.sicoobsc.com.br/transcredi/para-sua-empresa/para-sua-empresa/cobranca-2/
     // http://sicoobcredicampo.hospedagemdesites.ws/pga.php?pg=cobranca-bancaria-sistema-proprio
     
+    // API Open Source
+    // https://api.boletosimples.com.br/bank_contracts/sicoob/
+
     // DEFINE O FUSO HORARIO COMO O HORARIO DE BRASILIA
     date_default_timezone_set('America/Sao_Paulo');
 
@@ -45,7 +47,6 @@
 	include ("../../includes/include_geral_III.php");
 	include ("../../includes/classes/paging.class.php");
 
-	
 	$dtinicial = Fdate($_POST['inicio']);
 	$dtfinal = Fdate($_POST['fim']);
 	$bancoEmissor = $_POST['bancoemissor'];
@@ -58,34 +59,54 @@
 	$AnoIni = date( 'Y', strtotime($dtinicial));
 	$AnoFim = date( 'Y', strtotime($dtfinal));
 	$DiaIni = date( 'd', strtotime($dtfinal));
-	
+	$MesFim_ = $MesFim;
+    $MesIni_ = $MesIni;
+
 	$outroano = false;
-	
-	if($AnoIni <> $AnoFim && $MesFim <= $MesIni) {
+
+    if($AnoIni <> $AnoFim && $MesFim <= $MesIni) {
 		$MesFim = 12;
 		$outroano = true;
 	}
-	
-	
+
 	// Dados da Empresa
 	$qrylocal = "SELECT * from cadastro_unidades where codigo=".$_SESSION['s_local']."";
 	$exelocal = mysql_query($qrylocal) or die('Erro na query: ' .$qrylocal. mysql_error());
 	$rowempresa = mysql_fetch_array($exelocal);
 
 	// Dados do Banco
-   	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca FROM carne_bancos where nome = '".$bancoEmissor."'";
+   	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca, idretornobanco FROM carne_bancos where nome = '".$bancoEmissor."'";
 	$resulConfig = mysql_query($queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
 	$rowconfig = mysql_fetch_array($resulConfig);
 	
-
-
+    
 // Array dos Contribuintes Selecionados em geraremessabanco.php
 $arr = $_POST['selecionado'];
+$dadosRemessa = array();
+$controleheader = 0;
 
 foreach ($arr as &$value) {
    
-	$IdCliente=trim($value);
+    if($outroano == false) {
+        if($AnoIni <> $AnoFim){
+            $outroano = true;
+        }
+    }
 
+    $IdCliente=trim($value);
+    $proximoAno = false;
+
+	$MesIni = date( 'm', strtotime($dtinicial));
+	$MesFim = date( 'm', strtotime($dtfinal));
+
+	if($AnoIni <> $AnoFim && $MesFim_ <= $MesIni_) {
+        $MesIni = date( 'm', strtotime($dtinicial));
+        if($outroano == true){
+            $MesFim = 12;
+        } else {
+            $MesFim = date( 'm', strtotime($dtfinal));
+        }
+    }
 
 	// Qtde de Dependentes
 	
@@ -118,7 +139,7 @@ foreach ($arr as &$value) {
     $DataVencimento = $DataVencimento[2]."/".$DataVencimento[1]."/".$DataVencimento[0];
 
     $somames = 1;
-
+    
     while($rowcliente = mysql_fetch_array($resulCliente)) {
 
         $contador = 1;
@@ -128,40 +149,50 @@ foreach ($arr as &$value) {
         $diaDataInicio = date('d',strtotime($data_inicial));
         $venctoContribuinte = explode("-",substr($data_inicial,0,10));
         $venctoContribuinte[2] = $diaVencto;
+        $anoPosterior = date('Y', strtotime('+1 year')).'-01-'.$venctoContribuinte[2];
         $DataVencimento = $venctoContribuinte[2]."/".$venctoContribuinte[1]."/".$venctoContribuinte[0];
 
         $venctoContribuinte = implode("-",$venctoContribuinte);
 
-
         For ($x=$MesIni; $x<=$MesFim; $x++) {
 
             $qtdeFim = $x;
-            
-            if($x>$MesIni) {
+
+            if($proximoAno == true) {
+                  $DataVencimento = date('d/m/Y', strtotime("+".$somames." month", strtotime($anoPosterior)));
+                  $venctoContribuinte = $anoPosterior;
+                  $somames++;
+            };
+
+            if($x>$MesIni && $proximoAno == false) {
             // Alterado parra pegar o dia de vencto do contribuinte
             //$DataVencimento = date('d/m/Y', strtotime("+".$somames." month", strtotime($data_inicial)));
             $DataVencimento = date('d/m/Y', strtotime("+".$somames." month", strtotime($venctoContribuinte)));
             $somames++;
             }
-                
-        
-        // Dados do numero do documento - numero_documento
-        $qryNroDoc = "SELECT a.AUTO_INCREMENT as proximo FROM information_schema.tables a  WHERE a.table_name = 'carne_remessabanco' and table_schema = '".SQL_DB."'";
-        $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
-        $rownrodoc = mysql_fetch_array($exeNroDoc);
-        $numero_documento = $rownrodoc['proximo'];
-        
-            
-        $dirarquivoremessa = $rowconfig['dirarquivoremessa']; 
-        $carteiracobranca = $rowconfig['carteiracobranca'];
-                
-            
-        // DADOS DO BOLETO PARA O SEU CLIENTE
-        $dias_de_prazo_para_pagamento = 7;
-        $taxa_boleto = 0;
-        $data_venc = $DataVencimento; //"14/05/2013";//date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
 
-        $valor_cobrado = $rowcliente['valor']; // "1,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+            
+            /*
+            // Dados do numero do documento - numero_documento
+            $qryNroDoc = "SELECT a.AUTO_INCREMENT as proximo FROM information_schema.tables a  WHERE a.table_name = 'carne_remessabanco' and table_schema = '".SQL_DB."'";
+            $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
+            $rownrodoc = mysql_fetch_array($exeNroDoc);
+            $numero_documento = $rownrodoc['proximo'];
+            */
+
+            $numero_documento = $rowcliente['id'];
+        
+            
+            $dirarquivoremessa = $rowconfig['dirarquivoremessa']; 
+            $carteiracobranca = $rowconfig['carteiracobranca'];
+                
+            
+            // DADOS DO BOLETO PARA O SEU CLIENTE
+            $dias_de_prazo_para_pagamento = 7;
+            $taxa_boleto = 0;
+            $data_venc = $DataVencimento; //"14/05/2013";//date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
+
+            $valor_cobrado = $rowcliente['valor']; // "1,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
 
         // Soma o valor dos dependentes com o Titular
         if($nQtdeDep > 0) {
@@ -249,6 +280,7 @@ foreach ($arr as &$value) {
         if ($Dv == 1) $Dv = 0;
         if ($Dv > 9) $Dv = 0;
         $dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
+        $dadosboleto["dac_nosso_numero"] = $Dv;
 
         /*************************************************************************
          * +++
@@ -269,6 +301,17 @@ foreach ($arr as &$value) {
         $dadosboleto["cpf"] = str_replace('-', '', $dadosboleto["cpf"]);
         $dadosboleto["cpf"] = trim($dadosboleto["cpf"]);
 
+        $dadosboleto["endremessa"] = retira_acentos_ISO($rowcliente['endereco'])." ".$rowcliente['numero'];
+        $dadosboleto["bairemessa"] = retira_acentos_ISO($rowcliente['bairro']);
+        $dadosboleto["cidremessa"] = retira_acentos_ISO($rowcliente['cidade']);
+        $dadosboleto["ufremessa"] = $rowcliente['uf'];
+        $dadosboleto["cepremessa"] = $rowcliente['cep'];
+
+        if($rowconfig["idretornobanco"] == 1) {
+            $dadosboleto["titulo_empresa"] = $rowcliente['id'];
+        } else {
+            $dadosboleto["titulo_empresa"] = trim($dadosboleto["cpf"]);
+        }
 
         // INFORMACOES PARA O CLIENTE
         $dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
@@ -291,7 +334,7 @@ foreach ($arr as &$value) {
 
         // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
         // DADOS ESPECIFICOS DO SICOOB
-        $dadosboleto["modalidade_cobranca"] = "02";
+        $dadosboleto["modalidade_cobranca"] = "02"; // 02
         $dadosboleto["numero_parcela"] = "901";
 
 
@@ -327,22 +370,21 @@ foreach ($arr as &$value) {
 
             if($bancoEmissor=='Sicoob') {
             
-                // NÃO ALTERAR!
-                if($x==$MesIni) {
-                    include("include/funcoes_bancoob.php");
-                    header ('Content-type: text/html; charset=ISO-8859-1');
-                }
-                
-                include("include/layout_bancoob.php");
-                
-                
+                    // NÃO ALTERAR!
+                    if($x==$MesIni && $controleheader == 0) {
+                        include("include/funcoes_bancoob.php");
+                        header ('Content-type: text/html; charset=ISO-8859-1');
+                    }
+                    
+                    include("include/layout_bancoob.php");
+
             }
 
 
             if($bancoEmissor=='Bradesco') {
             
                 // N�O ALTERAR!
-                if($x==$MesIni) {
+                if($x==$MesIni && $controleheader == 0) {
                     include("include/funcoes_bradesco.php");
                     header ('Content-type: text/html; charset=ISO-8859-1');
                 }
@@ -350,26 +392,34 @@ foreach ($arr as &$value) {
             
             }
             
-            /*
-            if($carteiracobranca == 'Com Registro') {
-
-                $datageracao = date('Y-m-d H:i:s');
-            
+                /*
                 // Insert em carne_remessabanco
+                $datageracao = date('Y-m-d H:i:s');
                 $queryRemessa= "insert into carne_remessabanco (data,unidade,usuario) values ('".$datageracao."',".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";
                 $resulConfig = mysql_query($queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
                 $remessa = $numero_documento;
-                
-                include("../geral/remessabanco.php");
-            }
-            */
-            
+                */
+
             $contador++;
-        
+            $controleheader++;
+
+            array_push($dadosRemessa, $dadosboleto);
+
+            if($outroano == true) {
+                if($x==$MesFim){
+                    $MesIni = 01;
+                    $x = 0;
+                    $MesFim = date( 'm', strtotime($dtfinal) );
+                    $outroano = false;
+                    $proximoAno = true;
+                    $somames = 0;
+                }
+            }
+            
         }
         
-
     }
+
 }
 
             
@@ -377,14 +427,15 @@ foreach ($arr as &$value) {
 
                 $datageracao = date('Y-m-d H:i:s');
             
-                // Insert em carne_remessabanco
-                $queryRemessa= "insert into carne_remessabanco (data,unidade,usuario) values ('".$datageracao."',".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";
+                // Insert em carne_lote
+                $queryRemessa= "insert into carne_lote (data,banco,unidade,usuario) values ('".$datageracao."','".$bancoEmissor."',".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";
                 $resulConfig = mysql_query($queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
-                $remessa = $numero_documento;
                 
-                include("cnab240/remessa_sicoob.php");
-            }
-            
+                if(isset($_POST["remessa"])) {
+                    include("cnab240/remessa_sicoob.php");
+                }
+                
 
+            }
 
 ?>

@@ -62,10 +62,6 @@
 		print "<TR>";
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."M&ecirc;s/Ano de Vencto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='mesano' class='text4' onkeyup=\"maskIt(this,event,'##/####')\" id='idmesano' value='".$mesano."'></td>";
-		print "<td class='line' width='15%'>
-		Lote RPS<input type='checkbox' name='loterps' value='0'</td>";
-		print "<td class='line' width='15%'>Boleto<input type='checkbox' name='boleto' checked='checked' value='1'>
-		Remessa<input type='checkbox' name='remessa' checked='checked' value='2'</td>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicial Boleto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
@@ -97,14 +93,15 @@
 if(isset($_POST['mesano'])) {
 	
 	
-//print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/RecepcionarLoteRps.php' onSubmit=\"return verificaChecks(); return false;\">";
-print "<FORM name='geraremessabanco' method='POST' target='_blank' action='../boleto/boleto_bancoob_cnab240.php' onSubmit=\"return verificaChecks(); return false;\">";
+	//print "<FORM name='geraremessabanco' method='POST' action='nfsenew/examples/RecepcionarLoteRps.php' onSubmit=\"return verificaChecks(); return false;\">";
+	print "<FORM name='geraremessabanco' method='POST' target='_blank' action='../boleto/boleto_bancoob_cnab240.php' onSubmit=\"return verificaChecks(); return false;\">";
 
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 
 	$iniciocontrato = Fdate($_POST['iniciocontrato']);
 	$fimcontrato = Fdate($_POST['fimcontrato']);
+
 
 	print "<INPUT type='text' name='inicio' class='text4' value='".$dtinicial."' hidden='hidden'>";
 	print "<INPUT type='text' name='fim' class='text4' value='".$dtfinal."' hidden='hidden'>";
@@ -149,8 +146,14 @@ print "<FORM name='geraremessabanco' method='POST' target='_blank' action='../bo
 
 		$Print = "<table width='100%'><tr><td>";
 		$Print.= "<input type='submit' style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center;' value='Gerar Boleto com Arquivo Remessa' name='submit' id='idsubmit'>";
+		//$Print.= "</td></tr>";
+		$Print.= "</td>";
+		$Print.= "<td>";
+		$Print.= "Boleto<input type='checkbox' name='boleto' checked='checked' value='1'>";
+		$Print.= "</td><td>";
+		$Print.= "Remessa<input type='checkbox' name='remessa' checked='checked' value='2'>";
 		$Print.= "</td></tr></table>";
-			
+
 		$Print.= "<table id='pagtos' name='pagtos' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='#87CEFA' style='font-size:12'>";
 
 		

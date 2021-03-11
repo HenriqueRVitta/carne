@@ -49,13 +49,14 @@ try {
 	
 	$contentLoteRps = '';
 	
- 	$inicio = $_POST['inicio'];
+	$inicio = $_POST['inicio'];
 	$fim= $_POST['fim'];
+	$arr = $_POST['selecionado'];
 
 	$DataEmissao = date('Y-m-d').'T'.date('H:i:s');
 
 	$IdCliente = '';
-	$arr = $_POST['selecionado'];
+
 	foreach ($arr as &$value) {
     
 			$IdCliente.=trim($value).',';
@@ -75,7 +76,8 @@ $querytitular = "SELECT a.idretorno, sum(a.valor) as valor, b.* ".
 " where idretorno in".$IdCliente." group by a.cpfcnpj order by a.datapagto,b.nometitular limit 50";
 $resultadoTitular = mysql_query($querytitular) or die('ERRO NA QUERY !'.$querytitular);
 	
-$ContadorLote = 1;
+
+$ContadorLote = 1;
 
 while($rowtomador = mysql_fetch_array($resultadoTitular)) {
 

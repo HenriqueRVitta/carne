@@ -1,3 +1,12 @@
+CREATE TABLE carne_lote (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  data DATETIME NOT NULL DEFAULT '1900-01-01 00:00:00',
+  banco VARCHAR(45) NOT NULL,
+  usuario INTEGER NOT NULL DEFAULT '0',
+  unidade INTEGER NOT NULL DEFAULT '0',
+  arquivo VARCHAR(120) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`))
+
 ALTER TABLE carne_titular ADD COLUMN cartaoemitidopor VARCHAR(45) NOT NULL DEFAULT '' COMMENT 'usuario que emitiu cartao contribuinte'
 
 ALTER TABLE carne_titular ADD COLUMN cartaoemitido DATETIME NOT NULL DEFAULT '1900-01-01 00:00:00' COMMENT 'data em que foi emitido cartao do contribuinte'
