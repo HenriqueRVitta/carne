@@ -869,6 +869,7 @@ div.barcode {
 $numero_documento = 0;
 $numero_lote = 0;
 
-include("sqlbancoob.php");
+// Função implementada em admin\boleto\boleto_bancoob_cnab240.php
+//include("sqlbancoob.php");
 
 ?>

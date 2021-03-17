@@ -177,7 +177,7 @@ if(isset($_POST['mesano'])) {
 			}
 			$j++;
 			$nContador++;
-			$nTotalGeral+=$row['valor'];
+			$nTotalGeral+=$row['valor']+$row['valor_dependente'];
 			
 			//$datapagto = date('d/m/Y', strtotime($row['datapagto']));
 			//$dataRps = date('d-m-Y', strtotime($row['dtemissao']));
@@ -213,6 +213,7 @@ if(isset($_POST['mesano'])) {
 		$Print.="<tr>";
 		$Print.="<td></td>";
 		$Print.="<td>Qtde: ".$nContador."</td>";
+		$Print.="<td></td>";
 		$Print.="<td></td>";
 		$Print.="<td></td>";
 		$Print.="<td></td>";

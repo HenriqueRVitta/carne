@@ -144,7 +144,7 @@ foreach ($arr as &$value) {
 	}
 						
 	// Dados do Cliente
-   	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado FROM carne_titular a".
+   	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,b.datacontrato,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado FROM carne_titular a".
    	" join carne_contratos b on b.idtitular = a.id".
    	" join carne_tipoplano c on c.id = b.plano".
    	" join carne_competenciaplano d on d.idplano = c.id".   	
@@ -169,6 +169,11 @@ foreach ($arr as &$value) {
         $DataVencimento = $venctoContribuinte[2]."/".$venctoContribuinte[1]."/".$venctoContribuinte[0];
 
         $venctoContribuinte = implode("-",$venctoContribuinte);
+
+        $proxano = date('Y', strtotime("+1 year"));
+        $proxmes = date('m', strtotime($dtfinal));
+        $venctoContrato = $proxano.'-'.$proxmes.'-'.$diaVencto.' 00:00:00';
+        $ultimomescarne = $proxano.$proxmes;
 
         For ($x=$MesIni; $x<=$MesFim; $x++) {
 
@@ -383,7 +388,6 @@ foreach ($arr as &$value) {
                     }
                     
                     include("include/layout_bancoob.php");
-
             }
 
             $contador++;
@@ -401,15 +405,34 @@ foreach ($arr as &$value) {
                     $somames = 0;
                 }
             }
-            
+
         }
 
-        include("include\sqlbancoob.php");
-
         
+        // Atualizando a Data de Vencto do Contrato
+        $queryCont = "UPDATE carne_contratos set datacontrato = '".$venctoContrato."' Where idtitular = ".$rowcliente['id']." and status = 0";
+        $resulCont = mysql_query($queryCont) or die('Erro no Update '.$queryCont);
+        if ($resulCont == 0) {
+            $aviso = TRANS('ERR_INSERT');
+        }	
+                
+        // Atualizando a Data de Vencto do Contrato
+        $queryCont = "UPDATE carne_titular set ultimomescarne = '".$ultimomescarne."' Where id = ".$rowcliente['id'];
+        $resulCont = mysql_query($queryCont) or die('Erro no Update '.$queryCont);
+        if ($resulCont == 0) {
+            $aviso = TRANS('ERR_INSERT');
+        }	
+        
+
     }
 
 }
+
+
+foreach($dadosRemessa as $dadosboleto){
+    include("include\sqlbancoob.php"); 
+}
+
 
             if($carteiracobranca == 'Com Registro') {
                 

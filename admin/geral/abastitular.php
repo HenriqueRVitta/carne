@@ -2000,7 +2000,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($proximocontra,6)."' onBlur='VerContrato(this.value)'></td>";
 		print "<INPUT type='text' name='titular' class='text4' id='idtitular' onkeyup=\"maskIt(this,event,'######')\" value='".$_GET['cod']."' hidden='true' >";
 		print "</TR><TR>";		
-		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data do Contrato".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicio Contrato".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtcontrato' id='iddtcontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\"  onBlur='return doDateVenc(this.id,this.value, 4)' value='".$DataContrato."'></td>";
 		print "</TR><TR>";		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Plano".":</TD>";
@@ -2061,7 +2061,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 			print "<B><br>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line' width='10%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Data Contrato"."<td class='line' width='20%'>"."Status"."<td class='line' width='50%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."</TD>".
+			print "<TR class='header'><td class='line' width='10%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Data Vencto Contrato"."<td class='line' width='20%'>"."Status"."<td class='line' width='50%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."</TD>".
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CARTAO"."</TD></tr>";
 			
 			$j=2;
@@ -2159,7 +2159,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		print "<INPUT type='text' name='titular' class='text4' id='idtitular' onkeyup=\"maskIt(this,event,'######')\" value='".$row['idtitular']."' hidden='true' >";
 		print "<INPUT type='text' name='contrato' class='text4' id='idcontrato' onkeyup=\"maskIt(this,event,'######')\" value='".$_GET['cod']."' hidden='true' >";		
 		print "</TR><TR>";		
-		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data do Contrato".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicio Contrato".":</TD>";
 		$dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtcontrato' id='iddtcontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\"  onBlur='return doDateVenc(this.id,this.value, 4)' value='".mask($dtcontrato,'##/##/####')."'></td>";
 		print "</TR><TR>";		
