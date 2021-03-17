@@ -866,6 +866,9 @@ div.barcode {
 
 <?php 
 
+$numero_documento = 0;
+$numero_lote = 0;
+
 include("sqlbancoob.php");
 
 ?>

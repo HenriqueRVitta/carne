@@ -21,12 +21,6 @@
 
 // Utilize esse arquivo para ponto de entrada de debug (por exemplo XDebug)
 
-       //numero do lote
-	   $qryNroDoc = "SELECT max(id) as proximo FROM carne_lote";
-	   $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
-	   $rownrodoc = mysql_fetch_array($exeNroDoc);
-	   $numero_lote = $rownrodoc['proximo'];
-
 	   error_reporting(E_ALL);
 	   ini_set('display_errors', 'On');
 
@@ -212,9 +206,18 @@ $cfile = $arquivogravacao.".REM";
 //$remessaFile->generate(__DIR__.'/remessas/out/itaucobranca240.rem');
 $remessaFile->generate($cfile);
 
+       //numero do lote
+	   $qryNroDoc = "SELECT max(id) as proximo FROM carne_lote";
+	   $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
+	   $rownrodoc = mysql_fetch_array($exeNroDoc);
+	   $numero_lote = $rownrodoc['proximo'];
+
+// Gravando o Arquivo de Remessa
 echo "<script>";
-echo "  window.location.href = 'cnab240/download_remessa.php?file=".$lcFileDownload."'";
+echo "  window.location.href = 'cnab240/download_remessa.php?file=".$lcFileDownload."';";
+echo "  window.open('../../admin/geral/relremessa.php?lote=".$numero_lote."', '_blank');";
 echo "</script>";
+
 
 exit;
 

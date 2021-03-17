@@ -30,7 +30,5 @@
 	    header("Content-Disposition: attachment; filename=".basename($local_arquivo));
 	    // Envia o arquivo Download
 		readfile($local_arquivo);
-        exit;
-
     }
 ?>
