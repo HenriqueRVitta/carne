@@ -430,7 +430,7 @@ foreach ($arr as &$value) {
 
 
 foreach($dadosRemessa as $dadosboleto){
-    include("include\sqlbancoob.php"); 
+    include("include/sqlbancoob.php"); 
 }
 
 
