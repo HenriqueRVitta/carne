@@ -55,23 +55,44 @@
 		
 	}
 
+	if(isset($_POST['iniciocontrato'])) {
+
+		$dtinicialcontrato = $_POST['iniciocontrato'];
+		$dtfinalcontrato = $_POST['fimcontrato'];
+		
+	}
+
+	if(isset($_POST['mesano'])) {
+
+		$mesano = $_POST['mesano'];
+		
+	}
+
+
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='80%' bgcolor='".BODY_COLOR."'>";
 
 		print "<BR><b><font size=2 color='blue'>"."Op&ccedil;&otilde;es de Filtro"."</b></font><BR>";
 		print "<TD></TD>";
-		print "<TR>";
+		print "</TR><TR>";			
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Filtrar Por".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='filtro' id='filtro_' >";
+		print "<option value='Mes' selected>M&ecirc;s/Ano de Vencto</option>";  
+		print "<option value='Contrato'>Inicio/Fim Contrato</option>";  
+		print "</select>";
+		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."M&ecirc;s/Ano de Vencto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='mesano' class='text4' onkeyup=\"maskIt(this,event,'##/####')\" id='idmesano' value='".$mesano."'></td>";
-		print "</TR><TR>";		
-		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicial Boleto".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
-		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Data Final".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datafim' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario2' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Inicio Contrato".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='iniciocontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario3' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicialcontrato."'></td>";
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Fim Contrato".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='fimcontrato' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario4' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinalcontrato."'></td>";
+		print "</TR><TR>";		
+		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicial Boleto".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtinicial."'></td>";
+		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."' >"."Data Final".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datafim' class='text4' style='width:100px; text-align:center;' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario2' onBlur='return doDateVenc(this.id,this.value, 4)' value='".$dtfinal."'></td>";
 		print "</TR><TR>";			
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Banco Emissor".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
@@ -110,25 +131,24 @@ if(isset($_POST['mesano'])) {
 	print "<option value='".$_POST['bancoemissor_']."'>".$_POST['bancoemissor_']."</option>";  
 	print "</select>";
 
+	print "<select class='select2' name='filtro_' id='filtro_' hidden='hidden'>";
+	print "<option value='".$_POST['filtro']."'>".$_POST['filtro']."</option>";  
+	print "</select>";
+
 	$mesano = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	
-	/*$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
-				c.descricao, d.valor, d.valor_dependente
-				from carne_titular a
-				left Join carne_contratos b on b.idtitular = a.id
-				left Join carne_tipoplano c on c.id = b.plano
-				left Join carne_competenciaplano d on d.idplano = b.plano
-				where a.ultimomescarne = '".$mesano."' order by a.nometitular";
- */
+	$pcWhere = " where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' order by a.nometitular";
 
- 
+	if($_POST['filtro'] == 'Mes'){
+		$pcWhere = " where a.ultimomescarne ='".$mesano."' order by a.nometitular";
+	}
+
 	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
 				c.descricao, d.valor, d.valor_dependente, b.datacontrato
 				from carne_titular a
 				left Join carne_contratos b on b.idtitular = a.id
 				left Join carne_tipoplano c on c.id = b.plano
-				left Join carne_competenciaplano d on d.idplano = b.plano
-				where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' order by a.nometitular";
+				left Join carne_competenciaplano d on d.idplano = b.plano".$pcWhere;
 
 
 	$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
@@ -190,6 +210,7 @@ if(isset($_POST['mesano'])) {
 			$plano = $row['descricao'];
 			if(empty($row['descricao'])){
 				$plano = "FALTA INFORMAR PLANO NO CADASTRO";
+				$Checked='';
 			}
 
 			$datacontrato = date('d-m-Y', strtotime($row['datacontrato']));
