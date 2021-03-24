@@ -1,15 +1,15 @@
 <?php header ('Content-type: text/html; charset=ISO-8859-1'); 
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/04/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 
@@ -19,6 +19,9 @@
 	include ('../../includes/include_geral_II.inc.php');
 	include ('../../includes/classes/paging.class.php');
 	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -26,7 +29,7 @@
 ?>
 
 <head> 
-<title> Administração de Contratos </title> 
+<title> Administraï¿½ï¿½o de Contratos </title> 
 <style>
 
 body, table { 
@@ -100,7 +103,7 @@ function Limitedep(cod) {
 	    ajax = new XMLHttpRequest(); 
 	   } 
 	   catch(exc) { 
-	    alert("Esse browser não tem recursos para uso do Ajax"); 
+	    alert("Esse browser nï¿½o tem recursos para uso do Ajax"); 
 	    ajax = null; 
 	   } 
 	  } 
@@ -119,7 +122,7 @@ function Limitedep(cod) {
 	  
 	  //alert(ajax.readyState+' '+ajax.responseText+' '+ajax.status);
 	  
-	  //após ser processado - chama função processXML que vai varrer os dados 
+	  //apï¿½s ser processado - chama funï¿½ï¿½o processXML que vai varrer os dados 
 	 if(ajax.readyState == 4 ) { 
 		if(ajax.status==200){
 
@@ -132,7 +135,7 @@ function Limitedep(cod) {
 				redirect("incluirdependentes.php?action=incluir&cellStyle=true&cod="+cod);				
 			} else {
 				
-					alert('Quantidade máxima de '+npermitido+' Dependentes por Titular atingido.');
+					alert('Quantidade mï¿½xima de '+npermitido+' Dependentes por Titular atingido.');
 								
 				}
 				
@@ -140,7 +143,7 @@ function Limitedep(cod) {
 
 		}	
 		  else { 
-			   //caso não seja um arquivo XML emite a mensagem abaixo 
+			   //caso nï¿½o seja um arquivo XML emite a mensagem abaixo 
 			   mensagem( "Erro ao carregar" ); 
 			  } 
 	 } 
@@ -154,7 +157,7 @@ function Limitedep(cod) {
 	}
 	}//end function Dados 
 
-	//função responsável pelo nome dos elementos do form
+	//funï¿½ï¿½o responsï¿½vel pelo nome dos elementos do form
 	function gE(ID) {
 	return document.getElementById(ID);
 	}
@@ -194,7 +197,7 @@ print "</head>";
 
 print "<body onLoad=\"AlternarAbas('td_cadastro','div_cadastro')\">"; 
 
-print "<h2 align='left'><B><font size='4'>Administração de Contratos</font></B></h2>";
+print "<h2 align='left'><B><font size='4'>Administraï¿½ï¿½o de Contratos</font></B></h2>";
 print "<input type='text' name='titular' id='idtitular' value='".$_GET['cod']."' hidden='true'>";
 
 print "<table width='100%' height='480' cellspacing='0' cellpadding='0' 
@@ -227,7 +230,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 		if ((isset($_GET['action'])) && $_GET['action']=='incluirdependente') {
 
 			$query2 = "Update carne_dependente set idtitular=".$_GET['cod']." WHERE id='".$_GET['coddep']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -246,7 +249,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 		if ((isset($_GET['action'])) && $_GET['action']=='excluir') {
 
 			$query2 = "Update carne_dependente set idtitular=0 WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -271,13 +274,13 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 		print "<TABLE style='font-size:15px;' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
 		$query = "SELECT nometitular from carne_titular where id = ".$_GET['cod']."";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$rowTitular = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$rowTitular = mysqli_fetch_array($resultado);
 		
 		
 		$query = "SELECT d.id,d.nome,d.datanasc,p.descricao as parentesco from carne_dependente d Left Join carne_tipodependente p on p.id = d.parentesco where d.idtitular=".$_GET['cod']." order by d.nome desc";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -285,7 +288,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 		
 		$PAGE->execSQL();
 
-		// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+		// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 		$disabled = '';
 		$clasbutton = " class='button'";
 		
@@ -294,7 +297,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 		print "<td colspan='4'></td>";
 		print "<TD class='line'><a href='contratos.php'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD></TR>";
 				
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 			echo "<tr><td colspan='4' align='lefth'><a style='font-family:Tahoma; color:#1E90FF; font-weight:bold; text-decoration:underline; font-size:10pt;' onclick='Limitedep(".$_GET['cod'].")'>Incluir dependentes</td></tr>";
@@ -312,7 +315,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 				"</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -366,7 +369,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 		if ((isset($_GET['action'])) && $_GET['action']=='excluircontrato') {
 
 			$query2 = "delete from carne_contratos where id ='".$_GET['idcontrato']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -391,12 +394,12 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 		print "<TABLE style='font-size:15px;' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
 		$query = "SELECT nometitular from carne_titular where id = ".$_GET['cod']."";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$rowTitular = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$rowTitular = mysqli_fetch_array($resultado);
 		
 		$query = "SELECT c.id, c.nrocontrato, c.idtitular, c.datacontrato, c.plano, c.diavencto, c.status, c.registro, p.descricao from carne_contratos c Join carne_tipoplano p on p.id = c.plano where c.idtitular=".$_GET['cod']." order by p.descricao desc";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -410,7 +413,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 		print "<TD class='line'><a href='contratos.php'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD></TR>";
 
 		// Nenhum registro encontrado
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 			echo "<tr><td colspan='4' align='lefth'><a style='font-family:Tahoma; color:#1E90FF; font-weight:bold; text-decoration:underline; font-size:10pt;' href='incluircontrato.php?action=incluir&cellStyle=true&cod=".$_GET['cod']."');'>Incluir Contrato</td></tr>";			
@@ -425,10 +428,10 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
 			print "<TR class='header'><td class='line' width='10%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Data Contrato"."<td class='line' width='50%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."</TD>".
-				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CARTÃO"."</TD></tr>";
+				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CARTï¿½O"."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -456,7 +459,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 				if($_SESSION['modelocontrato'] == 1) {
 				
 				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacontrato.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Contrato"."'></a></td>";
-				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacartao.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Cartão Desconto"."'></a></td>";
+				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacartao.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Cartï¿½o Desconto"."'></a></td>";
 								
 				}
 
@@ -471,7 +474,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 				if($_SESSION['modelocontrato'] == 3) {
 				
 				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacontrato_3.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Contrato"."'></a></td>";
-				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacartao_3.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Cartão Desconto"."'></a></td>";
+				print "<td class='line' align='center'><a onClick=\"javascript:popup_doc('visualizacartao_3.php?popup=true&cod=".$row['idtitular']."')\"><img height='16' width='16' src='".ICONS_PATH."search.png' title='"."Visualizar Cartï¿½o Desconto"."'></a></td>";
 								
 				}
 				

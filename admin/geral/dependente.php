@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -18,7 +18,9 @@
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
 
-	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 ?>
 
 <!--
@@ -59,8 +61,8 @@
 	
 
 		$queryRR = "SELECT dtnascdepobriga FROM config";
-		$resultadoRR = mysql_query($queryRR) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$configuraRR = mysql_fetch_array($resultadoRR);
+		$resultadoRR = mysqli_query($conec->con,$queryRR) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$configuraRR = mysqli_fetch_array($resultadoRR);
 		$dtnascdepobriga = $configuraRR['dtnascdepobriga'];
 		
 	print "<BR><B><font size=4>"."Administra&ccedil;&atilde;o de Dependente"."</font></B><BR>";
@@ -78,8 +80,8 @@
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(id) as id FROM carne_dependente ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT d.*, t.nometitular FROM carne_dependente d left Join carne_titular t on t.id = d.idtitular";
@@ -99,20 +101,20 @@
 			$query.=" order by d.nome";
 		}
 		
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 		
 		if($registros==0) {
        		$query = "SELECT * FROM carne_dependente";
-			$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-			$registros = mysql_num_rows($resultado);
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+			$registros = mysqli_num_rows($resultado);
 		}
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
 		$PAGE->setSQL($query,(isset($_GET['FULL'])?$_GET['FULL']:0));
 
-	// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+	// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 	$disabled = '';
 	$clasbutton = " class='button'";
 		
@@ -131,7 +133,7 @@
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
 		"</td></tr>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -148,7 +150,7 @@
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -215,9 +217,9 @@
 		print "<select class='select2' name='parentesco' id='idparentesco' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Selecione Tipo Dependente"."</option>";
 					$sql="Select id,descricao from carne_tipodependente where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -264,7 +266,7 @@
 
 	if ((isset($_GET['action']) && $_GET['action']=="alter") && empty($_POST['submit'])) {
 
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Dependente"."</b></font><BR>";		
 
@@ -296,12 +298,12 @@
 		
 		print "<select class='select2' name='parentesco' id='parentesco'>";  
 		$sql="select id,nome,parentesco from carne_dependente where id =".$_GET['cod']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione Tipo Dependente"."</option>";
 				$sql="select id, descricao from carne_tipodependente where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['parentesco'] ) {
                             				print " selected";
@@ -367,7 +369,7 @@
 
 	} else
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['codigo'])) {
 				
 				$nascimento = Fdate($_POST['dtnasc']);
@@ -377,7 +379,7 @@
 	// Excluindo registro com Delete		
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 			$query2 = "DELETE FROM carne_dependente WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -412,8 +414,8 @@
 		$erro=false;
 
 		$qryl = "SELECT * FROM carne_dependente WHERE nome='".$_POST['nome']."'";
-		$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-		$linhas = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+		$linhas = mysqli_num_rows($resultado);
 
 		if ($linhas > 0)
 		{
@@ -432,7 +434,7 @@
 			$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,prontuario,nrocarteira,situacao,dtinativo,obs)".
 					" values ('".strtoupper($_POST['nome'])."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."',".$_POST['prontuario'].",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."')";
 						
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
 			{
 				$aviso = TRANS('ERR_INSERT');
@@ -469,7 +471,7 @@
 		
 		$query2 = "UPDATE carne_dependente SET nome='".strtoupper($_POST['nome'])."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$_POST['prontuario'].", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."' WHERE id=".$_POST['codigo']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 		if ($resultado2 == 0)
 		{
@@ -501,7 +503,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 
 function formatar(src, mask) 
@@ -536,7 +538,7 @@ if (d.value != ""){
 
 	if(nidade.value > 0) {
 		if(idadeatual > nidade.value) {
-			alert('Idade máxima para esse parentesco é de '+nidade.value+' anos. A idade atual é '+idadeatual);
+			alert('Idade mï¿½xima para esse parentesco ï¿½ de '+nidade.value+' anos. A idade atual ï¿½ '+idadeatual);
 			ndatanasc.value = '';
 		}
 	}
@@ -586,7 +588,7 @@ function Dados(parentesco) {
 	    ajax = new XMLHttpRequest(); 
 	   } 
 	   catch(exc) { 
-	    alert("Esse browser não tem recursos para uso do Ajax"); 
+	    alert("Esse browser nï¿½o tem recursos para uso do Ajax"); 
 	    ajax = null; 
 	   } 
 	  } 
@@ -606,7 +608,7 @@ function Dados(parentesco) {
 	  
 	  //alert(ajax.readyState+' '+ajax.responseText+' '+ajax.status);
 	  
-	  //após ser processado - chama função processXML que vai varrer os dados 
+	  //apï¿½s ser processado - chama funï¿½ï¿½o processXML que vai varrer os dados 
 	 if(ajax.readyState == 4 ) { 
 		if(ajax.status==200){
 
@@ -618,7 +620,7 @@ function Dados(parentesco) {
 			
 			}
 		  else { 
-			   //caso não seja um arquivo XML emite a mensagem abaixo 
+			   //caso nï¿½o seja um arquivo XML emite a mensagem abaixo 
 			   mensagem( "Erro ao carregar" ); 
 			  } 
 	 } 
@@ -632,7 +634,7 @@ function Dados(parentesco) {
 	}
 	}//end function Dados 
 
-	//função responsável pelo nome dos elementos do form
+	//funï¿½ï¿½o responsï¿½vel pelo nome dos elementos do form
 	function gE(ID) {
 	return document.getElementById(ID);
 	}

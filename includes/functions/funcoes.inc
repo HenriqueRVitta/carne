@@ -164,8 +164,8 @@
 	function conecta($host, $bd, $user, $senha, $sistema)
 	{
 		// $host = servidor do mysql, $bd = nome do banco de dados, $user = usuï¿½rio do mysql, $senha = senha dp mysql, $sistema = sistema que esta sendo usado
-		$conexao=mysql_connect($host,$user,$senha) or die(mysql_error());
-		$db=mysql_select_db($bd,$conexao);
+		$conexao=mysqli_connect($host,$user,$senha) or die(mysqli_error());
+		$db=mysqli_select_db($conexao,$bd);
 		if ($conexao == 0)
 		{
 			$retorno = "ERRO DE CONEXï¿½O - Servidor ".$host." - Sistema ".$sistema."<br>";
@@ -183,23 +183,26 @@
 	}
 
 	function desconecta($conexao){
-		mysql_close($conexao);
+		mysqli_close($conexao);
 	}
 
 	function senha_system($user,$password,$tabela,$local)
 	{
+		$conec = new conexao;
+		$conec->conecta('MYSQL');
+
 		// $user = usuÃ¡rio para login, $senha = senha do usuï¿½rio, $tabela = nome da tabela de usuï¿½rios
 		$localatua = $local;
 		$login = md5($password);
 		$query = "SELECT * from ".$tabela." where (nome = '".$user."' and senhaweb = '".$login."')";
 
-		$resultado = mysql_query($query) or die(mysql_error());
-		if ($resultado == 0)
+		$resultado = mysqli_query($conec->con,$query) or die(mysqli_error($conec->con));
+		if ($resultado->field_count == 0)
 		{
 			$retorno = "ERRO DE LOGIN - Tabela ".$tabela."<br>";
 		}
 		else
-		if (mysql_numrows($resultado) == 0)
+		if ($resultado->num_rows == 0)
 		{
 			$retorno = "ERRO DE LOGIN - UsuÃ¡rio ".$user."<br>";
 		}
@@ -208,7 +211,7 @@
 			$retorno = "ok";
 			
 			/*
-			$permissao = mysql_fetch_array($resultado);
+			$permissao = mysqli_fetch_array($resultado);
 
 			if($permissao['user_id'] > 1) {
 
@@ -232,16 +235,20 @@
 
 	function senha_ldap($user,$password,$tabela)
 	{
+
+		$conec = new conexao;
+		$conec->conecta('MYSQL');
+		
 		// $user = usuï¿½rio para login, $senha = senha do usuï¿½rio, $tabela = nome da tabela de usuï¿½rios
 		$login = md5($password);
 		$query = "SELECT * from $tabela where (nome = 'strtoupper($user)')";
-		$resultado = mysql_query($query) or die(mysql_error());
+		$resultado = mysqli_query($conec->con,$query) or die(mysqli_error($conec->con));
 		if ($resultado == 0)
 		{
 			$retorno = "ERRO DE LOGIN - Tabela $tabela<br>";
 		}
 		else
-		if (mysql_numrows($resultado) == 0)
+		if (mysqli_numrows($resultado) == 0)
 		{
 			$retorno = "ERRO DE LOGIN - Usuï¿½rio $user<br>";
 		}
@@ -373,14 +380,16 @@ function testaArea($area,$rowArea,$horarios){
 				exit;
 			}//if campos == headers
 
+			$conec = new conexao;
+			$conec->conecta('MYSQL');
 
-			$commit = mysql_query($sql);
-	        	$linhas = mysql_num_rows($commit);
+			$commit = mysqli_query($conec->con,$sql);
+	        	$linhas = mysqli_num_rows($commit);
 			$k=0;
 			$fields ="";
 			$total = "";
-			while($k < mysql_num_fields($commit)){ //quantidade de campos retornados da consulta
-				$field = mysql_fetch_field($commit,$k);//Retorna um objeto com informaï¿½ï¿½es dos campos
+			while($k < mysqli_num_fields($commit)){ //quantidade de campos retornados da consulta
+				$field = mysqli_fetch_field($commit,$k);//Retorna um objeto com informaï¿½ï¿½es dos campos
 				$fields.=$field->name; //Joga os nomes dos campos para uma string
 				$k++;
 			} // while
@@ -399,7 +408,7 @@ function testaArea($area,$rowArea,$horarios){
 					}//for
 					print "</tr>";
 					$l = 0; //variï¿½vel que controla se a linha ï¿½ par ou impar
-					while($row=mysql_fetch_array($commit)){
+					while($row=mysqli_fetch_array($commit)){
 						if ($l % 2) {
 							$par_impar = "_par";
 						} else {
@@ -438,7 +447,7 @@ function testaArea($area,$rowArea,$horarios){
 
 				if ($tipo==2) {//Outra formataï¿½ï¿½o para saï¿½da do relatï¿½rio//
 					print "<table class=\"relatorio_1\">";
-					while($row=mysql_fetch_array($commit)){
+					while($row=mysqli_fetch_array($commit)){
 						//print "<tr>";
 						for ($i=0; $i<count($campos); $i++){ //IMPRIME CAMPO A CAMPO
 							print "<tr>";
@@ -664,9 +673,14 @@ function FDate ($data){ //Retorna saï¿½da no formado AAAA-MM-DD HH:mm:SS
 		$Date = $DateParts[0];
 		if (isset($DateParts[1]))
 			$Time = $DateParts[1];
+		
+		$var1 = "#([0-9]{1,2})[/|-]([0-9]{1,2})[/|-]([0-9]{4}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})#";
+		$var2 = "#([0-9]{4})[/|-]([0-9]{1,2})[/|-]([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})#";
+		$sep = array();
 
 		//formato brasileiro com hora!!!
-		if (ereg ("([0-9]{1,2})[/|-]([0-9]{1,2})[/|-]([0-9]{4}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $Date." ".$Time, $sep)) {
+		//if (ereg ("([0-9]{1,2})[/|-]([0-9]{1,2})[/|-]([0-9]{4}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $Date." ".$Time, $sep)) {
+		if (preg_match($var1, $Date." ".$Time, $sep)) {			
 
 			$dia = $sep[1];
 			$mes = $sep[2];
@@ -676,7 +690,7 @@ function FDate ($data){ //Retorna saï¿½da no formado AAAA-MM-DD HH:mm:SS
 			$segundo = $sep[6];
 		} else
 			//formato americano com hora
-		if (ereg ("([0-9]{4})[/|-]([0-9]{1,2})[/|-]([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $Date." ".$Time, $sep)) {
+		if (preg_match($var2, $Date." ".$Time, $sep)) {
 			$dia = $sep[3];
 			$mes = $sep[2];
 			$ano = $sep[1];
@@ -1261,8 +1275,8 @@ function upload($img_file,$config, $FILE_TYPES="%%IMG%") {
 	function montaArray($mysql_result,$mysql_fetch_array){
 		$k=0;
 		$valores = array();
-		while($k < mysql_num_fields($mysql_result)){ //quantidade de campos retornados da consulta
-			$field = mysql_fetch_field($mysql_result,$k);//Retorna um objeto com informaï¿½ï¿½es dos campos
+		while($k < mysqli_num_fields($mysql_result)){ //quantidade de campos retornados da consulta
+			$field = mysqli_fetch_field($mysql_result,$k);//Retorna um objeto com informaï¿½ï¿½es dos campos
 			$valores[$field->name] = $mysql_fetch_array[$field->name];
 			$k++;
 		} // while
@@ -1678,17 +1692,18 @@ function grava_log($log_usu,$log_ope,$log_doc,$log_des,$log_dat,$log_hor,$log_mo
 
 	$Data = date("Y-m-d");
 
+		$conec = new conexao;
+		$conec->conecta('MYSQL');
+
 	 $pcStringSql = "select curtime() as hora";
-	 $resultado = mysql_query($pcStringSql) or die('Erro no Insert '.$query);
-	 $rowH = mysql_fetch_array($resultado);
+	 $resultado = mysqli_query($conec->con,$pcStringSql) or die('Erro no Insert '.$query);
+	 $rowH = mysqli_fetch_array($resultado);
 	 $hora = substr($rowH['hora'],0,5);
 	 
 	 $pcStringSql = "insert into auditoria (data, hora, usuario, operacao, documento, descricao, modulo, detalhes) values".
 	 "('".$Data."','".$hora."',".$_SESSION['s_uid'].",".$_SESSION['s_codoperacao'].",'".$log_doc."','".$log_des."','S','MODULO CARNE')";
 
-	 $resultado = mysql_query($pcStringSql) or die('Erro no Insert '.$query);
-
- 	 // gravaemarquivo($pcStringSql);
+	 $resultado = mysqli_query($conec->con,$pcStringSql) or die('Erro no Insert '.$query);
  	 
 }
 

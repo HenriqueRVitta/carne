@@ -7,7 +7,10 @@
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
 
-$idTitular = 0;
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
+	$idTitular = 0;
 
 if(isset($_GET['cod'])) {
 	$arr = array(0 => $_GET['cod']);
@@ -47,7 +50,7 @@ foreach ($arr as &$value) {
 	
 	// Gravando data da emissao do Cartao
 	$queryloteRps = "Update carne_titular set cartaoemitido = '".date('Y-m-d h:i:s')."', cartaoemitidopor = '".$_SESSION['s_usuario']."' where id = ".$idTitular."";
-	$resultadoLoteRps = mysql_query($queryloteRps) or die('ERRO NA QUERY !'.$queryloteRps);
+	$resultadoLoteRps = mysqli_query($conec->con,$queryloteRps) or die('ERRO NA QUERY !'.$queryloteRps);
 	
 	$query = "SELECT a.*, b.descricao, b.formapagto, c.valor, d.datacontrato, d.diavencto, d.nrocontrato, d.plano ".
 			 "FROM carne_titular a Join carne_contratos d ".
@@ -57,8 +60,8 @@ foreach ($arr as &$value) {
 			"where a.id =".$idTitular."";
 			
 			
-	$resultado = mysql_query($query) or die("ERRO na Query ".$query);
-	$row = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die("ERRO na Query ".$query);
+	$row = mysqli_fetch_array($resultado);
 	$dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));
 	$dtnascimento = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
 ?>	
@@ -101,9 +104,9 @@ foreach ($arr as &$value) {
 
 	// Seleciono aqui os dependentes do titular
     $queryDep = "select a.nome,b.descricao from carne_dependente a left join carne_tipodependente b on b.id = a.parentesco where a.idtitular = ".$idTitular."";
-    $resuldep = mysql_query($queryDep) or die('ERRO NA QUERY !'.$query);
+    $resuldep = mysqli_query($conec->con,$queryDep) or die('ERRO NA QUERY !'.$query);
 	$x=0;
-	while($rowDep = mysql_fetch_array($resuldep)) {
+	while($rowDep = mysqli_fetch_array($resuldep)) {
 
 	?>
 	

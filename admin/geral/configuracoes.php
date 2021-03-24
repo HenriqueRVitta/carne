@@ -1,16 +1,16 @@
 <?php 
 header ('Content-type: text/html; charset=ISO-8859-1');
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -18,6 +18,9 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -49,12 +52,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT tm_color_topo, tm_color_td, tm_color_body from styles";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$style = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$style = mysqli_fetch_array($resultado);
        	
        	$query = "SELECT prox_cartao_desc, prox_contrato, dtvencontrato, qtdepagtocaren, nromaxdepend, modelomenu, vlrbasecarne, contrato, ctacaixa, ctacontabil, centrocusto, historicopadrao, codcliente, modelocarne, modelocontrato, dtnascdepobriga, mesesematraso FROM config";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$config = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$config = mysqli_fetch_array($resultado);
 		
 		if(empty($config['prox_cartao_desc'])) { $ready1 = ""; } else { $ready1 = "readonly=\'true\'"; } 
 		if(empty($config['prox_contrato'])) { $ready2 = ""; } else { $ready2 = "readonly=true"; } 
@@ -69,7 +72,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='prox_contrato' maxlength='6' id='idprox_contrato' value='".strzero($config['prox_contrato'],6)."'".$ready2."></td>";
 		print "</TR><TR>";		
 		$dtcontrato = str_replace('/','',substr(converte_datacomhora($config['dtvencontrato']),0,10));
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Data Padrão Vencto Contrato/Carn&ecirc;".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Data Padrï¿½o Vencto Contrato/Carn&ecirc;".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtvencontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='iddtvencontrato' onBlur='return doDateVenc(this.id,this.value, 4)' value='".mask($dtcontrato,'##/##/####')."'></td>";
 		print "</TR><TR>";
 		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Qtde Pagto para Car&ecirc;ncia Contrato/Carn&ecirc;".":</TD>";
@@ -155,7 +158,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if($config['modelocarne']=='4'){ $selected4 = " selected"; } else { $selected4 = "";}
 		if($config['modelocarne']=='5'){ $selected5 = " selected"; } else { $selected5 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Modelo do Carnê".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Modelo do Carnï¿½".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='modelocarne' id='idmodelocarne'>";  
 		print "<option value='1'".$selected1.">Modelo 01</option>";  
@@ -215,7 +218,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 					
 		$query2 = "UPDATE styles SET tm_color_topo='".$_POST['tm_color_topo']."', tm_color_td='".$_POST['tm_color_td']."', tm_color_body='".$_POST['tm_color_body']."'";
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 		if ($resultado2 == 0)
 		{
@@ -226,7 +229,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 			$aviso =  TRANS('OK_EDIT');
 			
 			$query2 	= "UPDATE config SET prox_cartao_desc='".$_POST['prox_cartao_desc']."', prox_contrato='".$_POST['prox_contrato']."', dtvencontrato='".$dtvencto."', qtdepagtocaren=".$_POST['qtdepagtocaren'].", nromaxdepend='".$_POST['nromaxdepend']."', modelomenu='".$_POST['modelomenu']."', vlrbasecarne=".$_POST['vlrbasecarne'].", contrato='".$_POST['contrato']."', ctacaixa=".$_POST['ctacaixa'].", ctacontabil=".$_POST['ctacontabil'].", centrocusto=".$_POST['centrocusto'].", historicopadrao=".$_POST['historicopadrao'].", codcliente=".$_POST['codcliente'].", modelocarne=".$_POST['modelocarne'].", modelocontrato =".$_POST['modelocontrato'].", dtnascdepobriga=".$_POST['dtnascdepobriga'].", mesesematraso=".$_POST['mesesematraso']."";
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 			$_SESSION['s_modelomenu'] = $_POST['modelomenu'];
 			$_SESSION['ctacaixa'] = $_POST['ctacaixa'];
 			$_SESSION['ctacontabil'] = $_POST['ctacontabil'];
@@ -254,7 +257,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {
@@ -304,7 +307,7 @@ return false;
 	function valida(){
 		var ok = validaForm('idcodigo','','Cï¿½digo',1);
 		if (ok) var ok = validaForm('iddtvencontrato','','Data Vento Contrato',1);
-		if (ok) var ok = validaForm('idnromaxdepend','','Nro máximo dependentes',1);		
+		if (ok) var ok = validaForm('idnromaxdepend','','Nro mï¿½ximo dependentes',1);		
 
 		return ok;
 	}

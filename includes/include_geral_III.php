@@ -26,18 +26,18 @@
 
 	if (isset($_SESSION['s_uid'])) {
 		$qry = "SELECT * FROM temas t, uthemes u  WHERE u.uth_uid = ".$_SESSION['s_uid']." and t.tm_id = u.uth_thid";
-		$exec = mysql_query($qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÃ‡Ã•ES DO TEMA!<BR>'.$qry);
-		$row = mysql_fetch_array($exec);
-		$regs = mysql_num_rows($exec);
+		$exec = mysqli_query($conec->con,$qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÃ‡Ã•ES DO TEMA!<BR>'.$qry);
+		$row = mysqli_fetch_array($exec);
+		$regs = mysqli_num_rows($exec);
 		if ($regs==0){ //SE NÃƒO ENCONTROU TEMA ESPECÃ�FICO PARA O USUÃ�RIO
 			$qry = "SELECT * FROM styles";
-			$exec = mysql_query($qry);
-			$row = mysql_fetch_array($exec);
+			$exec = mysqli_query($conec->con,$qry);
+			$row = mysqli_fetch_array($exec);
 		}
 	} else {
 		$qry = "SELECT * FROM styles";
-		$exec = mysql_query($qry);
-		$row = mysql_fetch_array($exec);
+		$exec = mysqli_query($conec->con,$qry);
+		$row = mysqli_fetch_array($exec);
 	}
 
 

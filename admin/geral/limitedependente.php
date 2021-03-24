@@ -16,12 +16,12 @@ $conec->conecta('MYSQL') ;
 $cod = $_GET["cod"]; 
   
 $sqlQuery = "select nromaxdepend from config";
-$executa=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
-$config=mysql_fetch_array($executa);
+$executa=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
+$config=mysqli_fetch_array($executa);
 
 $sqlQuery = "SELECT count(*) as qtde FROM carne_dependente where idtitular ='".$cod."'";
-$executa=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
-$depend=mysql_fetch_array($executa);
+$executa=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
+$depend=mysqli_fetch_array($executa);
 
 $retorno = 'true';
 

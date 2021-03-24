@@ -1,16 +1,16 @@
 <?php 
 header ('Content-type: text/html; charset=ISO-8859-1');
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -18,6 +18,9 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -49,12 +52,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT tm_color_topo, tm_color_td, tm_color_body from styles";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$style = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$style = mysqli_fetch_array($resultado);
        	
 		$query = "SELECT nfseprefeitura, percentualfiltro, cnpj, im, tiporps, naturezaoperacao, regimetributa, optantesimples, incentivadorcultural, codservico, codigocnae, codtribmun, codmunicipiotrib, retemiss, aliquota, tipoambiente FROM config";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$config = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$config = mysqli_fetch_array($resultado);
 		
 		if(empty($config['prox_cartao_desc'])) { $ready1 = ""; } else { $ready1 = "readonly=\'true\'"; } 
 		if(empty($config['prox_contrato'])) { $ready2 = ""; } else { $ready2 = "readonly=true"; } 
@@ -71,8 +74,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo de Ambiente".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='tipoambiente' id='idtipoambiente'>";  
-		print "<option value='1'".$selected1.">Produção</option>";
-		print "<option value='2'".$selected2.">Homologação</option>";  
+		print "<option value='1'".$selected1.">Produï¿½ï¿½o</option>";
+		print "<option value='2'".$selected2.">Homologaï¿½ï¿½o</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -98,8 +101,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text2' name='cnpj' maxlength='14' id='idcnpj' value='".$config['cnpj']."'"."></td>";
 		print "</TR><TR>";		
 
-		// Inscrição Municipal
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Inscrição Municipal do Emitente".":</TD>";
+		// Inscriï¿½ï¿½o Municipal
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Inscriï¿½ï¿½o Municipal do Emitente".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='im' class='text4' id='idim' maxlength='45' value='".$config['im']."'></td>";
 		print "</TR><TR>";
 
@@ -118,7 +121,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "</TR><TR>";
 
 		
-		// Código de natureza da operação 
+		// Cï¿½digo de natureza da operaï¿½ï¿½o 
 		if($config['naturezaoperacao']=='1'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($config['naturezaoperacao']=='2'){ $selected2 = " selected"; } else { $selected2 = "";}
 		if($config['naturezaoperacao']=='3'){ $selected3 = " selected"; } else { $selected3 = "";}
@@ -126,26 +129,26 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if($config['naturezaoperacao']=='5'){ $selected5 = " selected"; } else { $selected5 = "";}
 		if($config['naturezaoperacao']=='6'){ $selected6 = " selected"; } else { $selected6 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Natureza da Operação".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Natureza da Operaï¿½ï¿½o".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='naturezaoperacao' id='idnaturezaoperacao'>";  
-		print "<option value='1'".$selected1.">Tributação no município</option>";  
-		print "<option value='2'".$selected2.">Tributação fora do município</option>";  
-		print "<option value='3'".$selected3.">Isenção</option>";  
+		print "<option value='1'".$selected1.">Tributaï¿½ï¿½o no municï¿½pio</option>";  
+		print "<option value='2'".$selected2.">Tributaï¿½ï¿½o fora do municï¿½pio</option>";  
+		print "<option value='3'".$selected3.">Isenï¿½ï¿½o</option>";  
 		print "<option value='4'".$selected4.">Imune</option>";  
-		print "<option value='5'".$selected5.">Exigibilidade suspensa por decisão judicial</option>";  
+		print "<option value='5'".$selected5.">Exigibilidade suspensa por decisï¿½o judicial</option>";  
 		print "<option value='6'".$selected6."> Exigibilidade suspensa por procedimento administrativo</option>";  
 		
 		print "</select>";
 		print "</TR><TR>";
 
-		// Código de identificação do regime especial de tributação 
+		// Cï¿½digo de identificaï¿½ï¿½o do regime especial de tributaï¿½ï¿½o 
 		if($config['regimetributa']=='1'){ $selected_1 = " selected"; } else { $selected_1 = "";}
 		if($config['regimetributa']=='2'){ $selected_2 = " selected"; } else { $selected_2 = "";}
 		if($config['regimetributa']=='3'){ $selected_3 = " selected"; } else { $selected_3 = "";}
 		if($config['regimetributa']=='4'){ $selected_4 = " selected"; } else { $selected_4 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Regime Especial de tributação".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Regime Especial de tributaï¿½ï¿½o".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='regimetributa' id='idregimetributa'>";  
 		print "<option value='1'".$selected_1.">Microempresa municipal</option>";  
@@ -163,7 +166,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='optantesimples' id='idoptantesimples'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">Não</option>";  
+		print "<option value='2'".$selected_2.">Nï¿½o</option>";  
 		print "</select>";
 		print "</TR><TR>";
 
@@ -176,7 +179,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='incentivadorcultural' id='idincentivadorcultural'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">Não</option>";  
+		print "<option value='2'".$selected_2.">Nï¿½o</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -189,7 +192,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='retemiss' id='idretemiss'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">Não</option>";  
+		print "<option value='2'".$selected_2.">Nï¿½o</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -200,18 +203,18 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "</TR><TR>";
 		
 		
-		// Código de identificação do município conforme Tabela do IBGE  
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Código Municíptio IBGE".":</TD>";
+		// Cï¿½digo de identificaï¿½ï¿½o do municï¿½pio conforme Tabela do IBGE  
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Cï¿½digo Municï¿½ptio IBGE".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codtribmun' maxlength='7' class='text4' id='codtribmun' value='".$config['codtribmun']."'></td>";
 		print "</TR><TR>";
 		
-		// Código CNAE - Código Nacional Atividade Econômica Principal
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Código CNAE - Código Nacional Atividade Econômica".":</TD>";
+		// Cï¿½digo CNAE - Cï¿½digo Nacional Atividade Econï¿½mica Principal
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Cï¿½digo CNAE - Cï¿½digo Nacional Atividade Econï¿½mica".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigocnae' maxlength='45' class='text4' id='idcodigocnae' value='".$config['codigocnae']."'></td>";
 		print "</TR><TR>";
 		
-		// Código de item da lista de serviço  
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Código Item Serviço".":</TD>";
+		// Cï¿½digo de item da lista de serviï¿½o  
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Cï¿½digo Item Serviï¿½o".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codservico' maxlength='45' class='text4' id='idcodservico' value='".$config['codservico']."'></td>";
 		print "</TR><TR>";
 
@@ -251,7 +254,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 			", tipoambiente=".$_POST['tipoambiente'].
 			", codtribmun='".$_POST['codtribmun']."'";			
 						
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 			$_SESSION['percentualfiltro'] = $_POST['percentualfiltro'];			
 			$_SESSION['nfseprefeitura'] = $_POST['nfseprefeitura'];
@@ -283,7 +286,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 
 <script type="text/javascript">
 
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

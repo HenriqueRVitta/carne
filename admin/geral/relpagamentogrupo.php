@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/02/2015 09:55
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos Analítico do Cadastro de Titular
+		Relatï¿½rio dos Analï¿½tico do Cadastro de Titular
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -26,7 +26,9 @@ ini_set("memory_limit","64M");
 
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
-
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 
 	$dtinicial = '1900-01-01';	
@@ -72,13 +74,7 @@ ini_set("memory_limit","64M");
 		
 	$pcordem	= " order by c.nometitular";
 
-	/* comentado temporariamente em 11/03/2015
-	// Faço aqui atualização da coluna qtdefilhos da tabela carne_titular
-	$query = "update carne_titular set qtdefilhos = (select count(*) from carne_dependente where idtitular = carne_titular.id)";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	*/
-	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
 	$query = "SELECT c.id, c.nometitular, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datanasc, 
 	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
 	d.compet_ini, d.compet_fim FROM carne_titular c
@@ -91,7 +87,7 @@ ini_set("memory_limit","64M");
     //print_r($_POST);
     //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table style='font-family: serif; font-size: 9pt; color: #000088;' width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
@@ -102,13 +98,13 @@ ini_set("memory_limit","64M");
 	<th scope='col' align='center'>Vlr Plano</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$inativos = 0;
 	$geral = 0;
 	$vlrtotal = 0;
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
     		
 		$dtreg = str_replace('/','',substr(converte_datacomhora($_POST['datapagto']),0,10));
 		
@@ -126,12 +122,12 @@ ini_set("memory_limit","64M");
 		$vlrtotal+=$row['valor'];
 
 		$queryDelPagto = "delete from carne_pagamentos where nrocarne =".$row['nrocarne']." and mesano=".$lnCompet."";
-	    $resultadoPagto = mysql_query($queryDelPagto) or die('ERRO NA QUERY !'.$queryDelPagto);
+	    $resultadoPagto = mysqli_query($conec->con,$queryDelPagto) or die('ERRO NA QUERY !'.$queryDelPagto);
 
 	    if($_POST['excluir']==1) {
 		$queryDelPagto = "INSERT INTO carne_pagamentos (idcliente,nrocarne,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario)".
 					" values (".$row['id'].",".$row['nrocarne'].",".$lnCompet.",'".$dtinicial."',".$_POST['localpagto'].",".$row['valor'].",".$row['valor'].",".$row['percdesc'].",".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";		
-	    $resultadoPagto = mysql_query($queryDelPagto) or die('ERRO NA QUERY !'.$queryDelPagto);
+	    $resultadoPagto = mysqli_query($conec->con,$queryDelPagto) or die('ERRO NA QUERY !'.$queryDelPagto);
 	    }	    
 		$i++;		
 		

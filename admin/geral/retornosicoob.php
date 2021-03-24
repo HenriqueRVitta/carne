@@ -1,10 +1,10 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/11/2017 15:17 
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
 		Processa Retorno Bancario
 
@@ -18,7 +18,7 @@ session_start();
 	$Banco = $_POST['banco'];
 	
        	
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -31,14 +31,17 @@ include ("../../includes/include_geral.inc.php");
 
 include ("../../includes/include_geral_II.inc.php");
 
+$conec = new conexao;
+$conec->conecta('MYSQL');
+
 $lcNomeArquivo = "";
 
 
 $query = "SELECT idretornobanco,localpagto FROM carne_bancos where id ='".$Banco."'";
-$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
+$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
 // 1 = ID Retorno Codigo/carne_titular.ID
 // 2 = Nro Contrato carne_titular.nrocarne
-$retornobanco = mysql_fetch_array($resultado);
+$retornobanco = mysqli_fetch_array($resultado);
 $idretornobanco = $retornobanco['idretornobanco'];
 $localpagto = $retornobanco['localpagto'];
 
@@ -46,54 +49,54 @@ $localpagto = $retornobanco['localpagto'];
 // Pasta onde o arquivo vai ser salvo
 $_UP['pasta'] = '../uploads/';
 
-// Tamanho máximo do arquivo (em Bytes)
+// Tamanho mï¿½ximo do arquivo (em Bytes)
 $_UP['tamanho'] = 1024 * 1024 * 2; // 2Mb
 
-// Array com as extensões permitidas
+// Array com as extensï¿½es permitidas
 $_UP['extensoes'] = array('txt', 'ret');
 
-// Renomeia o arquivo? (Se true, o arquivo será salvo como .jpg e um nome único)
+// Renomeia o arquivo? (Se true, o arquivo serï¿½ salvo como .jpg e um nome ï¿½nico)
 $_UP['renomeia'] = false;
 
 // Array com os tipos de erros de upload do PHP
-$_UP['erros'][0] = 'Não houve erro';
-$_UP['erros'][1] = 'O arquivo no upload é maior do que o limite do PHP';
+$_UP['erros'][0] = 'Nï¿½o houve erro';
+$_UP['erros'][1] = 'O arquivo no upload ï¿½ maior do que o limite do PHP';
 $_UP['erros'][2] = 'O arquivo ultrapassa o limite de tamanho especifiado no HTML';
 $_UP['erros'][3] = 'O upload do arquivo foi feito parcialmente';
-$_UP['erros'][4] = 'Não foi feito o upload do arquivo';
+$_UP['erros'][4] = 'Nï¿½o foi feito o upload do arquivo';
 
 // Verifica se houve algum erro com o upload. Se sim, exibe a mensagem do erro
 if ($_FILES['arquivo']['error'] != 0) {
-  die("Não foi possível fazer o upload, erro:" . $_UP['erros'][$_FILES['arquivo']['error']]);
-  exit; // Para a execução do script
+  die("Nï¿½o foi possï¿½vel fazer o upload, erro:" . $_UP['erros'][$_FILES['arquivo']['error']]);
+  exit; // Para a execuï¿½ï¿½o do script
 }
 
-// Caso script chegue a esse ponto, não houve erro com o upload e o PHP pode continuar
-// Faz a verificação da extensão do arquivo
+// Caso script chegue a esse ponto, nï¿½o houve erro com o upload e o PHP pode continuar
+// Faz a verificaï¿½ï¿½o da extensï¿½o do arquivo
 $extensao = strtolower(end(explode('.', $_FILES['arquivo']['name'])));
 
 if (array_search($extensao, $_UP['extensoes']) === false) {
-  echo "Por favor, envie arquivos com as seguintes extensões: txt ou ret";
+  echo "Por favor, envie arquivos com as seguintes extensï¿½es: txt ou ret";
   exit;
 }
 
-// Faz a verificação do tamanho do arquivo
+// Faz a verificaï¿½ï¿½o do tamanho do arquivo
 if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
-  echo "O arquivo enviado é muito grande, envie arquivos de até 2Mb.";
+  echo "O arquivo enviado ï¿½ muito grande, envie arquivos de atï¿½ 2Mb.";
   exit;
 }
 
-// O arquivo passou em todas as verificações, hora de tentar movê-lo para a pasta
+// O arquivo passou em todas as verificaï¿½ï¿½es, hora de tentar movï¿½-lo para a pasta
 // Primeiro verifica se deve trocar o nome do arquivo
 if ($_UP['renomeia'] == true) {
-  // Cria um nome baseado no UNIX TIMESTAMP atual e com extensão .txt
+  // Cria um nome baseado no UNIX TIMESTAMP atual e com extensï¿½o .txt
   $nome_final = md5(time()).'.txt';
 } else {
-  // Mantém o nome original do arquivo
+  // Mantï¿½m o nome original do arquivo
   $nome_final = $_FILES['arquivo']['name'];
 }
   
-// Depois verifica se é possível mover o arquivo para a pasta escolhida
+// Depois verifica se ï¿½ possï¿½vel mover o arquivo para a pasta escolhida
 if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
   // Upload efetuado com sucesso, exibe uma mensagem e um link para o arquivo
 
@@ -129,42 +132,42 @@ if (!empty($_FILES['arquivo']))
             }
 			/* Codigo do Movimento bancario
 			Comando/Movimento:
-			02 = Confirmação Entrada Título;
-			05 = Liquidação Sem Registro: Identifica a liquidação de título da modalidade "SEM REGISTRO";
-			06 = Liquidação Normal: Identificar a liquidação de título de modalidade "REGISTRADA", com exceção dos títulos que forem liquidados em cartório (Cód. de movimento 15=Liquidação em Cartório);
-			09 = Baixa de Titulo: Identificar as baixas de títulos, com exceção da baixa realizada com o cód. de movimento 10 (Baixa - Pedido Beneficiário);
-			10 = Baixa Solicitada (Baixa - Pedido Beneficiário): Identificar as baixas de títulos comandadas a pedido do Beneficiário;
-			11 = Títulos em Ser: Identifica os títulos em carteira, que estiverem com a situação "em abarto" (vencidos e a vencer).
-			14 = Alteração de Vencimento;
-			15 = Liquidação em Cartório: Identifica as liquidações dos títulos ocorridas em cartórios de protesto;
-			23 = Encaminhado a Protesto: Identifica o recebimento da instrução de protesto
-			27 = Confirmação Alteração Dados.
-			48 = Confirmação de instrução de transferência de carteira/modalidade de cobrança
+			02 = Confirmaï¿½ï¿½o Entrada Tï¿½tulo;
+			05 = Liquidaï¿½ï¿½o Sem Registro: Identifica a liquidaï¿½ï¿½o de tï¿½tulo da modalidade "SEM REGISTRO";
+			06 = Liquidaï¿½ï¿½o Normal: Identificar a liquidaï¿½ï¿½o de tï¿½tulo de modalidade "REGISTRADA", com exceï¿½ï¿½o dos tï¿½tulos que forem liquidados em cartï¿½rio (Cï¿½d. de movimento 15=Liquidaï¿½ï¿½o em Cartï¿½rio);
+			09 = Baixa de Titulo: Identificar as baixas de tï¿½tulos, com exceï¿½ï¿½o da baixa realizada com o cï¿½d. de movimento 10 (Baixa - Pedido Beneficiï¿½rio);
+			10 = Baixa Solicitada (Baixa - Pedido Beneficiï¿½rio): Identificar as baixas de tï¿½tulos comandadas a pedido do Beneficiï¿½rio;
+			11 = Tï¿½tulos em Ser: Identifica os tï¿½tulos em carteira, que estiverem com a situaï¿½ï¿½o "em abarto" (vencidos e a vencer).
+			14 = Alteraï¿½ï¿½o de Vencimento;
+			15 = Liquidaï¿½ï¿½o em Cartï¿½rio: Identifica as liquidaï¿½ï¿½es dos tï¿½tulos ocorridas em cartï¿½rios de protesto;
+			23 = Encaminhado a Protesto: Identifica o recebimento da instruï¿½ï¿½o de protesto
+			27 = Confirmaï¿½ï¿½o Alteraï¿½ï¿½o Dados.
+			48 = Confirmaï¿½ï¿½o de instruï¿½ï¿½o de transferï¿½ncia de carteira/modalidade de cobranï¿½a
 			*/
             
             $codigomovimento = trim(substr($linha, 108, 2));
             $processa = false;
             
 	        switch ($codigomovimento) {
-		    case 02: // Entrada Confirmada (verificar motivo na posição 319 a 328 )
+		    case 02: // Entrada Confirmada (verificar motivo na posiï¿½ï¿½o 319 a 328 )
 		        $processa = true;
 		        break;
-		    case 03: // Entrada Rejeitada ( verificar motivo na posição 319 a 328)
+		    case 03: // Entrada Rejeitada ( verificar motivo na posiï¿½ï¿½o 319 a 328)
 		        $processa = true;
 		        break;
 		    case 05:
 		        $processa = true;
 		        break;
-		    case 06: // Liquidação normal (sem motivo)
+		    case 06: // Liquidaï¿½ï¿½o normal (sem motivo)
 		        $processa = true;
 		        break;
-		    case 15: // Liquidação em Cartório (sem motivo)
+		    case 15: // Liquidaï¿½ï¿½o em Cartï¿½rio (sem motivo)
 		        $processa = true;
 		        break;
-	        case 09: // Baixado Automat. via Arquivo (verificar motivo posição 319 a 328)
+	        case 09: // Baixado Automat. via Arquivo (verificar motivo posiï¿½ï¿½o 319 a 328)
 		        $processa = true;
 		        break;
-	        case 10: // Baixado conforme instruções da Agência(verificar motivo pos.319 a 328)
+	        case 10: // Baixado conforme instruï¿½ï¿½es da Agï¿½ncia(verificar motivo pos.319 a 328)
 		        $processa = true;
 		        break;
 		}
@@ -189,7 +192,7 @@ if (!empty($_FILES['arquivo']))
 				// Apago no arquivo retorno todos os registro da data de pagamento
             	if($dataprocesso == '1900-01-01 00:00:00') {
             		$querydelete = "delete from retornobanco where datapagto='".$datapagto."'";
-					$resultadoDel = mysql_query($querydelete) or die('Erro na Query :'.$querydelete);
+					$resultadoDel = mysqli_query($conec->con,$querydelete) or die('Erro na Query :'.$querydelete);
 					$dataprocesso = $datapagto;
             	}
 
@@ -208,19 +211,19 @@ if (!empty($_FILES['arquivo']))
 					
 				}
             	
-				$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-				$linhas = mysql_num_rows($resultado);
+				$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+				$linhas = mysqli_num_rows($resultado);
 
 				if ($linhas > 0)
 				{
-					while ($row = mysql_fetch_array($resultado)) {
+					while ($row = mysqli_fetch_array($resultado)) {
 						
 					$idcliente = $row['id']; 
 						
 						// Verifico se ja foi registrado o pagamento
 						$query = "SELECT databaixa FROM carne_pagamentos WHERE idcliente='".$idcliente."' and databaixa ='".$datapagto."' and localpagto = ".$localpagto." and nrotitulobanco = '".$nrotitulobanco."'";
-						$pagtos = mysql_query($query) or die('Erro na Query :'.$query);
-						$registro = mysql_num_rows($pagtos);
+						$pagtos = mysqli_query($conec->con,$query) or die('Erro na Query :'.$query);
+						$registro = mysqli_num_rows($pagtos);
 						
 						IF($registro>0) {
 							
@@ -232,7 +235,7 @@ if (!empty($_FILES['arquivo']))
 							
 							$insert = "insert into carne_pagamentos (idcliente,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,nrotitulobanco) ".
 							"values (".$idcliente.",'".$mesano."','".$datapagto."',".$localpagto.",".$valor.",".$valor.",".$multa.",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",'".$nrotitulobanco."')";
-							$registrapagtos = mysql_query($insert) or die('Erro na Query :'.$insert);
+							$registrapagtos = mysqli_query($conec->con,$insert) or die('Erro na Query :'.$insert);
 							
 							$nfse = 0;
 							if(!empty($_SESSION['nfseprefeitura'])){
@@ -241,7 +244,7 @@ if (!empty($_FILES['arquivo']))
 							
 							// Gravo no arquivo de Retorno do Banco
 							$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco,nfse) "." values (".$idcliente.",'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."',".$nfse.")";
-							$registrapagtos = mysql_query($insertretorno) or die('Erro na Query :'.$insertretorno);
+							$registrapagtos = mysqli_query($conec->con,$insertretorno) or die('Erro na Query :'.$insertretorno);
 							
 						}
 						
@@ -253,7 +256,7 @@ if (!empty($_FILES['arquivo']))
 					// Quando nao localiza o CPF ou CNPJ informado no arquivo retorno
 					$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco) ".
 					"values (0,'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."')";
-					$registrapagtos = mysql_query($insertretorno) or die('Erro na Query :'.$insertretorno);
+					$registrapagtos = mysqli_query($conec->con,$insertretorno) or die('Erro na Query :'.$insertretorno);
 					
 				}
             	
@@ -266,8 +269,8 @@ if (!empty($_FILES['arquivo']))
 
     
 } else {
-  // Não foi possível fazer o upload, provavelmente a pasta está incorreta
-  echo "Não foi possível enviar o arquivo, tente novamente";
+  // Nï¿½o foi possï¿½vel fazer o upload, provavelmente a pasta estï¿½ incorreta
+  echo "Nï¿½o foi possï¿½vel enviar o arquivo, tente novamente";
   exit;
   
 }
@@ -294,8 +297,8 @@ if (!empty($_FILES['arquivo']))
 	
 
 	$sql="SELECT nome FROM usuarios where codigo = ".$_SESSION['s_coduser']." ";
-	$commit = mysql_query($sql);
-	$row = mysql_fetch_array($commit);
+	$commit = mysqli_query($conec->con,$sql);
+	$row = mysqli_fetch_array($commit);
 	
 	$lcBorda.="<td align='right'>Usu&aacute;rio:</TD>
 	<td align='left'>".retira_acentos_UTF8($row['nome'])."</TD>";
@@ -309,7 +312,7 @@ if (!empty($_FILES['arquivo']))
 	// Fim Dados Cabecalho
 		
      
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1' align='center'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
@@ -328,11 +331,11 @@ left join usuarios u on u.codigo = r.usuario
 where r.datapagto = '".$datapagto."' order by historico,nometitular";
 
 	
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		$dtpagto = str_replace('/','',substr(converte_datacomhora($row['r.datapagto']),0,10));
 
@@ -376,7 +379,7 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
 
 	
 	$query = "select historico,count(*) as qtde,sum(valor) as total from retornobanco where datapagto = '".$datapagto."' group by historico";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 
     $lcString.= "<br><table width='100%' border='0'>
   	<tr>
@@ -384,7 +387,7 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
     </tr>
   	<tr>";
     
-    while($row = mysql_fetch_array($resultado)){
+    while($row = mysqli_fetch_array($resultado)){
     $lcString.="<td align='right'>".$row['historico']."</td>
     <td align='right'> Qtde: ".$row['qtde']."</td>
     <td align='right'> Total: ".$row['total']."</td><tr>";

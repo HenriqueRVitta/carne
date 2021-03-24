@@ -1,18 +1,20 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/02/2015 09:32
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos Cadastros do Sistema
+		Relatï¿½rio dos Cadastros do Sistema
 */
 	session_start();
 	
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -47,9 +49,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Selecione Local Pagamento"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						$selected = "";
 						
@@ -66,10 +68,10 @@
 		print "<select class='select2' name='grupo' id='idgrupo'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,descricao from carne_grupo order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						print "<option value=".$row['id'].$selected.">".$row['descricao']."</option>";
 						$i++;
@@ -97,7 +99,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

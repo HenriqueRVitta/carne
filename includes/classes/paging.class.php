@@ -1,5 +1,5 @@
 <?php 
- /*                        Copyright 2005 Flávio Ribeiro
+ /*                        Copyright 2005 Flï¿½vio Ribeiro
 
          This file is part of OCOMON.
 
@@ -20,8 +20,8 @@
 /**
  * Paging - PHP-MySQL paging results class
  * @package Ocomon
- * @author Flávio Ribeiro
- * @copyright 2007 - Flávio Ribeiro
+ * @author Flï¿½vio Ribeiro
+ * @copyright 2007 - Flï¿½vio Ribeiro
  */
 
 
@@ -82,13 +82,13 @@ class paging
 	var $LIMIT=0;
 
 	/**
-	* Result of mysql_query for the current page
+	* Result of mysqli_query for the current page
 	* @var string
 	*/
 	var $RESULT_SQL;
 
 	/**
-	* Result of mysql_query for the full registers
+	* Result of mysqli_query for the full registers
 	* @var string
 	*/
 	var $RESULT_FULL;
@@ -177,8 +177,12 @@ class paging
 	}
 
 	function execSQL() {
-		$this->RESULT_FULL =	mysql_query($this->SQLFull);
-		$this->RESULT_SQL = mysql_query($this->SQL);
+		
+		$conec = new conexao;
+		$conec->conecta('MYSQL');
+
+		$this->RESULT_FULL = mysqli_query($conec->con, $this->SQLFull);
+		$this->RESULT_SQL  = mysqli_query($conec->con,$this->SQL);
 		$this->setNumberOfRegs();
 		$this->getPage();
 	}
@@ -199,8 +203,8 @@ class paging
 
 
 	function setNumberOfRegs(){
-		$this->NUMBER_REGS = mysql_num_rows($this->RESULT_FULL);
-		$this->NUMBER_REGS_PAGE = mysql_num_rows($this->RESULT_SQL);
+		$this->NUMBER_REGS = mysqli_num_rows($this->RESULT_FULL);
+		$this->NUMBER_REGS_PAGE = mysqli_num_rows($this->RESULT_SQL);
 	}
 
 	function getNumberOfPages (){
@@ -323,9 +327,7 @@ class paging
 	$PAGER->setSQL($query,(isset($_GET['FULL'])?$_GET['FULL']:0));
 	$PAGER->execSQL();
 
-	while ($row=mysql_fetch_array($PAGER->RESULT_SQL)){
-		//Print rows
-	}
+
 
 	$PAGE->showOutputPages();
 	*/

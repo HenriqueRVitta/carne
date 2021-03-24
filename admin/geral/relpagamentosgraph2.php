@@ -2,11 +2,11 @@
 	
 	session_start();
 
-	# Gráfico de PIZZA
+	# Grï¿½fico de PIZZA
 	
 	# PHPlot Example: Pie/text-data-single
 	# http://www.phplot.com/phplotdocs/
-	# Mais informações no site -> PHPlot Examples
+	# Mais informaï¿½ï¿½es no site -> PHPlot Examples
 	include ("../../includes/phplot/phplot.php");
 
 	include ("../../includes/classes/headers.class.php");
@@ -53,7 +53,7 @@
 		$pcordem	= " order by u.nome";
 		$pcgroup	= " group by u.nome";
 		$lcColumn	= " u.nome";
-		$separacao  = "Usuários";
+		$separacao  = "Usuï¿½rios";
 		break;
 	  case 4:
 		$pcordem	= " order by l.descricao";
@@ -71,8 +71,8 @@
 		
 
     $query = "select nome_hosp from configuracao limit 1";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$rowConfg = mysql_fetch_array($resultado);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$rowConfg = mysqli_fetch_array($resultado);
 	$nomehosp = $rowConfg['nome_hosp'];
 	
        $query = "SELECT".$lcColumn." as filtro, count(*) as qtde, sum(vlrpago) as total FROM carne_titular c
@@ -84,17 +84,15 @@
 		left Join usuarios u on u.codigo = k.usuario
 		Where k.databaixa between '".$dtinicial."' and '".$dtfinal."' ".$pcgroup." ".$pcordem;
                
-      //print_r($query);
-      //break;
-      
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+     
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	$lnqtde = 0.00;
 
 	$data = array();
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 		// Tratamento para quando for Mes/Ano
 		if($_POST['separacao'] <> 2) {
@@ -108,7 +106,7 @@
 		$i++;
 	}
 
-$lcCabecalho = $nomehosp."\n"."Gráfico de Recebimentos por ".$separacao."\n"."Período:".$_POST['datainicio']." A ".$_POST['datafim']."";
+$lcCabecalho = $nomehosp."\n"."Grï¿½fico de Recebimentos por ".$separacao."\n"."Perï¿½odo:".$_POST['datainicio']." A ".$_POST['datafim']."";
 
 //$plot = new PHPlot(1024, 768);
 $plot = new PHPlot(1280, 768);

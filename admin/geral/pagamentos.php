@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 07/01/2015 17:44
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 */
 
 	session_start();
@@ -26,9 +26,9 @@
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
 
-//	include ("../../includes/functions/funcoes.inc");
-//	include ("../../includes/javascript/funcoes.js");
-		
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -79,9 +79,9 @@
        	" Join carne_competenciaplano d on d.idplano = p.plano ".$Where;
        	
 		
-		$resultado = mysql_query($query) or die('ERRO NA QUERY 1 !'.$query);
-		$rowA = mysql_fetch_array($resultado);
-		$vinculoplano = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY 1 !'.$query);
+		$rowA = mysqli_fetch_array($resultado);
+		$vinculoplano = mysqli_num_rows($resultado);
 		
 		$valor  = $rowA['valor'];
 		$percentual = $rowA['percdesc'];
@@ -98,7 +98,7 @@
 		
 		$ValorApagar = 0.00;
 		
-		// Recebe o parãmetro GET do Mês e Ano de pagamento
+		// Recebe o parï¿½metro GET do Mï¿½s e Ano de pagamento
 		if(isset($_GET['mesano']) && !empty($_GET['mesano'])) {
 
 			//print_r($_GET);
@@ -110,31 +110,31 @@
 
 			$ValorApagar = substr($_GET['mesano'],9,4);
 			
-			// Calcula o percentual do Salário minino de 2014
+			// Calcula o percentual do Salï¿½rio minino de 2014
 			if($ano==2014) {
 				$valor = ((724.00 * $percentual) / 100);
 			}
 
-			// Calcula o percentual do Salário minino de 2015
+			// Calcula o percentual do Salï¿½rio minino de 2015
 			if($ano==2015) {
 				$valor = ((788.00 * $percentual) / 100);
 			}
 			
-			// Calcula o percentual do Salário minino de 2016
+			// Calcula o percentual do Salï¿½rio minino de 2016
 			if($ano==2016) {
 				$valor = ((880.00 * $percentual) / 100);
 			}
 			
 			
-			// Se Carnê parcelado pega os valores da tabela carne_parcelamento
+			// Se Carnï¿½ parcelado pega os valores da tabela carne_parcelamento
 			if($_GET['parcelado']=="Sim") {
 
 				$mesanoParc = substr($_GET['mesano'],2,4).substr($_GET['mesano'],0,2);
 				$nrocarneParc = substr($_GET['mesano'],0,4);
 				
 		       	$queryParcelado = "select vlrmensal, vlrparcelado from carne_parcelamento where nrocarne=".$nrocarneParc." and databaixa='1900-01-01 00:00:00' and mesano=".$mesanoParc.""; 
-				$resultadoParcelado = mysql_query($queryParcelado) or die('ERRO NA PARCELADO !'.$queryParcelado);
-				$rowAParc = mysql_fetch_array($resultadoParcelado);
+				$resultadoParcelado = mysqli_query($conec->con,$queryParcelado) or die('ERRO NA PARCELADO !'.$queryParcelado);
+				$rowAParc = mysqli_fetch_array($resultadoParcelado);
 				$ValorApagar = $rowAParc['vlrmensal'];
 				
 			}		
@@ -143,7 +143,7 @@
 		
 
 			/***********
-		 * Começa aqui a verificação de inadimplência
+		 * Comeï¿½a aqui a verificaï¿½ï¿½o de inadimplï¿½ncia
 		 * Henrique 26/06/2018 15:39
 		 */
 			
@@ -154,7 +154,7 @@
 			if ((isset($_POST['search'])) && !empty($_POST['search'])) {
 
 				// Pego a Data de Inicio do Cadastro do Titular
-				$arraydados = mysql_fetch_array($resultado);
+				$arraydados = mysqli_fetch_array($resultado);
 				
 				$sqlpagto = "select a.id,a.nometitular, a.datainicio Data_Inicio, d.valor as ValordoPlano,
 				sum(b.vlrpago) TotalPago,
@@ -167,8 +167,8 @@
 				join carne_competenciaplano d on d.idplano = c.plano
 				where a.id = ".$arraydados['id'];
 
-				$resultadopagto = mysql_query($sqlpagto) or die('ERRO NA EXECUÇÂO DA QUERY carne_pagamentos!');
-				while ($rowpagto= mysql_fetch_array($resultadopagto)) {
+				$resultadopagto = mysqli_query($conec->con,$sqlpagto) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY carne_pagamentos!');
+				while ($rowpagto= mysqli_fetch_array($resultadopagto)) {
 					
 					 if($rowpagto['MesesInadimplente'] > 0){
 					 	
@@ -198,7 +198,7 @@
 		
 			
 		/***********
-		 * Termina aqui a verificação de inadimplência
+		 * Termina aqui a verificaï¿½ï¿½o de inadimplï¿½ncia
 		 * Henrique 26/06/2018 15:39
 		 */
 			
@@ -238,10 +238,10 @@
 		print "<select class='select3' name='plano' id='idplano' disabled='disabled'>";  
 		print "<option value=-1>"."Tipo de Plano"."</option>";
 			$sql="Select id,descricao from carne_tipoplano order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						if($row['id']==$rowA['plano']) { $selected = " selected"; } else { $selected = "";}
 						
@@ -272,9 +272,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Selecione Local Pagamento"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						$selected = "";
 						
@@ -297,9 +297,9 @@
 		print "<select class='select2' name='taxas' id='idtaxas' onChange='return ConsultaTaxas(this.value)'>";  
 				print "<option value=-1>"."Selecione a Taxa"."</option>";
 					$sql="Select id,descricao from carne_taxas where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						$selected = "";
 						
@@ -327,9 +327,9 @@
 		
 		// Qtde de Dependentes
 	   	$queryCliente = "SELECT count(*) as qtde_dep FROM carne_dependente where idtitular = '".$_GET['cod']."'";
-		$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+		$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 		$i=0;
-		while($rowQtde = mysql_fetch_array($resulCliente)){
+		while($rowQtde = mysqli_fetch_array($resulCliente)){
 			$qtde = $rowQtde['qtde_dep'];
 			$i++;
 		}
@@ -348,9 +348,9 @@
 	   	" join carne_tipoplano c on c.id = b.plano".
 	   	" join carne_competenciaplano d on d.idplano = c.id".   	
 	   	" where a.id = '".$_GET['cod']."'";
-		$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+		$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 	
-		while($rowcliente = mysql_fetch_array($resulCliente)){
+		while($rowcliente = mysqli_fetch_array($resulCliente)){
 
 		// Soma o valor dos dependentes com o Titular
 			if($nQtdeDep > 0) {
@@ -387,7 +387,7 @@
 		print "<br>";
 		
 		/***********
-		 * Começa aqui a lista dos pagamentos edetuados pelo cliente
+		 * Comeï¿½a aqui a lista dos pagamentos edetuados pelo cliente
 		 * Henrique 02/02/2015 12:54
 		 */
 
@@ -405,9 +405,9 @@
 		
 		$queryPrincipal.=" and p.unidade =".$_SESSION['s_local']." ORDER BY p.id desc";
 		
-		$resultado = mysql_query($queryPrincipal) or die('ERRO NA QUERY 2 !'.$queryPrincipal);
+		$resultado = mysqli_query($conec->con,$queryPrincipal) or die('ERRO NA QUERY 2 !'.$queryPrincipal);
 	
-		$registros = mysql_num_rows($resultado);
+		$registros = mysqli_num_rows($resultado);
 
 	    $disabled = '';
 	    $clasbutton = " class='button'";
@@ -424,7 +424,7 @@
 			$cellStyle = "cellpadding='5' cellspacing='1'";
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem('Nenhum pagamento registrado')."</td></tr>";
 		}
@@ -442,7 +442,7 @@
 			$lcLibera2 = liberamenu('Excluir Pagamento Carne');
 		
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -517,8 +517,8 @@
        	" Join carne_pagamentos k on k.idcliente = c.id ".
        	" Where k.id = ".$_GET['cod']." ";
 		
-		$resultado = mysql_query($query) or die('ERRO NA QUERY 3 !'.$query);
-		$rowA = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY 3 !'.$query);
+		$rowA = mysqli_fetch_array($resultado);
 
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato/Carn&ecirc;".":</TD>";
@@ -534,10 +534,10 @@
 		print "<select class='select2' name='plano' id='idplano' disabled='disabled'>";  
 		print "<option value=-1>"."Tipo de Plano"."</option>";
 			$sql="Select id,descricao from carne_tipoplano order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						if($row['id']==$rowA['plano']) { $selected = " selected"; } else { $selected = "";}
 						
@@ -568,9 +568,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Selecione Local Pagamento"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						if($row['id']==$rowA['localpagto']) { $selected = " selected"; } else { $selected = "";}
 						
@@ -590,9 +590,9 @@
 		print "<select class='select2' name='taxas' id='idtaxas' onChange='return ConsultaTaxas(this.value)'>";  
 				print "<option value=-1>"."Selecione a Taxa"."</option>";
 					$sql="Select id,descricao from carne_taxas where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						$selected = "";
 						
@@ -633,7 +633,7 @@
 
 	} else
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['codigo'])) {
 				
 				if(empty($_POST['datainativo'])) {
@@ -648,8 +648,8 @@
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 		
 			 $query2 = "select p.nrocarne, p.idcliente, t.nometitular from carne_pagamentos p join carne_titular t on t.id = p.idcliente where p.id ='".$_GET['cod']."'";
-			 $resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-			 $rowCont = mysql_fetch_array($resultado2);
+			 $resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+			 $rowCont = mysqli_fetch_array($resultado2);
 			
 			 $Log1 = liberamenu('Excluir Pagamento Carne');
 	       	 $Log2 = $rowCont['idcliente'];
@@ -659,7 +659,7 @@
 	 	     grava_log($_SESSION['s_uid'],$_SESSION['s_codoperacao'],$Log2,$log3,$log4,$log4,$log4,$log5);
 		
 			$query2 = "DELETE FROM carne_pagamentos WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -684,8 +684,8 @@
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_CAD')))) {	
 
 		 $query2 = "select nometitular from carne_titular where id ='".$_POST['cliente']."'";
-		 $resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-		 $rowCont = mysql_fetch_array($resultado2);
+		 $resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+		 $rowCont = mysqli_fetch_array($resultado2);
 		
 		 $Log1 = liberamenu('Incluir Pagamento Carne');
        	 $Log2 = $_POST['cliente'];
@@ -742,7 +742,7 @@
 				
 				$query = "INSERT INTO carne_pagamentos (idcliente,nrocarne,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,idtaxas,valor_taxas)".
 							" values (".$_POST['cliente'].",".$_POST['nrocarne'].",".$lnCompet.",'".$dtpagto."',".$_POST['localpagto'].",".$value1.",".$value2.",".$_POST['vlrtaxa'].",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",".$taxas.",".$valortaxa.")";		
-				$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				
 				if($AnoIni <> $AnoFim && $x==12) {
 					$x = 0;
@@ -760,29 +760,29 @@
 
 			$query = "INSERT INTO carne_pagamentos (idcliente,nrocarne,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,idtaxas,valor_taxas)".
 						" values (".$_POST['cliente'].",".$_POST['nrocarne'].",".$lnCompet.",'".$dtpagto."',".$_POST['localpagto'].",".$value1.",".$value2.",".$_POST['vlrtaxa'].",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",".$taxas.",".$valortaxa.")";		
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			
 		}
 			
 		
 		
-			// Se Carnê parcelado atualiza a tabela carne_parcelamento e insert em carne_pagamentos
+			// Se Carnï¿½ parcelado atualiza a tabela carne_parcelamento e insert em carne_pagamentos
 			if($_POST['parcelado']=="Sim") {
 				
 				// Update na tabela carne_parcelamento
 				$queryParcelado = "update carne_parcelamento set databaixa='".$dtpagto."', localpagto=".$_POST['localpagto']." where nrocarne=".$_POST['nrocarne']." and mesano=".$lnCompet.""; 
-				$resultadoParcelado = mysql_query($queryParcelado) or die('ERRO NO UPDATE PARCELADO !'.$queryParcelado);
+				$resultadoParcelado = mysqli_query($conec->con,$queryParcelado) or die('ERRO NO UPDATE PARCELADO !'.$queryParcelado);
 
 				// Pego os dados do carne_parcelamento para insert em carne_pagamentos
 		       	$queryParcelado = "select vlrmensal, vlrparcelado from carne_parcelamento where nrocarne=".$_POST['nrocarne']." and mesano=".$lnCompet.""; 
-				$resultadoParcelado = mysql_query($queryParcelado) or die('ERRO NA PARCELADO !'.$queryParcelado);
-				$rowAParc = mysql_fetch_array($resultadoParcelado);
+				$resultadoParcelado = mysqli_query($conec->con,$queryParcelado) or die('ERRO NA PARCELADO !'.$queryParcelado);
+				$rowAParc = mysqli_fetch_array($resultadoParcelado);
 				$ValorParcelado = $rowAParc['vlrparcelado'];
 				$ValorMensal = $rowAParc['vlrmensal'];
 
 				$query = "INSERT INTO carne_pagamentos (idcliente,nrocarne,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,parcelamento)".
 					" values (".$_POST['cliente'].",".$_POST['nrocarne'].",".$lnCompet.",'".$dtpagto."',".$_POST['localpagto'].",".$ValorMensal.",".$ValorParcelado.",".$_POST['vlrtaxa'].",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",1)";		
-				$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				
 				
 			}		
@@ -811,8 +811,8 @@
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_ALTER')))) {	
 					
 		 $query2 = "select p.nrocarne, p.idcliente, t.nometitular from carne_pagamentos p join carne_titular t on t.id = p.idcliente where p.id ='".$_POST['idpagto']."'";
-		 $resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-		 $rowCont = mysql_fetch_array($resultado2);
+		 $resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+		 $rowCont = mysqli_fetch_array($resultado2);
 		
 		 $Log1 = liberamenu('Alterar Pagamento Carne');
        	 $Log2 = $rowCont['idcliente'];
@@ -829,7 +829,7 @@
 		
 		$query2 = "UPDATE carne_pagamentos SET mesano=".$lnCompet.",databaixa='".$dtpagto."', localpagto=".$_POST['localpagto'].", vlrpago=".$value1.", usuario=".$_SESSION['s_uid']." WHERE id=".$_POST['idpagto']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query 4: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query 4: '.$query2);
 		
 		if ($resultado2 == 0)
 		{
@@ -857,7 +857,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function ConsultaTaxas(valor){
 

@@ -1,10 +1,10 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/03/2019 14:18 GLPI 13397
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
 		Emissao da Capa do Carne
 
@@ -12,7 +12,7 @@
 
 	session_start();
 	
-	// Impressão do Capa
+	// Impressï¿½o do Capa
 	if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
  	     echo "<script>redirect('geracapacarne.php');</script>";		
 	}
@@ -21,6 +21,9 @@
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$titular = $_POST['titular'];
@@ -86,13 +89,13 @@ $mpdf->SetHTMLHeader($headerE,'E');
 $mpdf->SetHTMLFooter($footer);
 $mpdf->SetHTMLFooter($footerE,'E');
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
     $query = "select nome_hosp, end_hosp, num_hosp, bair_hosp, cid_hosp, uf_hosp, cep_hosp, cgc_hosp, ddd1_hosp, fone_hosp from configuracao limit 1";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$rowConfg = mysql_fetch_array($resultado);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$rowConfg = mysqli_fetch_array($resultado);
 	$nomehosp = $rowConfg['nome_hosp'];
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT t.id, t.nrocarne, t.nometitular, t.endereco, t.numero, t.cep, t.bairro, t.cidade, t.uf, c.nrocontrato, c.plano, c.diavencto, p.descricao, p.formapagto, p.percdesc, cp.compet_ini, cp.compet_fim, cp.valor
 				 FROM carne_titular t Join carne_contratos c
 				 on c.idtitular = t.id
@@ -102,13 +105,13 @@ $mpdf->SetHTMLFooter($footerE,'E');
 				 on cp.idplano = c.plano 
 				 Where t.situacao = 'ATIVO' ".$pcwhere."";
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
     $lcString= "<table style='width: 680px; height: 340px;' border='1' cellspacing='1' cellpadding='1'>
     <tr><td>";
     
     $lcString.= "<table style='width: 680px; height: 340px;' border='0' cellspacing='1' cellpadding='1'>";
 	
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	$registros = 0;
@@ -117,7 +120,7 @@ $mpdf->SetHTMLFooter($footerE,'E');
 	$MesIni = date( 'm', strtotime($dtinicial));
 	$MesFim = date( 'm', strtotime($dtfinal));
 		
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		$lcString.="<tr>
 		    <td width='182' rowspan='5'><p><img src='imagens/logo.png' width='190' height='180' alt='image' /></p>
@@ -178,9 +181,9 @@ $mpdf->SetHTMLFooter($footerE,'E');
 
 	// Seleciono aqui os dependentes do titular
     $queryDep = "select a.nome,b.descricao from carne_dependente a left join carne_tipodependente b on b.id = a.parentesco where a.idtitular = ".$row['id']."";
-    $resuldep = mysql_query($queryDep) or die('ERRO NA QUERY !'.$query);
+    $resuldep = mysqli_query($conec->con,$queryDep) or die('ERRO NA QUERY !'.$query);
 	$x=0;
-	while($rowDep = mysql_fetch_array($resuldep)) {
+	while($rowDep = mysqli_fetch_array($resuldep)) {
 
 	  $lcString.="<tr>
 		    <td>".$rowDep['nome']." - ".$rowDep['descricao']."</td>

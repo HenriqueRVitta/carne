@@ -24,6 +24,11 @@
 	   error_reporting(E_ALL);
 	   ini_set('display_errors', 'On');
 
+
+$conec = new conexao;
+$conec->conecta('MYSQL');
+
+	   
 require_once __DIR__.'/vendor/autoload.php';
 
 use CnabParser\Parser\Layout;
@@ -199,7 +204,7 @@ for ($i = 1; $i < 99; $i++) {
 
        //numero do lote
 	   $qryNroDoc = "update carne_lote set arquivo='".$lcFile."' where id = ".$numero_lote;
-	   $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
+	   $exeNroDoc = mysqli_query($conec->con,$qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysqli_error($conec->con));
 
 
 $cfile = $arquivogravacao.".REM";
@@ -208,8 +213,8 @@ $remessaFile->generate($cfile);
 
        //numero do lote
 	   $qryNroDoc = "SELECT max(id) as proximo FROM carne_lote";
-	   $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
-	   $rownrodoc = mysql_fetch_array($exeNroDoc);
+	   $exeNroDoc = mysqli_query($conec->con,$qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysqli_error($conec->con));
+	   $rownrodoc = mysqli_fetch_array($exeNroDoc);
 	   $numero_lote = $rownrodoc['proximo'];
 
 // Gravando o Arquivo de Remessa

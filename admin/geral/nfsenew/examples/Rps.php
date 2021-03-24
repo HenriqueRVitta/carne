@@ -11,13 +11,13 @@ session_start();
 
 	
 	$query = "SELECT razao FROM cadastro_unidades";
-	$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$configEmp = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$configEmp = mysqli_fetch_array($resultado);
 	$NomeEmpresa = retira_acentos_UTF8($configEmp['razao']);
 	
 	$query = "SELECT nfseprefeitura, cnpj, im, tiporps, naturezaoperacao, regimetributa, optantesimples, incentivadorcultural, codservico, codigocnae, codtribmun, codmunicipiotrib, retemiss, aliquota, tipoambiente FROM config";
-	$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$config = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$config = mysqli_fetch_array($resultado);
 
 	$dirarquivoremessa = "../../../../admin/carnebancario/remessas";
 	
@@ -63,10 +63,10 @@ try {
 $querytitular = "SELECT a.idretorno, sum(a.valor) as valor, b.* ".
 " FROM retornobanco a Join carne_titular b on b.id = a.idcliente ".
 " where datapagto between '".$inicio."' and '".$fim."' and nfse = 1 group by a.cpfcnpj order by a.datapagto,b.nometitular";
-$resultadoTitular = mysql_query($querytitular) or die('ERRO NA QUERY !'.$querytitular);
+$resultadoTitular = mysqli_query($conec->con,$querytitular) or die('ERRO NA QUERY !'.$querytitular);
 
 
-while($rowtomador = mysql_fetch_array($resultadoTitular)) {
+while($rowtomador = mysqli_fetch_array($resultadoTitular)) {
 
 $processarNFSe = false;
 
@@ -80,10 +80,10 @@ if($processarNFSe == true) {
 	// Obtendo o nro do LOTE
 	// Insert em carne_loterps
 	$querylote = "insert into carne_loterps (dtemissao) values ('".date("Y-m-d H:i:s")."')";
-	$resultadoLote = mysql_query($querylote) or die('ERRO NA QUERY !'.$querylote);
+	$resultadoLote = mysqli_query($conec->con,$querylote) or die('ERRO NA QUERY !'.$querylote);
 	$querylote = "Select max(id) as proximo from carne_loterps";
-	$resultadoLote = mysql_query($querylote) or die('ERRO NA QUERY !'.$querylote);
-	$rowlote = mysql_fetch_array($resultadoLote);
+	$resultadoLote = mysqli_query($conec->con,$querylote) or die('ERRO NA QUERY !'.$querylote);
+	$rowlote = mysqli_fetch_array($resultadoLote);
 	$lote = $rowlote['proximo'];
 	// Fim LOTE
 	

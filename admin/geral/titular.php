@@ -18,6 +18,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -57,8 +60,8 @@ $selectedAmbos = "selected";
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(id) as id FROM carne_titular ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE MAX ID 1!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE MAX ID 1!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT * FROM carne_titular ";
@@ -135,8 +138,8 @@ $selectedAmbos = "selected";
 			$query = $_SESSION['where'];
 		}
 								
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃƒâ€¡Ãƒâ€šO DA QUERY DE CONSULTA 1!');
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃƒâ€¡Ãƒâ€šO DA QUERY DE CONSULTA 1!');
+		$registros = mysqli_num_rows($resultado);
 
 
 		if (isset($_GET['LIMIT']))
@@ -173,7 +176,7 @@ $selectedAmbos = "selected";
 
 
 			
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -190,7 +193,7 @@ $selectedAmbos = "selected";
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -266,7 +269,7 @@ $selectedAmbos = "selected";
 
 	if ((isset($_GET['action']) && $_GET['action']=="alter") && empty($_POST['submit'])) {
 
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Cliente"."</b></font><BR>";		
 
@@ -486,12 +489,12 @@ $selectedAmbos = "selected";
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 		
 			$query2 = "select nometitular FROM carne_titular WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusÃ£o '.$query2);
-			$rowNome = mysql_fetch_array($resultado2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
+			$rowNome = mysqli_fetch_array($resultado2);
 			
 		
 			$query2 = "DELETE FROM carne_titular WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusÃ£o '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -502,7 +505,7 @@ $selectedAmbos = "selected";
 					$aviso = TRANS('OK_DEL');
 
 			$query2 = "DELETE FROM carne_contratos WHERE idtitular='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusÃ£o '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
 					
 			}
 			
@@ -529,8 +532,8 @@ $selectedAmbos = "selected";
 		$erro=false;
 
 		$qryl = "SELECT * FROM carne_titular WHERE nometitular='".$_POST['nome']."' and nomemae='".$_SESSION['nomemae']."'";
-		$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-		$linhas = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+		$linhas = mysqli_num_rows($resultado);
 
 		if ($linhas > 0)
 		{
@@ -548,7 +551,7 @@ $selectedAmbos = "selected";
 			$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario)".
 					" values ('".$_POST['nome']."','".$_POST['endereco']."','".$_POST['numero']."','".$cep."','".$_POST['bairro']."','".$_POST['cidade']."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$_POST['nomemae']."','".$_POST['nomepai']."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."')";
 						
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
 			{
 				$aviso = TRANS('ERR_INSERT');
@@ -574,7 +577,7 @@ $selectedAmbos = "selected";
 		
 		$query2 = "UPDATE carne_titular SET nometitular='".$_POST['nome']."',endereco='".$_POST['endereco']."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', datanasc='".$nascimento."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."' WHERE id=".$_POST['codigo']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 		if ($resultado2 == 0)
 		{

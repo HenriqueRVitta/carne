@@ -26,9 +26,9 @@ join carne_titular c on c.id = g.idtitular
 join usuarios u on u.codigo = g.usuario
 where idtitular ='".$cod."' order by g.datagerou asc limit 12";
 
-$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
+$commit=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
 
-if (mysql_num_rows($commit) == 0){
+if (mysqli_num_rows($commit) == 0){
 
 	print "";
 
@@ -46,7 +46,7 @@ if (mysql_num_rows($commit) == 0){
 	
 	$j=2;
 	
-	while($row = mysql_fetch_array($commit)){
+	while($row = mysqli_fetch_array($commit)){
 
 		if ($j % 2)
 		{

@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 07/01/2015 17:44
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -18,6 +18,9 @@
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -50,9 +53,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Todos"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -82,7 +85,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {
@@ -129,7 +132,7 @@ function comboTiporel(Id, pStr) {
 
 	d = document.getElementById(Id);
 	
-	// Relatório Analítico
+	// Relatï¿½rio Analï¿½tico
 	if(d.value == 1) {
 		document.getElementById('idgrafico').value=1;
 		document.getElementById('idseparacao').value=-1;
@@ -137,7 +140,7 @@ function comboTiporel(Id, pStr) {
 		document.getElementById('idgrafico').disabled=true;
 	}
 			
-	// Relatório Sintético
+	// Relatï¿½rio Sintï¿½tico
 	if(d.value == 2) {
 		document.getElementById('idgrafico').value=1;
 		document.getElementById('idseparacao').value=4;
@@ -145,7 +148,7 @@ function comboTiporel(Id, pStr) {
 		document.getElementById('idgrafico').disabled=true;		
 	}
 
-	// Relatório Gráfico
+	// Relatï¿½rio Grï¿½fico
 	if(d.value == 3) {
 		document.getElementById('idseparacao').value=-1;
 		document.getElementById('idseparacao').disabled=false;
@@ -159,12 +162,12 @@ function comboTiporel2(Id, pStr) {
 
 	d = document.getElementById(Id);
 	
-	// Relatório Analítico
+	// Relatï¿½rio Analï¿½tico
 	if(document.getElementById('idtiporelatorio').value == 1) {
 		d.disabled=true;
 	}
 			
-	// Relatório Sintético
+	// Relatï¿½rio Sintï¿½tico
 	if(document.getElementById('idtiporelatorio').value == 2) {
 		d.disabled=false;
 	}

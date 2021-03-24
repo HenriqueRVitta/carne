@@ -1,5 +1,5 @@
 <?php 
- /*                        Copyright 2005 Flávio Ribeiro
+ /*                        Copyright 2005 Flï¿½vio Ribeiro
 
          This file is part of OCOMON.
 
@@ -20,8 +20,8 @@
 /**
  * Lock Class
  * @package Ocomon
- * @author Flávio Ribeiro
- * @copyright 2007 - Flávio Ribeiro
+ * @author Flï¿½vio Ribeiro
+ * @copyright 2007 - Flï¿½vio Ribeiro
  */
 
 
@@ -56,26 +56,26 @@ class lock
 		if ($this->OCO != ""){
 
 			$chk_lock = "SELECT * FROM lock_oco WHERE lck_oco = ".$this->OCO."";
-			$exec_chk = mysql_query($chk_lock) or die ("ERRO NA TENTATIVA DE ACESSAR AS INFORMAÇÕES DE LOCK!<br>".$chk_lock);
-			$row = mysql_fetch_array($exec_chk);
-			$achou = mysql_num_rows($exec_chk);
+			$exec_chk = mysqli_query($chk_lock) or die ("ERRO NA TENTATIVA DE ACESSAR AS INFORMAï¿½ï¿½ES DE LOCK!<br>".$chk_lock);
+			$row = mysqli_fetch_array($exec_chk);
+			$achou = mysqli_num_rows($exec_chk);
 
 			if ($achou != 0) {
 				if (($row['lck_uid'] == $this->UID) || ($this->FORCE_EDIT == 1)) {
 					$this->unlock($this->OCO);
 					$SQL = "INSERT INTO lock_oco (lck_uid, lck_oco) VALUES (".$this->UID.", ".$this->OCO.")";
-					$EXEC = mysql_query($SQL) or die ('ERRO NA TENTATIVA DE CRIAR PONTO DE LOCK!');
+					$EXEC = mysqli_query($SQL) or die ('ERRO NA TENTATIVA DE CRIAR PONTO DE LOCK!');
 				} else {
 					$SQL = "SELECT nome FROM usuarios u, lock_oco l WHERE l.lck_uid = u.user_id and u.user_id = ".$row['lck_uid']." ";
-					$EXEC = mysql_query($SQL);
-					$row_nome = mysql_fetch_array($EXEC);
-					print "<br>Essa Ocorrência já está em edição nesse instante pelo usuário <b><font color='red'>".$row_nome['nome']."</font></b>. Não pode ser editada! <br><a onclick='javascript:history.back()'>Voltar</a><br>";
+					$EXEC = mysqli_query($SQL);
+					$row_nome = mysqli_fetch_array($EXEC);
+					print "<br>Essa Ocorrï¿½ncia jï¿½ estï¿½ em ediï¿½ï¿½o nesse instante pelo usuï¿½rio <b><font color='red'>".$row_nome['nome']."</font></b>. Nï¿½o pode ser editada! <br><a onclick='javascript:history.back()'>Voltar</a><br>";
 					print "<a href='".$_SERVER['PHP_SELF']."?numero=".$this->OCO."&FORCE_EDIT=1'>Editar assim mesmo</a>";
 					exit;
 				}
 			} else {
 				$SQL = "INSERT INTO lock_oco (lck_uid, lck_oco) VALUES (".$this->UID.", ".$this->OCO.")";
-				$EXEC = mysql_query($SQL) or die ('ERRO NA TENTATIVA DE CRIAR PONTO DE LOCK!');
+				$EXEC = mysqli_query($SQL) or die ('ERRO NA TENTATIVA DE CRIAR PONTO DE LOCK!');
 			}
 
 		} else {
@@ -90,7 +90,7 @@ class lock
 		}
 		if ($this->OCO != 0){
 			$SQL = "DELETE FROM lock_oco WHERE lck_oco = ".$this->OCO." ";
-			$EXEC = mysql_query($SQL) or die('ERRO NA TENTATIVA DE EXCLUIR REGISTRO DE LOCK!');
+			$EXEC = mysqli_query($SQL) or die('ERRO NA TENTATIVA DE EXCLUIR REGISTRO DE LOCK!');
 		}
 	}
 

@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -23,6 +23,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$localpagto = $_POST['localpagto'];
@@ -49,9 +52,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if(isset($_POST['localpagto'])) {
 
 		$sql="SELECT descricao FROM carne_localpagto where id = ".$_POST['localpagto']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Local Pagamento:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -121,7 +124,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
       //print_r($query);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Local de Pagamento</th>
@@ -129,7 +132,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	<th scope='col' align='center'>Vlr Total</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	$lnqtde = 0.00;
@@ -142,7 +145,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		}
 	
 			
-	while($row = mysql_fetch_array($resultado)) {
+	while($row = mysqli_fetch_array($resultado)) {
 		
 
 			// Se Selecionado Exportar para o Financeiro e Filtrado um Local de Pagamento	
@@ -150,7 +153,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 				
 				// Alterado em 01/02/2016 para gravar depois de apagar com delete from
 				$queryFin = "delete from financeiro.contasreceber where nrodoc ='".$dtpagto.$sequencia."' and unidade=".$_SESSION['s_local']." and dtbaixa = '1900-01-01 00:00:00'";
-				$resultadoFin = mysql_query($queryFin) or die('Erro no Delete do CONTASRECEBER '.$queryFin);
+				$resultadoFin = mysqli_query($conec->con,$queryFin) or die('Erro no Delete do CONTASRECEBER '.$queryFin);
 				
 			}
 		
@@ -174,7 +177,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 				// Gravando na Tabela ContasReceber
 				$queryFin = "INSERT INTO financeiro.contasreceber (dtemissao,dtvencto,nrodoc,codcliente,codcusto,valor,tpcliente,unidade,historico,codhistorico,codcontabil) ".
 						" values ('".$dtinicial."','".$dtinicial."','".$dtpagto.$sequencia."',".$_SESSION['codcliente'].",".$_SESSION['centrocusto'].",".$row['total'].",1,".$_SESSION['s_local'].",'".$lcCampo."',".$_SESSION['historicopadrao'].",".$_SESSION['ctacontabil'].")";
-				$resultadoFin = mysql_query($queryFin) or die('Erro no Insert do FINANCEIRO '.$queryFin);
+				$resultadoFin = mysqli_query($conec->con,$queryFin) or die('Erro no Insert do FINANCEIRO '.$queryFin);
 			}
 	
 		
@@ -206,13 +209,13 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		left Join carne_localpagto l on l.id = k.localpagto
 		left Join usuarios u on u.codigo = k.usuario
 		Where p.status = 0 and k.databaixa between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere;
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 		
-			while($row = mysql_fetch_array($resultado)){
+			while($row = mysqli_fetch_array($resultado)){
 	
 			// Gravando na Tabela carne_pagamentos o nro doc referente no Financeiro
 			$queryFin = "Update carne_pagamentos set docfinanceiro = '".$dtpagto.$sequencia."' where id =".$row['id'];
-			$resultadoFin = mysql_query($queryFin) or die('Erro no Insert do FINANCEIRO '.$queryFin);
+			$resultadoFin = mysqli_query($conec->con,$queryFin) or die('Erro no Insert do FINANCEIRO '.$queryFin);
 			
 			}
 			
@@ -241,7 +244,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 			// Quando Conferencia verifico se existe contrato de contribuinte como INATIVO	
 			if($_POST['processarpara'] == 1 && $_POST['localpagto'] <> -1) {
 
-				// Cabeçalho do regisrtos encontrados
+				// Cabeï¿½alho do regisrtos encontrados
 				$lcStringInativo = "<br><h2 style='color:#069;'>CONTRATOS INATIVOS NO CADASTRO - FAVOR CORRIGIR</h2><br>
 				<table width='800' border='1' cellspacing='1' cellpadding='1'>
 				<tr>
@@ -257,10 +260,10 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 				left Join carne_localpagto l on l.id = k.localpagto
 				left Join usuarios u on u.codigo = k.usuario
 				Where p.status = 1 and k.databaixa between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere." order by c.nometitular";
-				$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+				$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 				$nInativos = 0;
 				
-					while($row = mysql_fetch_array($resultado)){
+					while($row = mysqli_fetch_array($resultado)){
 
 						$lcStringInativo.= "<tr>
 						<td align='left'>".$row['nometitular']."</TD>

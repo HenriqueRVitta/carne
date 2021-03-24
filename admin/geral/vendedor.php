@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 05/02/2019 17:24 GLPI 12698
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -17,7 +17,10 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
-	
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -52,8 +55,8 @@
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(id) as id FROM carne_vendedor ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID! '.$query);
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID! '.$query);
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT * FROM carne_vendedor";
@@ -74,8 +77,8 @@
 			$query.=" and unidade =".$_SESSION['s_local']." ORDER BY nome";
 		}
 
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 	    $disabled = '';
 	    $clasbutton = " class='button'";
@@ -99,7 +102,7 @@
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
 		"</td></tr>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -114,7 +117,7 @@
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -190,7 +193,7 @@
 
 	if ((isset($_GET['action']) && $_GET['action']=="alter") && empty($_POST['submit'])) {
 
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Vendedor"."</b></font><BR>";		
 
@@ -237,7 +240,7 @@
 
 	} else
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['codigo'])) {
 				
 				if(empty($_POST['datainativo'])) {
@@ -254,7 +257,7 @@
 
 			// Exclui o grupo
 			$query2 = "DELETE FROM carne_vendedor WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -281,8 +284,8 @@
 		$erro=false;
 
 		$qryl = "SELECT * FROM carne_vendedor WHERE nome='".$_POST['nome']."'";
-		$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-		$linhas = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+		$linhas = mysqli_num_rows($resultado);
 
 		if ($linhas > 0)
 		{
@@ -302,7 +305,7 @@
 			$query = "INSERT INTO carne_vendedor (nome,email,celular,ativo,unidade)".
 					" values ('".$lcnome."','".$lcemail."','".$_POST['celular']."',".$_POST['situacao'].",".$_SESSION['s_local'].")";
 						
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
 			{
 				$aviso = TRANS('ERR_INSERT');
@@ -331,7 +334,7 @@
 			
 		$query2 = "UPDATE carne_vendedor SET nome='".$lcnome."', unidade=".$_SESSION['s_local'].", email='".$_POST['email']."', celular='".$_POST['celular']."', ativo = ".$_POST['situacao']."  WHERE id=".$_POST['codigo']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 		
 		if ($resultado2 == 0)
 		{
@@ -356,7 +359,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

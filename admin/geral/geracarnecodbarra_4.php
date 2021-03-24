@@ -1,16 +1,16 @@
 <?php
-/*      Copyright 2019 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2019 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/03/2019 14:18 GLPI 13397
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
 		Impressao Carne com codigo de barras
 
 */
 	
-	// Impressão do Capa
+	// Impressï¿½o do Capa
 	if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
  	     echo "<script>redirect('geracapacarne.php');</script>";		
 	}
@@ -98,6 +98,9 @@ function CodigoBarra($numero){
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	date_default_timezone_set('America/Sao_Paulo');
 	
 	$dtinicial = Fdate($_POST['datainicio']);
@@ -158,15 +161,15 @@ $lcString  = '
 <p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
 ';
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
     $query = "select a.razao,a.endereco,a.numero,a.ddd,a.fone,a.bairro,a.cep,b.cidade,b.uf from cadastro_unidades a left join municipios b on b.codibge = a.codcidade where a.codigo = '".$_SESSION['s_local']."'";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$rowConfg = mysql_fetch_array($resultado);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$rowConfg = mysqli_fetch_array($resultado);
 	$nomehosp = $rowConfg['razao'];
 	$endereco = $rowConfg['endereco'].", ".$rowConfg['numero']." ".$rowConfg['bairro'];
 	$cidade = $rowConfg['cidade']." ".$rowConfg['uf']." CEP:".mask($rowConfg['cep'],"#####-###")." Tel:(".$rowConfg['ddd'].") ".mask($rowConfg['fone'],"####-####");
 	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT t.id, t.nrocarne, t.nometitular, t.endereco, t.numero, t.bairro, t.cidade, t.uf, t.cpf, 
        			 t.telefoneres, t.celular, t.datainicio, c.nrocontrato, c.plano, c.diavencto, p.descricao, p.formapagto, p.percdesc, 
        			 cp.compet_ini, cp.compet_fim, cp.valor, cp.valor_dependente, t.valorplano, cp.vlrfixonegociado
@@ -178,11 +181,11 @@ $lcString  = '
 				 on cp.idplano = c.plano 
 				 where t.situacao = 'ATIVO' ".$pcwhere."";
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString= "<table style='width: 680px; height: 340px;' border='1' >";
 	
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 
@@ -203,12 +206,12 @@ $lcString  = '
 	
 	$VlrBaseCarne=$_SESSION['vlrbasecarne'];
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 	// Obtenho a quandidade de dependentes
     $querydependente = "select count(*) as qtdedependente from carne_dependente where situacao = 'ATIVO' and idtitular = '".$row['id']."'";
-    $resultadodep = mysql_query($querydependente) or die('ERRO NA QUERY !'.$querydependente);
-	$rowDependente = mysql_fetch_array($resultadodep);
+    $resultadodep = mysqli_query($conec->con,$querydependente) or die('ERRO NA QUERY !'.$querydependente);
+	$rowDependente = mysqli_fetch_array($resultadodep);
 	$qtdeDependente = $rowDependente['qtdedependente'];
 		
 	
@@ -334,10 +337,10 @@ $lcString  = '
 
 			// Henrique 24/10/2019 13:23 GLPI 16571
 			// Inserindo na Tabela carne_carnesgerados
-			// Os Carnes que estão sendo gerados para o Contribuinte
+			// Os Carnes que estï¿½o sendo gerados para o Contribuinte
 			$query = "INSERT INTO carne_carnesgerados (idtitular,datainicio,datafim,usuario,datagerou,valor)".
 					" values ('".$titular."','".$dtinicial."','".$dtfinal."',".$_SESSION['s_uid'].",'".$datageracao."',".$Valorcarne.")";
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					
 		
 			}

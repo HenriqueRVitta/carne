@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -17,6 +17,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -56,11 +59,11 @@
 	if(isset($_GET['cod']) or isset($_GET['idcomp'])) {
 		
 		$query = "SELECT max(id) as id FROM carne_competenciaplano ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID! '.$query);
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID! '.$query);
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$queryplano = "SELECT * from carne_tipoplano where id = ".$_GET['cod']."";
-       	$plano = mysql_query($queryplano) or die('ERRO NA QUERY !'.$queryplano);
+       	$plano = mysqli_query($conec->con,$queryplano) or die('ERRO NA QUERY !'.$queryplano);
        	
        	$cond=0;
        	$query = "SELECT * FROM carne_competenciaplano";
@@ -89,8 +92,8 @@
 			$query.=" and unidade =".$_SESSION['s_local']." ORDER BY compet_ini";
 		}
 
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 	}
 
@@ -120,7 +123,7 @@
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
 		"</td></tr>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -137,7 +140,7 @@
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -181,7 +184,7 @@
 	} else
 	if ((isset($_GET['action'])  && ($_GET['action'] == "incluir") )&& empty($_POST['submit'])) {
 
-		$rowPlano = mysql_fetch_array($plano);
+		$rowPlano = mysqli_fetch_array($plano);
 		
 		print "<BR><b><font size=2 color='blue'>"."Inclus&atilde;o Compet&ecirc;ncias do Plano"."</b></font><BR>";
 
@@ -244,13 +247,13 @@
 	if ((isset($_GET['action']) && $_GET['action']=="alter") && empty($_POST['submit'])) {
 
 	    $queryplano = "SELECT * from carne_tipoplano where id = ".$_GET['cod']."";
-	    $plano = mysql_query($queryplano) or die('ERRO NA QUERY !'.$queryplano);
+	    $plano = mysqli_query($conec->con,$queryplano) or die('ERRO NA QUERY !'.$queryplano);
 
 		$querycomp = "SELECT * from carne_competenciaplano where id = ".$_GET['idcomp']."";
-	    $dadoscomp = mysql_query($querycomp) or die('ERRO NA QUERY !'.$queryplano);	    
+	    $dadoscomp = mysqli_query($conec->con,$querycomp) or die('ERRO NA QUERY !'.$queryplano);	    
 		
-		$rowPlano = mysql_fetch_array($plano);
-		$rowcomp  = mysql_fetch_array($dadoscomp);
+		$rowPlano = mysqli_fetch_array($plano);
+		$rowcomp  = mysqli_fetch_array($dadoscomp);
 		
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Compet&ecirc;ncia do Plano"."</b></font><BR>";		
 
@@ -313,7 +316,7 @@
 
 	} else
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['compet_ini'])) {
 				
 				$compet_ini = substr($_POST['compet_ini'],3,4).substr($_POST['compet_ini'],0,2);
@@ -324,7 +327,7 @@
 	// Excluindo registro com Delete		
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 			$query2 = "DELETE FROM carne_competenciaplano WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -351,8 +354,8 @@
 		$erro=false;
 
 		$qryl = "SELECT * FROM carne_competenciaplano WHERE compet_ini='".$compet_ini."' and compet_fim ='".$compet_fim."' and idplano=".$_POST['idplano']."";
-		$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-		$linhas = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+		$linhas = mysqli_num_rows($resultado);
 
 		if ($linhas > 0)
 		{
@@ -368,7 +371,7 @@
 			$query = "INSERT INTO carne_competenciaplano (idplano,compet_ini,compet_fim,valor,valor_dependente,unidade,registro,vlrfixonegociado)".
 					" values ('".$_POST['idplano']."','".$compet_ini."','".$compet_fim."',".$_POST['valor'].",".$_POST['valor_dependente'].",".$_SESSION['s_local'].",'".$registro."',".$_POST['vlrfixonegociado'].")";
 						
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
 			{
 				$aviso = TRANS('ERR_INSERT');
@@ -380,7 +383,7 @@
 		}
 
 		if($aviso != TRANS('OK_INSERT')) {
-			echo "<script>mensagem('Já existe cadastro com essas informações');</script>";
+			echo "<script>mensagem('Jï¿½ existe cadastro com essas informaï¿½ï¿½es');</script>";
 		} 
 		
 		echo "<script>redirect('".$_SERVER['PHP_SELF']."');</script>";
@@ -393,7 +396,7 @@
 		
 		$query2 = "UPDATE carne_competenciaplano SET idplano='".$_POST['idplano']."', compet_ini='".$compet_ini."', compet_fim='".$compet_fim."', valor=".$_POST['valor'].", valor_dependente=".$_POST['valor_dependente'].", unidade=".$_SESSION['s_local']." WHERE id=".$_POST['idplanocomp']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 		
 		if ($resultado2 == 0)
 		{
@@ -418,7 +421,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {
@@ -467,8 +470,8 @@ return false;
 <!--
 	function valida(){
 		var ok = validaForm('idcodigo','','Cï¿½digo',1);
-		if (ok) var ok = validaForm('idcompet_ini','','Competência Inicial',1);		
-		if (ok) var ok = validaForm('idcompet_fim','','Competência Fim',1);
+		if (ok) var ok = validaForm('idcompet_ini','','Competï¿½ncia Inicial',1);		
+		if (ok) var ok = validaForm('idcompet_fim','','Competï¿½ncia Fim',1);
 		if (ok) var ok = validaForm('idvalor','','Valor do Plano',1);
 		return ok;
 	}

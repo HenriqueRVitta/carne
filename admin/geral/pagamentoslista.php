@@ -1,10 +1,10 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 30/01/2015 07:34
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
 		Lista a tabela carne_titular para consulta e registro de paggamentos
 
@@ -14,7 +14,10 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
-	
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');	
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -49,8 +52,8 @@
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(id) as id FROM carne_titular ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, space(25) as nome, p.docfinanceiro FROM carne_titular c Join carne_pagamentos p on p.idcliente=c.id ";
@@ -67,7 +70,7 @@
 		
 		if ((isset($_POST['search'])) && !empty($_POST['search'])) {
 
-			// Se informado código de barra ou prontuario
+			// Se informado cï¿½digo de barra ou prontuario
 			if(is_numeric($_POST['search'])) {
 				
 				if(strlen($_POST['search'])>=18) { $Parcelado = "Sim"; } else { $Parcelado = "Nao"; }
@@ -92,7 +95,7 @@
 					}
 
 					
-					// Implementação para o Novo Codigo de barra conforme impressao
+					// Implementaï¿½ï¿½o para o Novo Codigo de barra conforme impressao
 					// no Modulo Adm Utilitarios -> Gerar Carne para Grafica Sistema SAGMAX
 					if(strlen($_POST['search']) == 12 or strlen($_POST['search']) == 14 or strlen($_POST['search']) == 15 && substr($_POST['search'],0,1) == 9) {
 
@@ -124,7 +127,7 @@
 					
 					$carne = trim($_POST['search']);						
 
-					// Implementação para o Novo Codigo de barra conforme impressao
+					// Implementaï¿½ï¿½o para o Novo Codigo de barra conforme impressao
 					// no Modulo Adm Utilitarios -> Gerar Carne para Grafica Sistema SAGMAX
 					if(strlen($_POST['search']) == 12 or strlen($_POST['search']) == 14 or strlen($_POST['search']) == 15 && substr($_POST['search'],0,1) == 9) {
 
@@ -165,7 +168,7 @@
 			$mesano = "&mesano=".trim(substr($_POST['search'],$ini,6)).trim(substr($_POST['search'],7,7))."&parcelado=".$Parcelado;
 
 
-			// Implementação para o Novo Codigo de barra conforme impressao
+			// Implementaï¿½ï¿½o para o Novo Codigo de barra conforme impressao
 			// no Modulo Adm Sistema SAGMAX
 			if(strlen($_POST['search']) == 12 or strlen($_POST['search']) == 14 or strlen($_POST['search']) == 15 && substr($_POST['search'],0,1) == 9) {
 				$mesano = "&mesano=".trim(substr($_POST['search'],6,2)).trim(substr($_POST['search'],8,4))."&parcelado=".$Parcelado;
@@ -183,19 +186,19 @@
 		}
 
 		$querylista = $query;
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
-		$pagamentos = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
+		$pagamentos = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);
 		
-		$registros = mysql_num_rows($resultado);
+		$registros = mysqli_num_rows($resultado);
 
-		// Se não encontrou nenhum registro de pagamento
+		// Se nï¿½o encontrou nenhum registro de pagamento
 		// utiliza left Join carne_pagamentos na $query 
 		if ((isset($_POST['search'])) && !empty($_POST['search'])) {
 			
 			if ($registros == 0) {
 			$query = str_replace("Join carne_pagamentos","left Join carne_pagamentos",$query);
-			$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
-			$registros = mysql_num_rows($resultado);
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
+			$registros = mysqli_num_rows($resultado);
 			
 				if($registros > 0){
 					$querylista = $query;
@@ -204,7 +207,7 @@
 		
 		}		
 		
-	// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+	// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 	$disabled = '';
 	$clasbutton = " class='button'"; 	
 	
@@ -223,14 +226,14 @@
 		$id = "";
 
 		
-		// Se nada encontrado faço a pesquisa em carne_dependente
+		// Se nada encontrado faï¿½o a pesquisa em carne_dependente
 		if ($registros == 0) {
 
 			$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, d.nome, p.docfinanceiro FROM carne_titular c Join carne_dependente d on d.idtitular = c.id ".
 		    " Join carne_pagamentos p on p.idcliente=c.id Where d.nome like '%".trim($search)."%' limit 1000";
 			$querylista = $query;
-			$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
-			$registros = mysql_num_rows($resultado);
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);		
+			$registros = mysqli_num_rows($resultado);
 		    
 		}
 	
@@ -253,7 +256,7 @@
 		{
 
 		/***********
-		 * Começa aqui a verificação de inadimplência
+		 * Comeï¿½a aqui a verificaï¿½ï¿½o de inadimplï¿½ncia
 		 * Henrique 26/06/2018 15:39
 		 */
 			
@@ -264,7 +267,7 @@
 			if ((isset($_POST['search'])) && !empty($_POST['search'])) {
 
 				// Pego a Data de Inicio do Cadastro do Titular
-				$arraydados = mysql_fetch_array($resultado);
+				$arraydados = mysqli_fetch_array($resultado);
 				
 				$sqlpagto = "select a.id,a.nometitular, a.datainicio Data_Inicio, d.valor as ValordoPlano,
 				sum(b.vlrpago) TotalPago,
@@ -277,8 +280,8 @@
 				join carne_competenciaplano d on d.idplano = c.plano
 				where a.id = ".$arraydados['id'];
 
-				$resultadopagto = mysql_query($sqlpagto) or die('ERRO AO EXECUTAR QUERY carne_pagamentos!');
-				while ($rowpagto= mysql_fetch_array($resultadopagto)) {
+				$resultadopagto = mysqli_query($conec->con,$sqlpagto) or die('ERRO AO EXECUTAR QUERY carne_pagamentos!');
+				while ($rowpagto= mysqli_fetch_array($resultadopagto)) {
 					
 					 if($rowpagto['MesesInadimplente'] > 0){
 					 	
@@ -308,7 +311,7 @@
 		
 			
 		/***********
-		 * Termina aqui a verificação de inadimplência
+		 * Termina aqui a verificaï¿½ï¿½o de inadimplï¿½ncia
 		 * Henrique 26/06/2018 15:39
 		 */
 			
@@ -341,15 +344,15 @@
 				
 			}
 			
-			// Se não é codigo de barra leva mes em branco
+			// Se nï¿½o ï¿½ codigo de barra leva mes em branco
 			if ((isset($_POST['search'])) && !empty($_POST['search'])) {
 				if(strlen($_POST['search'])<=4 or !is_numeric($_POST['search'])) {
 					$mesano = "";
 				}
 			}
 
-			$resultado = mysql_query($querylista) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$querylista);		
-			while ($row = mysql_fetch_array($resultado))
+			$resultado = mysqli_query($conec->con,$querylista) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$querylista);		
+			while ($row = mysqli_fetch_array($resultado))
 			{
 				if ($j % 2)
 				{
@@ -389,7 +392,7 @@
 				if($row['parcelamento']==1) { $Parcela = "SIM"; } else { $Parcela = "NAO"; }
 				print "<td class='line' align='center'>".$Parcela."</td>";
 				
-				// Se já foi Exportado para o Financeiro
+				// Se jï¿½ foi Exportado para o Financeiro
 				if(!empty($row['docfinanceiro'])){
 					print "<td class='line' align='center'>Exportado Financeiro</td>";					
 				} else {
@@ -403,7 +406,7 @@
 			
 				// Direciona para registrar pagamentos
 				if ((isset($_POST['search'])) && !empty($_POST['search'])) {
-					// Se informado código de barra ou prontuario/nrocarne
+					// Se informado cï¿½digo de barra ou prontuario/nrocarne
 					if(is_numeric($_POST['search'])) {
 						echo "<script>redirect('pagamentos.php?cod=".$id.$mesano."&action=incluir&cellStyle=true');</script>";
 					}
@@ -421,7 +424,7 @@
 
 	if ((isset($_GET['action']) && $_GET['action']=="alter") && empty($_POST['submit'])) {
 
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Cliente"."</b></font><BR>";		
 
@@ -612,7 +615,7 @@
 
 	} else
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['codigo'])) {
 				
 				$nascimento = Fdate($_POST['dtnasc']);
@@ -639,7 +642,7 @@
 	// Excluindo registro com Delete		
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 			$query2 = "DELETE FROM carne_titular WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -666,8 +669,8 @@
 		$erro=false;
 
 		$qryl = "SELECT * FROM carne_titular WHERE nometitular='".$_POST['nome']."' and nomemae='".$_SESSION['nomemae']."'";
-		$resultado = mysql_query($qryl) or die('Erro na Query 1 :'.$qryl);
-		$linhas = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query 1 :'.$qryl);
+		$linhas = mysqli_num_rows($resultado);
 
 		if ($linhas > 0)
 		{
@@ -685,7 +688,7 @@
 			$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario)".
 					" values ('".$_POST['nome']."','".$_POST['endereco']."','".$_POST['numero']."','".$cep."','".$_POST['bairro']."','".$_POST['cidade']."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$_POST['nomemae']."','".$_POST['nomepai']."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."')";
 						
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
 			{
 				$aviso = TRANS('ERR_INSERT');
@@ -711,7 +714,7 @@
 		
 		$query2 = "UPDATE carne_titular SET nometitular='".$_POST['nome']."',endereco='".$_POST['endereco']."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', datanasc='".$nascimento."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."' WHERE id=".$_POST['codigo']." ";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query 2 :'.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query 2 :'.$query2);
 
 		if ($resultado2 == 0)
 		{
@@ -736,7 +739,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

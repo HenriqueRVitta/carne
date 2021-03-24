@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 13/03/2015 07:16
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatorio de Carnês parcelados com seus respectivos valores
+		Relatorio de Carnï¿½s parcelados com seus respectivos valores
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -24,6 +24,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$plano = $_POST['plano'];
@@ -66,9 +69,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if(isset($_POST['plano'])) {
 
 		$sql="SELECT descricao FROM carne_tipoplano where id = ".$_POST['plano']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -81,9 +84,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if(isset($_POST['localpagto'])) {
 
 		$sql="SELECT descricao FROM carne_localpagto where id = ".$_POST['localpagto']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Local Pagamento:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -96,13 +99,13 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		$lcBorda.= "<td align='right'>Relat&oacute;rio:</TD>
 		<td align='left'>".$tiporel."</TD>";
 
-	// Situação Pagos
+	// Situaï¿½ï¿½o Pagos
 	if($_POST['situacao']==2) {
 		$lcBorda.= "<td align='right'>Situacao:</TD>
 		<td align='left'>PAGOS</TD>";
 	} 
 
-	// Situação Em Aberto	
+	// Situaï¿½ï¿½o Em Aberto	
 	if($_POST['situacao']==3) {
 		$lcBorda.= "<td align='right'>Situacao:</TD>
 		<td align='left'>EM ABERTO</TD>";
@@ -122,12 +125,12 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 
 	$lcgroup = "";
 	
-	// Situação Pagos
+	// Situaï¿½ï¿½o Pagos
 	if($_POST['situacao']==2) {
 		$pcwhere = " and k.databaixa > '1900-01-01'";
 	} 
 
-	// Situação Em Aberto	
+	// Situaï¿½ï¿½o Em Aberto	
 	if($_POST['situacao']==3) {
 		$pcwhere = " and k.databaixa = '1900-01-01'";
 	}
@@ -136,7 +139,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		$pcwhere = " and k.nrocarne = ".$_POST['nrocarne']."";
 	}
 	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT count(*) as qtde, c.id, c.nometitular, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim, ".
        " k.dtregistro, k.id as idpagto, k.nrocarne, k.mesano, k.databaixa, l.descricao as desclocal, k.localpagto, k.vlrmensal, k.vlrparcelado, u.nome FROM carne_titular c ".
        " Join carne_contratos p on p.idtitular = c.id ".
@@ -151,7 +154,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
       //print_r($_POST);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
@@ -164,11 +167,11 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	<th scope='col' align='center'>Total</th>	
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		$dtregistro = str_replace('/','',substr(converte_datacomhora($row['dtregistro']),0,10));
 

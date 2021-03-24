@@ -1,16 +1,17 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 	 
-	// Impressão do Capa
+	// Impressï¿½o do Capa
 	if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
  	     echo "<script>redirect('geracapacarne.php');</script>";		
 	}
@@ -98,6 +99,9 @@ function CodigoBarra($numero){
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	date_default_timezone_set('America/Sao_Paulo');
 	
 	$datageracao = date('Y-m-d H:i:s');
@@ -161,13 +165,13 @@ $lcString  = '
 <p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
 ';
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
     $query = "select nome_hosp from configuracao limit 1";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$rowConfg = mysql_fetch_array($resultado);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$rowConfg = mysqli_fetch_array($resultado);
 	$nomehosp = $rowConfg['nome_hosp'];
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT t.id, t.nrocarne, t.nometitular, c.nrocontrato, c.plano, c.diavencto, p.descricao, p.formapagto, p.percdesc, cp.compet_ini, cp.compet_fim, cp.valor
 				 FROM carne_titular t Join carne_contratos c
 				 on c.idtitular = t.id
@@ -177,11 +181,11 @@ $lcString  = '
 				 on cp.idplano = c.plano 
 				 where t.situacao = 'ATIVO' ".$pcwhere."";
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString= "<table width='800' border='0' cellspacing='1' cellpadding='1'>";
 	
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 
@@ -201,7 +205,7 @@ $lcString  = '
 	
 	$VlrBaseCarne=$_SESSION['vlrbasecarne'];
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 	For ($x=$MesIni; $x<=$MesFim; $x++) {
 		
@@ -286,19 +290,19 @@ $lcString  = '
 
 			// Henrique 24/10/2019 13:23 GLPI 16571
 			// Inserindo na Tabela carne_carnesgerados
-			// Os Carnes que estão sendo gerados para o Contribuinte
+			// Os Carnes que estï¿½o sendo gerados para o Contribuinte
 			$query = "INSERT INTO carne_carnesgerados (idtitular,datainicio,datafim,usuario,datagerou,valor)".
 					" values ('".$titular."','".$dtinicial."','".$dtfinal."',".$_SESSION['s_uid'].",'".$datageracao."',".$Valorcarne.")";
-			$resultado = mysql_query($query) or die('Erro no Insert '.$query);
-			
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
+			}
 		}
 	
 	$lcString.= "</table>";
 
-$mpdf->ignore_invalid_utf8 = true;	
-$mpdf->WriteHTML($lcString);
+	$mpdf->ignore_invalid_utf8 = true;	
+	$mpdf->WriteHTML($lcString);
 
-$mpdf->Output();
-exit;
+	$mpdf->Output();
+	exit;
 
 ?>

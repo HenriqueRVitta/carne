@@ -1,5 +1,5 @@
 <?php 
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 07/02/2019 14:29 GLPI 12987
@@ -13,14 +13,16 @@
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
 
-	
+	$conec = new conexao;
+    $conec->conecta('MYSQL');
+    
 $banco = $_POST["banco"];
 
 $query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM carne_bancos where nome = '".$banco."'";
-$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 
-$row = mysql_fetch_array($resultado);
-$linha=mysql_num_rows($resultado);
+$row = mysqli_fetch_array($resultado);
+$linha=mysqli_num_rows($resultado);
 
 if($linha > 0) {
 

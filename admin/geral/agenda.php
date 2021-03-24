@@ -122,12 +122,11 @@
    $user = "root";
    $pass = "mcjsagwin";
    $db = "marcia_m";
-   $conn = mysql_connect($host, $user, $pass) or die (mysql_error());
+   $conn = mysqli_connect($host, $user, $pass) or die (mysqli_error());
    
-   @mysql_select_db($db);
+   @mysqli_select_db($db);
    
-   //@mysql_select_db($db);//selecione o banco de dados
-   
+  
    if(empty($_GET['data'])){//navegaçao entre os meses
            $dia = date('d');
            $month = ltrim(date('m'),"0");
@@ -236,11 +235,11 @@
            
            for($i = 1; $i <= $n; $i++ ){/*agora vamos no banco de dados verificar os evendos*/
                            $dtevento = $i."-".$month."-".$ano;
-                   $sqlag = mysql_query("SELECT * FROM agenda WHERE dtevento = '$dtevento'") or die(mysql_error());
+                   $sqlag = mysqli_query("SELECT * FROM agenda WHERE dtevento = '$dtevento'") or die(mysqli_error());
                    
-                                   $num = mysql_num_rows($sqlag);/*quantos eventos tem para o mes*/
-                                   $idev = @mysql_result($sqlag, 0, "dtevento");
-                                   $eve = @mysql_result($sqlag, 0, "evento");                      
+                                   $num = mysqli_num_rows($sqlag);/*quantos eventos tem para o mes*/
+                                   $idev = @mysqli_result($sqlag, 0, "dtevento");
+                                   $eve = @mysqli_result($sqlag, 0, "evento");                      
                                    if($num > 0){/*prevalece qualquer dia especial do calendario, por isso está em primeiro*/
                           print '<td class="evt">';
                           print '<a href="?d='.$idev.'&data='.$dia.'/'.$month.'/'.$ano.'" title="'.$eve.'">'.$i.'</a>';
@@ -276,17 +275,17 @@
                    }
    if(isset($_GET['d'])){/*link dos dias de eventos*/
            $idev = $_GET['d'];
-           $sqlev = mysql_query("SELECT * FROM agenda WHERE dtevento = '$idev' ORDER BY hora ASC") or die(mysql_error());
-           $numev = mysql_num_rows($sqlev);
+           $sqlev = mysqli_query("SELECT * FROM agenda WHERE dtevento = '$idev' ORDER BY hora ASC") or die(mysqli_error());
+           $numev = mysqli_num_rows($sqlev);
            for($j = 0; $j < $numev; $j++){/*caso no mesmo dia tenha mais eventos continua imprimindo */
-           $eve = @mysql_result($sqlev, $j, "evento");/*pegando os valores do banco referente ao evento*/
-           $dev = @mysql_result($sqlev, $j, "dtevento");
-           $dsev = @mysql_result($sqlev, $j, "conteudo");
-           $auev = @mysql_result($sqlev, $j, "autor");
-           $lev = @mysql_result($sqlev, $j, "local");
-           $psev = @mysql_result($sqlev, $j, "data");
+           $eve = @mysqli_result($sqlev, $j, "evento");/*pegando os valores do banco referente ao evento*/
+           $dev = @mysqli_result($sqlev, $j, "dtevento");
+           $dsev = @mysqli_result($sqlev, $j, "conteudo");
+           $auev = @mysqli_result($sqlev, $j, "autor");
+           $lev = @mysqli_result($sqlev, $j, "local");
+           $psev = @mysqli_result($sqlev, $j, "data");
            $nowev = date('d/m/Y - H:i', strtotime($psev));/*transforma a data para data padrão brazil*/
-           $hev = @mysql_result($sqlev, $j, "hora"); 
+           $hev = @mysqli_result($sqlev, $j, "hora"); 
    print '<table width="300" cellspacing="0" cellpadding="0">';/*monta a tabela de eventos*/
    print '<tr><td class="show">'.$dev.' - '.$eve.'</td></tr>';
    print '<tr><td class="linha"><b>Hora: </b>'.$hev.'hs</td></tr>';

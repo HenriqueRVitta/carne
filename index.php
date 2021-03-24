@@ -1,5 +1,6 @@
 <?php 
 header("Content-Type: text/html; charset=ISO-8859-1",true);
+
 /*
  * No Banco de Dados MYSQL execute
  * ALTER DATABASE `sua_base` CHARSET = Latin1 COLLATE = latin1_swedish_ci
@@ -38,9 +39,8 @@ is_file( "./includes/config.inc.php" )
 	include ("includes/functions/funcoes.inc");
 	include ("includes/javascript/funcoes.js");
 	include ("includes/queries/queries.php");
-	include ("".$includesPath."config.inc.php");
-	//require_once ("includes/languages/".LANGUAGE."");
-	include ("".$includesPath."versao.php");
+	include ("includes/config.inc.php");
+	include ("includes/versao.php");
 
 	include("includes/classes/conecta.class.php");
 	$conec = new conexao;
@@ -51,8 +51,8 @@ is_file( "./includes/config.inc.php" )
 	}
 
 	$qryLang = "SELECT * FROM config";
-	$execLang = mysql_query($qryLang);
-	$rowLang = mysql_fetch_array($execLang) or die('Erro na query '.$execLang);
+	$execLang = mysqli_query($conec->con,$qryLang);
+	$rowLang = mysqli_fetch_array($execLang) or die('Erro na query '.$execLang);
 	if (!isset($_SESSION['s_language'])) $_SESSION['s_language']= $rowLang['conf_language'];
 	if (!isset($_SESSION['s_modelomenu'])) $_SESSION['s_modelomenu']= $rowLang['modelomenu'];
 	if (!isset($_SESSION['modelocarne']))  $_SESSION['modelocarne']=$rowLang['modelocarne'];
@@ -80,8 +80,8 @@ is_file( "./includes/config.inc.php" )
 	}
 		
 	$qrylocal = "SELECT razao from cadastro_unidades where codigo=".$_SESSION['s_local']."";
-	$exelocal = mysql_query($qrylocal) or die('Erro na query: ' .$qrylocal. mysql_error());
-	$rowlocal = mysql_fetch_array($exelocal);
+	$exelocal = mysqli_query($conec->con,$qrylocal) or die('Erro na query: ' .$qrylocal.mysqli_error($conec->con));
+	$rowlocal = mysqli_fetch_array($exelocal);
 
 	$uLogado = '';
 	if(!empty($_SESSION['s_coduser'])) {
@@ -104,15 +104,14 @@ is_file( "./includes/config.inc.php" )
 	}
 	$marca = "HOME";
 	
-print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"http://www.w3.org/TR/html4/loose.dtd\">";
-print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
-print "<head>";
-//print "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>";
+echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"http://www.w3.org/TR/html4/loose.dtd\">";
+echo "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
+echo "<head>";
 
-print "<title>Sistema de Carn&ecirc; - &Aacute;rea Administrativa</title>";
-print "<link rel='stylesheet' href='includes/css/estilos.css.php'>"; //type='text/css'
-print "</head><body onLoad=\"setHeight('centro'); setHeight('centro2')\">";
-print "<table width='100%' border='0px' id='geral'><tr><td colspan='2'>";
+echo "<title>Sistema de Carn&ecirc; - &Aacute;rea Administrativa</title>";
+echo "<link rel='stylesheet' href='includes/css/estilos.css.php'>";
+echo "</head><body onLoad=\"setHeight('centro'); setHeight('centro2')\">";
+echo "<table width='100%' border='0px' id='geral'><tr><td colspan='2'>";
 
 
 $pnglogin= "<td align='right' width='70'><a href='".$commonPath."logout.php' title='".$hnt."'>".$logInfo."&nbsp;<img class='profile-img' src='//ssl.gstatic.com/accounts/ui/avatar_2x.png' style=\"{vertical-align:middle;}\" height='15' width='15' border='0' alt=''></a></td><td >|</td>";
@@ -125,14 +124,11 @@ if(!conexaointernet()){
 
 
 
-print "<table class='topo' border='0' id='cabecalho'>
-	<tr>
-		<td ><img src='logo.png' height='95' width='350'></td>
-		<td align='left'><a href='http://chamados.mcj.com.br' target='_blank' style='color:blue; text-decoration: underline;'>CHAMADOS</a></td>
-		<td align='right'><font color='#1E90FF'>".$USER_TYPE.":</font><b> ".$uLogado."</b></td><td align='right'>|</td>".
-		$pnglogin."
-		
-		</tr></table>";
+echo "<table class='topo' border='0' id='cabecalho'>";
+echo "<tr><td ><img src='logo.png' height='95' width='350'></td>";
+echo "<td align='left'><a href='http://chamados.mcj.com.br' target='_blank' style='color:blue; text-decoration: underline;'>CHAMADOS</a></td>";
+echo "<td align='right'><font color='#1E90FF'>".$USER_TYPE.":</font><b> ".$uLogado."</b></td><td align='right'>|</td>".$pnglogin;
+echo "</tr></table>";
 		
 print "<table class='barra' border='0' id='barra'><tr>";
 
@@ -142,25 +138,19 @@ print "<table class='barra' border='0' id='barra'><tr>";
 		print "<td width='7%'>&nbsp;</td>";
 		print "<td width='5%' >&nbsp;</td>";
 		print "<td width='76%'>&nbsp;</td>";
-		//$conec->desconecta('MYSQL');
 	
 	} else {
 
-		/*
-		$qryconf = $QRY["useropencall"];
-		$execconf = mysql_query($qryconf) or die('Não foi possível ler as informações de configuração do sistema!');
-		$rowconf = mysql_fetch_array($execconf);
-		*/
 		
 		$qryStyle = "SELECT * FROM temas t, uthemes u  WHERE u.uth_uid = ".$_SESSION['s_uid']." and t.tm_id = u.uth_thid";
-		$execStyle = mysql_query($qryStyle) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÇÔES DE ESTILOS!<BR>'.$qryStyle);
-		$rowStyle = mysql_fetch_array($execStyle);
-		$regs = mysql_num_rows($execStyle);
+		$execStyle = mysqli_query($conec->con,$qryStyle) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÇÔES DE ESTILOS!<BR>'.$qryStyle);
+		$rowStyle = mysqli_fetch_array($execStyle);
+		$regs = mysqli_num_rows($execStyle);
 		if ($regs==0){ //SE N�O ENCONTROU TEMA ESPEC�FICO PARA O USU�RIO
 			unset ($rowStyle);
 			$qryStyle = "SELECT * FROM styles";
-			$execStyle = mysql_query($qryStyle);
-			$rowStyle = mysql_fetch_array($execStyle);
+			$execStyle = mysqli_query($conec->con,$qryStyle);
+			$rowStyle = mysqli_fetch_array($execStyle);
 		}
 
 		print "<td id='HOME' width='5%' class='barraMenu'><a class='barra' onMouseOver=\"destaca('HOME')\" onMouseOut=\"libera('HOME')\" onclick=\"loadIframe('".$modelomenu."?sis=h','menu','home.php', 'centro',3,'HOME')\" >&nbsp;".TRANS('MNS_HOME')."&nbsp;</a></td>";
@@ -222,8 +212,8 @@ if ($_SESSION['s_logado']) {
 			print "<option value=-1 selected></option>";
 			
 			$query = "SELECT id,razao from cadastro_unidades order by razao";
-			$resul = mysql_query($query) or die('Nao foi possivel ler as informaoes de Local de Atua��o!');;
-			while ($rownivel = mysql_fetch_array($resul)){
+			$resul = mysqli_query($conec->con,$query) or die('Nao foi possivel ler as informaoes de Local de Atua��o!');;
+			while ($rownivel = mysqli_fetch_array($resul)){
 				print "<option value='".$rownivel['id']."' selected>".substr($rownivel['razao'],0,45)."</option>";
 			}
 			print "</select></td>";

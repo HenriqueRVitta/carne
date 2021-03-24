@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/02/2015 09:55
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos Analítico do Cadastro de Titular
+		Relatï¿½rio dos Analï¿½tico do Cadastro de Titular
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -27,6 +27,9 @@ date_default_timezone_set('America/Sao_Paulo');
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 
 	$dtinicial = '1900-01-01';	
@@ -96,9 +99,9 @@ date_default_timezone_set('America/Sao_Paulo');
 	if(isset($_POST['plano'])) {
 
 		$sql="SELECT descricao FROM carne_tipoplano where id = ".$_POST['plano']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -145,7 +148,7 @@ date_default_timezone_set('America/Sao_Paulo');
 	}
 	
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
 	$query = "SELECT c.cidade, q.descricao, count(*) as qtde FROM carne_titular c
 	left Join carne_contratos p on p.idtitular = c.id
 	left Join carne_tipoplano q on q.id = p.plano
@@ -156,21 +159,21 @@ date_default_timezone_set('America/Sao_Paulo');
       //print_r($_POST);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table style='font-family: serif; font-size: 9pt; color: #000088;' width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Descricao</th>
 	<th scope='col' align='center'>Qtde</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$inativos = 0;
 	$geral = 0;
 	$vlrtotal = 0;
 	
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		if($separacao == 3) {
 			$row['cidade'] = $row['descricao'];
@@ -259,16 +262,16 @@ if($_POST['gerarexecel'] == 2) {
 	
 $dadosXls = $header.$lcString.$footer;
 
-// Definimos o nome do arquivo que será exportado  
+// Definimos o nome do arquivo que serï¿½ exportado  
 $arquivo = "RelatorioCadastroCarne".$date.".xls";  
-// Configurações header para forçar o download  
+// Configuraï¿½ï¿½es header para forï¿½ar o download  
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment;filename="'.$arquivo.'"');
 header('Cache-Control: max-age=0');
-// Se for o IE9, isso talvez seja necessário
+// Se for o IE9, isso talvez seja necessï¿½rio
 header('Cache-Control: max-age=1');
        
-// Envia o conteúdo do arquivo  
+// Envia o conteï¿½do do arquivo  
 echo $dadosXls;
 	
 

@@ -1,7 +1,9 @@
 <?php
 
 	session_start();
-
+  $conec = new conexao;
+  $conec->conecta('MYSQL');
+  
 
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
@@ -16,8 +18,8 @@ $query = "SELECT a.*, b.descricao, b.formapagto, c.valor, d.datacontrato, d.diav
 		"where a.id =".$_GET['cod']."";
 		
 		
-$resultado = mysql_query($query) or die("ERRO na Query ".$query);
-$row = mysql_fetch_array($resultado);
+$resultado = mysqli_query($conec->con,$query) or die("ERRO na Query ".$query);
+$row = mysqli_fetch_array($resultado);
 $dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));
 $dtnascimento = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
 
@@ -168,8 +170,8 @@ body {
   </tr>
 <?php 
 		$query = "SELECT d.id,d.nome,d.datanasc,p.descricao as parentesco from carne_dependente d Left Join carne_tipodependente p on p.id = d.parentesco where d.idtitular=".$_GET['cod']." order by d.nome desc";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-			while ($rowb = mysql_fetch_array($resultado))
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+			while ($rowb = mysqli_fetch_array($resultado))
 			{
 
 				  $dtnasc = str_replace('/','',substr(converte_datacomhora($rowb['datanasc']),0,10));

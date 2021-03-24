@@ -20,8 +20,8 @@ $nometitu = 'Registro nao encontrado';
 
 $sqlQuery = "select c.nrocontrato, t.nometitular from carne_contratos c Join carne_titular t on t.id = c.idtitular where c.nrocontrato ='".$cod."'";
 
-$strquery=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
-$retorno=mysql_fetch_array($strquery);
+$strquery=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
+$retorno=mysqli_fetch_array($strquery);
 
 if($retorno['nrocontrato'] > 0) {
 $contrato = $retorno['nrocontrato'];

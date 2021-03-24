@@ -17,6 +17,8 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -54,10 +56,10 @@
 		print "<select class='select2' name='titular' id='idtitular'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,nometitular from carne_titular order by nometitular";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['id'].">".$row['nometitular']."</option>";
 						$i++;
@@ -71,10 +73,10 @@
 		print "<select class='select2' name='plano' id='idplano'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,descricao from carne_tipoplano where status = 0 and unidade =".$_SESSION['s_local']." order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						//if($row['id']==$rowA['plano']) { $selected = " selected"; } else { $selected = "";}
 						//print "<option value=".$row['id'].$selected.">".$row['descricao']."</option>";
@@ -89,9 +91,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Todos"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -146,10 +148,10 @@
 		print "<select class='select2' name='usuario' id='idusuario'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="SELECT codigo,nome FROM usuarios order by nome";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['codigo'].">".$row['nome']."</option>";
 						$i++;
@@ -162,10 +164,10 @@
 		print "<select class='select2' name='cidade' id='idcidade'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="SELECT distinct cidade FROM carne_titular order by cidade";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['cidade'].">".$row['cidade']."</option>";
 						$i++;
@@ -185,9 +187,9 @@
 		print "<select class='select2' name='taxas' id='idtaxas' onChange='return ConsultaTaxas(this.value)'>";  
 				print "<option value=-1>"."Selecione a Taxa"."</option>";
 					$sql="Select id,descricao from carne_taxas where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						$selected = "";
 						
@@ -233,10 +235,10 @@
 		print "<select class='select2' name='grupo' id='idgrupo'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,descricao from carne_grupo order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;

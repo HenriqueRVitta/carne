@@ -19,11 +19,11 @@
   */
 
 
-## CRIAR VARIÁVEL PARA DEFINIÇÃO DO PADRÃO DE DATA EX: PADRÃO AMERICANO, PADRÃO BRASILEIRO
+## CRIAR VARIï¿½VEL PARA DEFINIï¿½ï¿½O DO PADRï¿½O DE DATA EX: PADRï¿½O AMERICANO, PADRï¿½O BRASILEIRO
 
 class dateOpers {
-	var $data1; //Primeira parâmetro de data
-	var $data2; //Segundo parâmetro de data
+	var $data1; //Primeira parï¿½metro de data
+	var $data2; //Segundo parï¿½metro de data
 	var $forma;
 
 	var $dif_sec;
@@ -33,7 +33,7 @@ class dateOpers {
 	var $tValido;
 	var $dFullAll;
 
-	function formatDate ($data){ //Retorna saída no formado AAAA-MM-DD HH:mm:SS
+	function formatDate ($data){ //Retorna saï¿½da no formado AAAA-MM-DD HH:mm:SS
 
 		$ano = 0;
 		$mes = 0;
@@ -201,10 +201,10 @@ class dateOpers {
 
 		if ($sep1['1']<=$sep2['1']){
 			$first_is_minor = true;
-			//print "<br>O hora de início é menor!<br>";
+			//print "<br>O hora de inï¿½cio ï¿½ menor!<br>";
 		} else {
 			$first_is_minor = false;
-			//print "<br>O hora de início é maior!<br>";
+			//print "<br>O hora de inï¿½cio ï¿½ maior!<br>";
 		}
 
 		$this->dFullAll = array("fullDays"=>$fullDays, "first_is_minor"=>$first_is_minor);
@@ -222,7 +222,7 @@ class dateOpers {
 	}
 
 
-	//Parâmetros em segundos - data1: data mais antiga - data2: data mais recente (SEMPRE NO FORMATO AMERICANO!!!
+	//Parï¿½metros em segundos - data1: data mais antiga - data2: data mais recente (SEMPRE NO FORMATO AMERICANO!!!
 	function diff_time($data1,$data2){
 		$s = strtotime($data2)-strtotime($data1);
 		$secs = $s;
@@ -248,7 +248,7 @@ class dateOpers {
 
 		$dias = $d;
 
-		//ALTERAÇÃO PARA AJUSTAR O TOTAL DE DIAS CHEIOS - 14-15-08
+		//ALTERAï¿½ï¿½O PARA AJUSTAR O TOTAL DE DIAS CHEIOS - 14-15-08
 		//if ($this->fullDays($data1,$data2)){
 
 		$this->fullDays($data1,$data2);
@@ -287,7 +287,7 @@ class dateOpers {
 	}
 
 
-	function diasDomingo($data1,$data2){//Retorna a quantidade de Domingos do período
+	function diasDomingo($data1,$data2){//Retorna a quantidade de Domingos do perï¿½odo
 
 		$this->diff_time($data1, $data2);
 		$dias_diff = $this->diff["dFullTotal"];
@@ -318,13 +318,13 @@ class dateOpers {
 	//Retorna o tempo vÃ¡lido em horas ou segundos entre duas datas descontando finais de semana e feriados.
 	//TambÃ©m desconta os horÃ¡rios fora da carga horÃ¡ria de cada Ã¡rea.
 
-	//Colocar parâmetro para identificar o tempo de intervalo
+	//Colocar parï¿½metro para identificar o tempo de intervalo
 	//PARAMETROS:
 	//	hora_ini: inicio da jornada
 	//	hora_fim: final da jornada
 	//	meio_dia: intervalo
-	//	sabado: total de horas trabalhadas nos sábados
-	//	saida: formato da saída da função, se será em horas ou segundos
+	//	sabado: total de horas trabalhadas nos sï¿½bados
+	//	saida: formato da saï¿½da da funï¿½ï¿½o, se serï¿½ em horas ou segundos
 	function tempo_valido($data1,$data2,$hora_ini,$hora_fim,$meio_dia,$sabado,$saida){
 		set_time_limit(300);
 		$noData = false;
@@ -349,7 +349,7 @@ class dateOpers {
 
 
 
-			if ($data1_aux['3']<$hora_ini){ //ABERTURA COMPARADA A HORA DE INÍCIO
+			if ($data1_aux['3']<$hora_ini){ //ABERTURA COMPARADA A HORA DE INï¿½CIO
 				$data1_aux['3'] = $hora_ini;
 				$data1_aux['4'] = "00";
 				$data1_aux['5'] = "00";
@@ -403,7 +403,7 @@ class dateOpers {
 
 
 			//Verifica se existem feriados nos dias uteis cadastrados na tabela feriados
-			//	entre as duas datas (também verifica os feriados permanentes);
+			//	entre as duas datas (tambï¿½m verifica os feriados permanentes);
 			$sql = "SELECT data_feriado AS dia_semana, fixo_feriado as permanente ".
 				"\nFROM feriados ".
 				"\nWHERE ".
@@ -417,8 +417,11 @@ class dateOpers {
 							"\n\t\t ) ".
 					"\n\tGROUP BY date_format(data_feriado,'%m-%d' )";
 
-			$resultado = mysql_query($sql);
-			$feriados = mysql_num_rows($resultado);//Em dias Ãºteis
+			$conec = new conexao;
+			$conec->conecta('MYSQL');
+					
+			$resultado = mysqli_query($conec->con,$sql);
+			$feriados = mysqli_num_rows($resultado);//Em dias Ãºteis
 
 			//Verifica os feriados que cairam em Domingo;
 			$sql2 = "SELECT data_feriado AS dia_semana, fixo_feriado as permanente ".
@@ -435,8 +438,9 @@ class dateOpers {
 							"\n\t\t ) ".
 					"\n\tGROUP BY date_format(data_feriado,'%m-%d' )";
 
-			$resultado2 = mysql_query($sql2);
-			$feriados_domingo = mysql_num_rows($resultado2);
+
+			$resultado2 = mysqli_query($conec->con,$sql2);
+			$feriados_domingo = mysqli_num_rows($resultado2);
 
 			//Verifica os feriados que cairam em SÃ¡bado;
 			$sql3 = "SELECT data_feriado AS dia_semana, fixo_feriado as permanente ".
@@ -453,8 +457,8 @@ class dateOpers {
 							"\n\t\t ) ".
 					"\n\tGROUP BY date_format(data_feriado,'%m-%d' )";
 
-			$resultado3 = mysql_query($sql3);
-			$feriados_sabado = mysql_num_rows($resultado3);
+			$resultado3 = mysqli_query($conec->con,$sql3);
+			$feriados_sabado = mysqli_num_rows($resultado3);
 
 			$feriados+= $feriados_domingo+$feriados_sabado;
 			$invalidos=0; //Inicializando o numero de horas invÃ¡lidas do intervalo!!

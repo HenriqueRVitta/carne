@@ -6,7 +6,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
-
+  $conec = new conexao;
+  $conec->conecta('MYSQL');
+  
 ?>
 
 <html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
@@ -45,8 +47,8 @@ $query = "SELECT a.nometitular, b.descricao, b.formapagto, c.valor, d.datacontra
 		"where a.id =".$_GET['cod']."";
 		
 		
-$resultado = mysql_query($query) or die("ERRO na Query ".$query);
-$row = mysql_fetch_array($resultado);
+$resultado = mysqli_query($conec->con,$query) or die("ERRO na Query ".$query);
+$row = mysqli_fetch_array($resultado);
 
 $dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));
 				

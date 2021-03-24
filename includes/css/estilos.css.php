@@ -1,4 +1,7 @@
-<?php session_start();
+<?php 
+
+session_start();
+
 /*ARQUIVO DE ESTILOS*/
 
 	require_once ('../../includes/config.inc.php');
@@ -10,27 +13,27 @@
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
 
-	// Definição de cores do Sistema na Tabela -> SELECT * FROM styles
+	// Definiï¿½ï¿½o de cores do Sistema na Tabela -> SELECT * FROM styles
 
 	if (isset($_SESSION['s_uid'])) {
 	//if (isset($_COOKIE['cook_oco_uid'])) {
 
 		$qry = "SELECT * FROM temas t, uthemes u  WHERE u.uth_uid = ".$_SESSION['s_uid']." and t.tm_id = u.uth_thid";
-		$exec = mysql_query($qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAï¿½ï¿½ES DO TEMA!<BR>'.$qry);
-		$row = mysql_fetch_array($exec);
-		$regs = mysql_num_rows($exec);
+		$exec = mysqli_query($conec->con,$qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAï¿½ï¿½ES DO TEMA!<BR>'.$qry);
+		$row = mysqli_fetch_array($exec);
+		$regs = mysqli_num_rows($exec);
 		if ($regs==0){ //SE Nï¿½O ENCONTROU TEMA ESPECï¿½FICO PARA O USUï¿½RIO
 			$qry = "SELECT * FROM styles";
-			$exec = mysql_query($qry);
-			$row = mysql_fetch_array($exec);
+			$exec = mysqli_query($conec->con,$qry);
+			$row = mysqli_fetch_array($exec);
 		}
 	} else {
 		$qry = "SELECT * FROM styles";
-		$exec = mysql_query($qry);
-		$row = mysql_fetch_array($exec);
+		$exec = mysqli_query($conec->con,$qry);
+		$row = mysqli_fetch_array($exec);
 	}
 
-// Cor do rodapé e corpo da página
+// Cor do rodapï¿½ e corpo da pï¿½gina
 print "body
 {
 	position: relative;
@@ -121,23 +124,23 @@ print "table.topo
 	text-align:left; ";
 	if ($row['tm_color_topo'] == "IMG_DEFAULT") {
 		
-		// Cabeçalho principal do Projeto juntamente com a LOGO
+		// Cabeï¿½alho principal do Projeto juntamente com a LOGO
 		
-		// Imagem de fundo do cabeçalho
+		// Imagem de fundo do cabeï¿½alho
 		//print "background-image:url('./bk_header.png');";
 		
-		// Cor de fundo do cabeçalho padrão do sistema
+		// Cor de fundo do cabeï¿½alho padrï¿½o do sistema
 		print "background-color: #FFFFFF;";
 		print "background-repeat: repeat ;";
 	} else {
 		
-		// Cor de fundo do cabeçalho definida pelo usuário
-		// #d1ead7 cor de fundo da logo Cliente Clínica Saúde e Harmonia - Ipatinga
+		// Cor de fundo do cabeï¿½alho definida pelo usuï¿½rio
+		// #d1ead7 cor de fundo da logo Cliente Clï¿½nica Saï¿½de e Harmonia - Ipatinga
 		print "background-color:".$row['tm_color_topo'].";";
 		//print "background-repeat: repeat ;";
 	}
 	
-	// Cor do Usuário logado no topo da página
+	// Cor do Usuï¿½rio logado no topo da pï¿½gina
 	print "color: ".$row['tm_color_topo_font'].";
 		
 }";
@@ -359,7 +362,7 @@ print ".botao:hover {color:#5E515B; }";
 /*FIM LINKS*/
 
 /************************************************************/
-/* Cor dos campos do Formulário */
+/* Cor dos campos do Formulï¿½rio */
 $formFieldColor = "#F6F6F6"; //#F1F1F1
 
 print ".select, .text, .select2, .text2, input.text
@@ -518,7 +521,7 @@ print ".data {height:20px; background-color:".$formFieldColor."; font-family: Ar
 
 /*FIM FORMULï¿½RIOS*/
 /*************************************a:link {color: #5E515B; text-decoration: none; cursor:pointer;}
-/*BOTÕES*/
+/*BOTï¿½ES*/
 
 print ".help
 {
@@ -566,7 +569,7 @@ print ".button
 	background: #F0F8FF;
 	border: 1px solid #a4a4a4; 
 }";
-// COR dos botões antes	background: #F0F8FF; url('./bg.gif') repeat-x #f0f0f0;
+// COR dos botï¿½es antes	background: #F0F8FF; url('./bg.gif') repeat-x #f0f0f0;
 
 print ".buttonDisabled {  
     background-color:  	#FFFFFF;  
@@ -676,7 +679,7 @@ print "a.likebutton
 }";
 
 
-/*FIM BOTÕES*/
+/*FIM BOTï¿½ES*/
 /************************************************************/
 
 print ".divAlerta {background-color: #FAD163; color: #000000;}";

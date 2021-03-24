@@ -21,8 +21,8 @@ $cod=$_POST["idtaxas"];
 
 $sqlQuery = "select id, valor from carne_taxas where id ='".$cod."'";
 
-$slProduto=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
-$rest=mysql_fetch_array($slProduto);
+$slProduto=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
+$rest=mysqli_fetch_array($slProduto);
 
 //echo "$rest[valor],$rest[id],00";
 

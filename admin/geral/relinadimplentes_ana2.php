@@ -26,7 +26,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	include("../../includes/mpdf54/mpdf.php");		
 	include ("../../includes/include_geral_III.php");
 
-
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
@@ -70,9 +72,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if($_POST['titular'] <> -1 ) {
 		
 		$sql="SELECT nometitular FROM carne_titular where id = ".$_POST['titular']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Cliente:</TD>
 				<td align='left'>".$row['nometitular']."</TD>";
@@ -84,8 +86,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		if($_POST['grupo']<>-1) {
 			
 			$sql="SELECT descricao FROM carne_grupo where id = ".$_POST['grupo']." ";
-			$commit = mysql_query($sql);
-			$row = mysql_fetch_array($commit);
+			$commit = mysqli_query($conec->con,$sql);
+			$row = mysqli_fetch_array($commit);
 	
 			$lcBorda.="<td align='right'>GRUPO:</TD>
 			<td align='left'>".retira_acentos_UTF8($row['descricao'])."</TD>";
@@ -190,13 +192,13 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	<th scope='col' align='center'>Vlr do Debito</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$qtdeIna = 0;
 	
 	$lntotalpg = 0.00;
 
-		while($row = mysql_fetch_array($resultado)){
+		while($row = mysqli_fetch_array($resultado)){
 				
     	$dtregistro = str_replace('/','',substr(converte_datacomhora($row['Data_Inicio']),0,10));
 
@@ -205,7 +207,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
     			// Inativar no carne_titular
     			if(isset($_POST['inativar']) && $_POST['inativar'] == 2){
     				$queryinativar = "Update carne_titular set situacao = 'Inativo' where id = ".$row['id'];
-    		    	$inativar = mysql_query($queryinativar) or die('ERRO NA QUERY !'.$queryinativar);
+    		    	$inativar = mysqli_query($conec->con,$queryinativar) or die('ERRO NA QUERY !'.$queryinativar);
     			}
     		
 				$lcString.= "<tr>

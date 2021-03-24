@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/02/2015 09:55
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos Analítico do Cadastro de Titular
+		Relatï¿½rio dos Analï¿½tico do Cadastro de Titular
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -96,9 +96,9 @@ ini_set('memory_limit', '-1');
 	if(isset($_POST['plano'])) {
 
 		$sql="SELECT descricao FROM carne_tipoplano where id = ".$_POST['plano']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -144,13 +144,7 @@ ini_set('memory_limit', '-1');
 		$pcordem	= " order by c.nometitular";
 	}
 
-	/* comentado temporariamente em 11/03/2015
-	// Faço aqui atualização da coluna qtdefilhos da tabela carne_titular
-	$query = "update carne_titular set qtdefilhos = (select count(*) from carne_dependente where idtitular = carne_titular.id)";
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	*/
-	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
 	$query = "SELECT c.id, c.nometitular, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
 	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
 	d.compet_ini, d.compet_fim FROM carne_titular c
@@ -163,7 +157,7 @@ ini_set('memory_limit', '-1');
       //print_r($_POST);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table style='font-family: serif; font-size: 9pt; color: #000088;' width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
@@ -175,14 +169,14 @@ ini_set('memory_limit', '-1');
 	<th scope='col' align='center'>Vlr Plano</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$inativos = 0;
 	$geral = 0;
 	$vlrtotal = 0;
 	
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		$dtreg = str_replace('/','',substr(converte_datacomhora($row['datainicio']),0,10));
 		
@@ -293,16 +287,16 @@ if($_POST['gerarexecel'] == 2) {
 	
 $dadosXls = $header.$lcString.$footer;
 
-// Definimos o nome do arquivo que será exportado  
+// Definimos o nome do arquivo que serï¿½ exportado  
 $arquivo = "RelatorioCadastroCarne".$date.".xls";  
-// Configurações header para forçar o download  
+// Configuraï¿½ï¿½es header para forï¿½ar o download  
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment;filename="'.$arquivo.'"');
 header('Cache-Control: max-age=0');
-// Se for o IE9, isso talvez seja necessário
+// Se for o IE9, isso talvez seja necessï¿½rio
 header('Cache-Control: max-age=1');
        
-// Envia o conteúdo do arquivo  
+// Envia o conteï¿½do do arquivo  
 echo $dadosXls;
 	
 

@@ -1,15 +1,15 @@
 <?php header ('Content-type: text/html; charset=ISO-8859-1');
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -17,6 +17,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -53,8 +56,8 @@
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(id) as id FROM carne_titular ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT * FROM carne_titular ";
@@ -71,10 +74,10 @@
 			$query.=" Where unidade =".$_SESSION['s_local']." ORDER BY id desc";
 		}
 
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1!');
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1!');
+		$registros = mysqli_num_rows($resultado);
 
-	// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+	// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 	$disabled = '';
 	$clasbutton = " class='button'";
 		
@@ -99,7 +102,7 @@
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
 			"</td></tr>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 			echo "<tr><td colspan='4'>".mensagem('Cadastre o Titular para ter acesso ao contrato.')."</td></tr>";
@@ -118,7 +121,7 @@
 				"<td class='line' align='center'><h3>"." Contrato "."</h3></TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -150,7 +153,7 @@
 				}
 				print "<td class='line'>".$row['nrocontrato']."</td>";
 				
-				print "<td class='line' align='center'><a onClick=\"redirect('abas.php?action=dependentes&cod=".$row['id']."&cellStyle=true')\"><img height='18' width='18' src='".ICONS_PATH."contents.png' title='"."Acessar informações do Contrato"."'></a></td>";
+				print "<td class='line' align='center'><a onClick=\"redirect('abas.php?action=dependentes&cod=".$row['id']."&cellStyle=true')\"><img height='18' width='18' src='".ICONS_PATH."contents.png' title='"."Acessar informaï¿½ï¿½es do Contrato"."'></a></td>";
 				print "<td class='line'><a href=\"redirect('abas.php?action=excluir&cod=".$row['id']."')\"></a></TD>";
 				
 				print "</TR>";
@@ -168,7 +171,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

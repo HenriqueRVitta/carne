@@ -47,6 +47,9 @@
 	include ("../../includes/include_geral_III.php");
 	include ("../../includes/classes/paging.class.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
     $numero_lote = [];
     
     $datageracao = date('Y-m-d H:i:s');
@@ -75,23 +78,23 @@
 
 	// Dados da Empresa
 	$qrylocal = "SELECT * from cadastro_unidades where codigo=".$_SESSION['s_local']."";
-	$exelocal = mysql_query($qrylocal) or die('Erro na query: ' .$qrylocal. mysql_error());
-	$rowempresa = mysql_fetch_array($exelocal);
+	$exelocal = mysqli_query($conec->con,$qrylocal) or die('Erro na query: ' .$qrylocal. mysqli_error($conec->con));
+	$rowempresa = mysqli_fetch_array($exelocal);
 
 	// Dados do Banco
    	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca, idretornobanco FROM carne_bancos where nome = '".$bancoEmissor."'";
-	$resulConfig = mysql_query($queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
-	$rowconfig = mysql_fetch_array($resulConfig);
+	$resulConfig = mysqli_query($conec->con,$queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
+	$rowconfig = mysqli_fetch_array($resulConfig);
 	
 
     // Insert em carne_lote
     $queryRemessa= "insert into carne_lote (data,banco,unidade,usuario) values ('".$datageracao."','".$bancoEmissor."',".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";
-    $resulConfig = mysql_query($queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
+    $resulConfig = mysqli_query($conec->con,$queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
 
        //numero do lote
 	   $qryNroDoc = "SELECT max(id) as proximo FROM carne_lote";
-	   $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
-	   $rownrodoc = mysql_fetch_array($exeNroDoc);
+	   $exeNroDoc = mysqli_query($conec->con,$qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysqli_error($conec->con));
+	   $rownrodoc = mysqli_fetch_array($exeNroDoc);
 	   $numero_lote = $rownrodoc['proximo'];
        $lotedaremessa = $rownrodoc['proximo'];
 
@@ -127,9 +130,9 @@ foreach ($arr as &$value) {
 	// Qtde de Dependentes
 	
    	$queryCliente = "SELECT count(*) as qtde_dep FROM carne_dependente where idtitular = '".$IdCliente."'";
-	$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+	$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 	$i=0;
-	while($rowQtde = mysql_fetch_array($resulCliente)){
+	while($rowQtde = mysqli_fetch_array($resulCliente)){
 		$qtde = $rowQtde['qtde_dep'];
 		$i++;
 	}
@@ -149,14 +152,14 @@ foreach ($arr as &$value) {
    	" join carne_tipoplano c on c.id = b.plano".
    	" join carne_competenciaplano d on d.idplano = c.id".   	
    	" where a.id = '".$IdCliente."'";
-	$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+	$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 
     $DataVencimento = explode("-",substr($_POST['inicio'],0,10));
     $DataVencimento = $DataVencimento[2]."/".$DataVencimento[1]."/".$DataVencimento[0];
 
     $somames = 1;
     
-    while($rowcliente = mysql_fetch_array($resulCliente)) {
+    while($rowcliente = mysqli_fetch_array($resulCliente)) {
 
         $contador = 1;
         $qtdeInicio = $MesFim;
@@ -261,7 +264,7 @@ foreach ($arr as &$value) {
             $qtde_nosso_numero = strlen($NossoNumero);
             $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
             $cont=0;
-            $calculoDv = '';
+            $calculoDv=0;
             for($num=0;$num<=strlen($sequencia);$num++)
             {
                 $cont++;
@@ -283,7 +286,11 @@ foreach ($arr as &$value) {
                     $constante = 7;
                     $cont = 0;
                 }
-                $calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+
+                $somando = intval(substr($sequencia,$num,1));
+
+                //$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+                $calculoDv = $calculoDv + ($somando * $constante);
             }
             $Resto = $calculoDv % 11;
             $Dv = 11 - $Resto;
@@ -411,14 +418,14 @@ foreach ($arr as &$value) {
         
         // Atualizando a Data de Vencto do Contrato
         $queryCont = "UPDATE carne_contratos set datacontrato = '".$venctoContrato."' Where idtitular = ".$rowcliente['id']." and status = 0";
-        $resulCont = mysql_query($queryCont) or die('Erro no Update '.$queryCont);
+        $resulCont = mysqli_query($conec->con,$queryCont) or die('Erro no Update '.$queryCont);
         if ($resulCont == 0) {
             $aviso = TRANS('ERR_INSERT');
         }	
                 
         // Atualizando a Data de Vencto do Contrato
         $queryCont = "UPDATE carne_titular set ultimomescarne = '".$ultimomescarne."' Where id = ".$rowcliente['id'];
-        $resulCont = mysql_query($queryCont) or die('Erro no Update '.$queryCont);
+        $resulCont = mysqli_query($conec->con,$queryCont) or die('Erro no Update '.$queryCont);
         if ($resulCont == 0) {
             $aviso = TRANS('ERR_INSERT');
         }	

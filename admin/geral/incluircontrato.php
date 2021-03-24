@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/04/2014 08:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -17,7 +17,10 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
-	
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+		
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 ?>
    	<!-- Utilize isso para evitar conflito entre scripts
@@ -64,8 +67,8 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 	
        	$query = "SELECT max(id) as id FROM carne_contratos ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT * FROM carne_contratos ";
@@ -80,10 +83,10 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 			$query.=" and unidade =".$_SESSION['s_local']."";
 		}
 
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1!');
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1!');
+		$registros = mysqli_num_rows($resultado);
 
-	// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+	// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 	$disabled = '';
 	$clasbutton = " class='button'";
 		
@@ -110,9 +113,9 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 		print "<select class='select2' name='plano' id='idplano'>";  
 				print "<option value=-1>"."Selecione o Plano"."</option>";
 					$sql="Select id,descricao from carne_tipoplano where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -143,7 +146,7 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 	    	$clasbutton = " class='buttonDisabled'";
 	    }
 		
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o do Contrato"."</b></font><BR>";		
 
@@ -163,12 +166,12 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 
 		print "<select class='select2' name='plano' id='idplano'>";  
 		$sql="select plano from carne_contratos where id =".$_GET['cod']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione o Plano"."</option>";
 				$sql="Select id,descricao from carne_tipoplano where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['plano'] ) {
                             				print " selected";
@@ -202,7 +205,7 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 
 	}
 
-		// Variáveis convertidas
+		// Variï¿½veis convertidas
 		if(isset($_POST['codigo'])) {
 				
 				$dtcontrato = Fdate($_POST['dtcontrato']);
@@ -214,8 +217,8 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_CAD')))) {	
 
 	    $query = "SELECT prox_cartao_desc,prox_contrato FROM config";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$config = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$config = mysqli_fetch_array($resultado);
        	$proximocartao = $config['prox_cartao_desc']+1;
        	$proximocontra = $config['prox_contrato']+1;
 		
@@ -224,7 +227,7 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 		$query = "INSERT INTO carne_contratos (nrocontrato,plano,datacontrato,diavencto,status,idtitular,unidade,registro)".
 				" values ('".$_POST['codigo']."','".$_POST['plano']."','".$dtcontrato."','".$_POST['diavencto']."','".$_POST['status']."','".$_POST['titular']."',".$_SESSION['s_local'].",'".$registro."')";
 					
-		$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+		$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 		if ($resultado == 0)
 		{
 			$aviso = TRANS('ERR_INSERT');
@@ -234,10 +237,10 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 			$aviso = TRANS('OK_INSERT');
 			
 			$query = "update carne_titular set nrocontrato=".$_POST['codigo']." where id =".$_POST['titular']."";
-			$resultado = mysql_query($query) or die('Erro no Update '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Update '.$query);
 
 			$query2 	= "UPDATE config SET prox_contrato='".$proximocontra."'";
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 			
 		}
 
@@ -254,7 +257,7 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 					
 		$query2 = "UPDATE carne_contratos SET nrocontrato='".$_POST['codigo']."',plano='".$_POST['plano']."', datacontrato='".$dtcontrato."', diavencto='".$_POST['diavencto']."', status='".$_POST['status']."', idtitular='".$_POST['titular']."', unidade=".$_SESSION['s_local']." where id=".$_POST['contrato']."";		
 		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 		if ($resultado2 == 0)
 		{
@@ -295,7 +298,7 @@ function VerContrato(nrocontrato) {
 	    ajax = new XMLHttpRequest(); 
 	   } 
 	   catch(exc) { 
-	    alert("Esse browser não tem recursos para uso do Ajax"); 
+	    alert("Esse browser nï¿½o tem recursos para uso do Ajax"); 
 	    ajax = null; 
 	   } 
 	  } 
@@ -315,7 +318,7 @@ function VerContrato(nrocontrato) {
 	  
 	  //alert(ajax.readyState+' '+ajax.responseText+' '+ajax.status);
 	  
-	  //após ser processado - chama função processXML que vai varrer os dados 
+	  //apï¿½s ser processado - chama funï¿½ï¿½o processXML que vai varrer os dados 
 	 if(ajax.readyState == 4 ) { 
 		if(ajax.status==200){
 
@@ -325,14 +328,14 @@ function VerContrato(nrocontrato) {
 			rnometitular = r.substring(0, (i = r.indexOf(',')));
 
 			if(rcontrato > 0){
-				mensagem('Nro de Contrato '+rcontrato+' já existe para '+rnometitular);
+				mensagem('Nro de Contrato '+rcontrato+' jï¿½ existe para '+rnometitular);
 				nrocontrato.value = 0; 
 			}
 
 			
 		}
 		  else { 
-			   //caso não seja um arquivo XML emite a mensagem abaixo 
+			   //caso nï¿½o seja um arquivo XML emite a mensagem abaixo 
 			   mensagem( "Erro ao carregar" ); 
 			  } 
 	 } 
@@ -347,7 +350,7 @@ function VerContrato(nrocontrato) {
 	} 
 	
 
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 function formatar(src, mask) 
 {
 var i = src.value.length;

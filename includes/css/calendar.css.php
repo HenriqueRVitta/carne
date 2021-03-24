@@ -8,26 +8,22 @@
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
 
-	//$qry = "SELECT * FROM styles";
-	//$exec = mysql_query($qry);
-	//$row = mysql_fetch_array($exec);
-
 	if (isset($_SESSION['s_uid'])) {
 	//if (isset($_COOKIE['cook_oco_uid'])) {
 
 		$qry = "SELECT * FROM temas t, uthemes u  WHERE u.uth_uid = ".$_SESSION['s_uid']." and t.tm_id = u.uth_thid";
-		$exec = mysql_query($qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÇÕES DO TEMA!<BR>'.$qry);
-		$row = mysql_fetch_array($exec);
-		$regs = mysql_num_rows($exec);
-		if ($regs==0){ //SE NÃO ENCONTROU TEMA ESPECÍFICO PARA O USUÁRIO
+		$exec = mysqli_query($conec->con,$qry) or die('ERRO NA TENTATIVA DE RECUPERAR AS INFORMAï¿½ï¿½ES DO TEMA!<BR>'.$qry);
+		$row = mysqli_fetch_array($exec);
+		$regs = mysqli_num_rows($exec);
+		if ($regs==0){ //SE Nï¿½O ENCONTROU TEMA ESPECï¿½FICO PARA O USUï¿½RIO
 			$qry = "SELECT * FROM styles";
-			$exec = mysql_query($qry);
-			$row = mysql_fetch_array($exec);
+			$exec = mysqli_query($qry);
+			$row = mysqli_fetch_array($exec);
 		}
 	} else {
 		$qry = "SELECT * FROM styles";
-		$exec = mysql_query($qry);
-		$row = mysql_fetch_array($exec);
+		$exec = mysqli_query($conec->con,$qry);
+		$row = mysqli_fetch_array($exec);
 	}
 
 
@@ -35,9 +31,9 @@
 print "#calendarDiv{
 	position:absolute;
 	width:205px;
-	border:1px solid #999999; ". //*#317082 - BORDA DA CAIXA DO CALENDÁRIO*/
+	border:1px solid #999999; ". //*#317082 - BORDA DA CAIXA DO CALENDï¿½RIO*/
 	"padding:1px;
-	background-color: #FFF; ".//*#FFF - COR DE FUNDO DO CALENDÁRIO*/
+	background-color: #FFF; ".//*#FFF - COR DE FUNDO DO CALENDï¿½RIO*/
 	"font-family:arial;
 	font-size:10px;
 	padding-bottom:20px;
@@ -147,10 +143,10 @@ print "#calendarDiv .timeBar{
 
 
 print "#calendarDiv .monthYearPicker{
-	background-color: #F0F0F0;". //*#E2EBED - FUNDO DA CAIXA DE SELEÇÃO DESDOBRADA*/
-	"border:1px solid #AAAAAA;". //*#AAAAAA - BORDA DA CAIXA DE SELEÇÃO DO ANO E MES DESDOBRADA*/
+	background-color: #F0F0F0;". //*#E2EBED - FUNDO DA CAIXA DE SELEï¿½ï¿½O DESDOBRADA*/
+	"border:1px solid #AAAAAA;". //*#AAAAAA - BORDA DA CAIXA DE SELEï¿½ï¿½O DO ANO E MES DESDOBRADA*/
 	"position:absolute;
-	color: #5E515B; ".//*#317082  - COR DO ANO E MES NA CAIXA DE SELEÇÃO DESDOBRADA*/
+	color: #5E515B; ".//*#317082  - COR DO ANO E MES NA CAIXA DE SELEï¿½ï¿½O DESDOBRADA*/
 	"left:0px;
 	top:15px;
 	z-index:1000;
@@ -168,8 +164,8 @@ print "#calendarDiv .monthYearPicker{
 	cursor:pointer;
 }";
 print "#calendarDiv .monthYearActive{
-	background-color:#DBDBDB; ".//*#317082 HOVER DA CAIXA DE SELEÇÃO ANO-MES DESDOBRADA - FUNDO*/
-	"color: black;". //*#E2EBED - HOVER DA CAIXA DE SELEÇÃO ANO-MES DESDOBRADA - FONTE*/
+	background-color:#DBDBDB; ".//*#317082 HOVER DA CAIXA DE SELEï¿½ï¿½O ANO-MES DESDOBRADA - FUNDO*/
+	"color: black;". //*#E2EBED - HOVER DA CAIXA DE SELEï¿½ï¿½O ANO-MES DESDOBRADA - FONTE*/
 "}";
 
 print "#calendarDiv td{

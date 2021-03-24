@@ -23,14 +23,14 @@ session_start();
 	//$query = "SELECT * FROM imagens WHERE img_oco = ".$_GET['file']." and img_cod=".$_GET['cod']."";
 	$query = "SELECT * FROM imagens WHERE  img_cod=".$_GET['cod']."";
 	
-	$result = mysql_query($query) or die("ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÇÕES DA IMAGEM");
+	$result = mysqli_query($conec->con,$query) or die("ERRO NA TENTATIVA DE RECUPERAR AS INFORMAï¿½ï¿½ES DA IMAGEM");
 	
-	$data = @ mysql_fetch_array($result);
+	$data = @ mysqli_fetch_array($result);
 
 	if (!empty($data["img_bin"])) {
-		// Saída MIME header
+		// Saï¿½da MIME header
 		header("Content-Type: {$data["img_tipo"]}");
-		// Saída da imagen
+		// Saï¿½da da imagen
 		echo $data["img_bin"];
 	}
 ?>

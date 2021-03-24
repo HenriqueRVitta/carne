@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 
@@ -14,7 +14,7 @@
 
 	ini_set('memory_limit', '-1');
 		
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -26,6 +26,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	
@@ -55,8 +58,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 
 	if($_POST['usuario'] <> -1) {
 		$sql="SELECT nome FROM usuarios where codigo = ".$_POST['usuario']." ";
-		$commit = mysql_query($sql);
-		$row = mysql_fetch_array($commit);
+		$commit = mysqli_query($conec->con,$sql);
+		$row = mysqli_fetch_array($commit);
 
 		$lcBorda.="<td align='right'>Usuario:</TD>
 	<td align='left'>".retira_acentos_UTF8($row['nome'])."</TD>";
@@ -85,12 +88,12 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	$lcgroup =  "";
 	
 
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "select a.data,a.hora,a.usuario,a.operacao,a.documento,a.descricao,u.nome from auditoria a Left Join usuarios u on u.codigo = a.usuario". 
        " Where a.data between '".$dtinicial."' and '".$dtfinal."'".$pcwhere." and a.detalhes = 'MODULO CARNE' ".$lcgroup." ".$pcordem."";
 
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Data</th>
@@ -101,11 +104,11 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	<th scope='col' align='center'>Descricao</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$vetorMenu = ArrayMenus();
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 		$data = str_replace('/','',substr(converte_datacomhora($row['data']),0,10));
 		$operacao = $vetorMenu[$row['operacao']];

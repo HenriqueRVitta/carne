@@ -14,6 +14,9 @@
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -28,8 +31,8 @@
 	}
 
     $query = "SELECT razao FROM cadastro_unidades where codigo=".$_SESSION['s_local'];
-	$resultado = mysql_query($query) or die('ERRO NA Ececucao da Query! '.$query);
-    $row = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die('ERRO NA Ececucao da Query! '.$query);
+    $row = mysqli_fetch_array($resultado);
 	
 	print "<TABLE border='0' align='left' cellpadding='5' cellspacing='2' width='100%' bgcolor='".BODY_COLOR."'>";
 	print "<TR><TD><h2 align='center'><B><font size='4'>".$row['razao']."</font></B></h2></TD></TR>";
@@ -50,8 +53,8 @@
 	print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT max(prontuario) as id FROM pacientes  ";
-		$resultado = mysql_query($query) or die('ERRO NA Ececucao da Query MAX Prontuario!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA Ececucao da Query MAX Prontuario!');
+       	$maxid = mysqli_fetch_array($resultado);
 
        	if($maxid['id']==0) { $maxid['id'] = 1; }
 
@@ -71,8 +74,8 @@
 
 		$query.=" order by nome";
 		
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY CONSULTA!');
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY CONSULTA!');
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -87,7 +90,7 @@
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
 		"</td></tr>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -99,7 +102,7 @@
 			print "<TR class='header'><td class='line'>"."Paciente"."</TD>"."<td class='line'>"."Registro"."</TD>"."<td class='line'>"."Sele&ccedil;&atilde;o"."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{

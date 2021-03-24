@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 
@@ -14,6 +14,8 @@
 
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 
 	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	$dtinicial = Fdate($_POST['datainicio']);
@@ -44,9 +46,9 @@
 	if($_POST['titular'] <> -1 ) {
 		
 		$sql="SELECT nometitular FROM carne_titular where id = ".$_POST['titular']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Cliente:</TD>
 				<td align='left'>".$row['nometitular']."</TD>";
@@ -114,7 +116,7 @@
 			
 	}
 	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT c.id, c.nometitular, c.registro, c.nrocarne, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim,
 		space(1) as desclocal, space(1) as localpagto, space(10) as databaixa, 0.00 as vlrpago, space(1) as nome FROM carne_titular c
 		Join carne_contratos p on p.idtitular = c.id
@@ -125,7 +127,7 @@
       //print_r($query);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
@@ -136,7 +138,7 @@
 	<th scope='col' align='center'>Ult.Pagto</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$qtdeIna = 0;
 	
@@ -145,21 +147,21 @@
 	$dtini = explode('/',$_POST['datainicio']);
 	$dtfim = explode('/',$_POST['datafim']);
 
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		//$dtpagto = str_replace('/','',substr(converte_datacomhora($row['databaixa']),0,10));
 
 		for ($x=$dtini[1]; $x <= $dtfim[1]; $x++) {
 			
 	       $queryIna = "SELECT mesano from carne_pagamentos Where databaixa between '".$dtinicial."' and '".$dtfinal."' and idcliente = ".$row['id'];
-    	   $resultadoIna = mysql_query($queryIna) or die('ERRO NA QUERY !'.$queryIna);
-    		if(mysql_num_rows($resultadoIna) == 0) {
+    	   $resultadoIna = mysqli_query($conec->con,$queryIna) or die('ERRO NA QUERY !'.$queryIna);
+    		if(mysqli_num_rows($resultadoIna) == 0) {
     			
     			$UltPagto = "";
 	       		$queryMaxPag = "SELECT max(mesano) as mesano from carne_pagamentos where idcliente = ".$row['id'];
-    	   		$resultadoMax = mysql_query($queryMaxPag) or die('ERRO NA QUERY !'.$queryMaxPag);
-    	   		$rowMaxpag = mysql_fetch_array($resultadoMax);
-    	   		if(mysql_num_rows($resultadoMax) > 0) {
+    	   		$resultadoMax = mysqli_query($conec->con,$queryMaxPag) or die('ERRO NA QUERY !'.$queryMaxPag);
+    	   		$rowMaxpag = mysqli_fetch_array($resultadoMax);
+    	   		if(mysqli_num_rows($resultadoMax) > 0) {
     				$UltPagto = $rowMaxpag['mesano'];
     	   		}
     	   		

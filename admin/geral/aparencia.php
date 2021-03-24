@@ -1,6 +1,6 @@
 <?php 
 
- /*                        Copyright 2005 Flávio Ribeiro
+ /*                        Copyright 2005 Flï¿½vio Ribeiro
 
          This file is part of OCOMON.
 
@@ -22,6 +22,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	print "<SCRIPT LANGUAGE='Javascript' SRC='../../includes/javascript/ColorPicker2.js'></SCRIPT>";
 	print "<SCRIPT LANGUAGE='Javascript' SRC='../../includes/javascript/PopupWindow.js'></SCRIPT>";
 	print "<SCRIPT LANGUAGE='Javascript' SRC='../../includes/javascript/AnchorPosition.js'></SCRIPT>";
@@ -44,19 +47,19 @@
 	$auth->testa_user($_SESSION['s_usuario'],$_SESSION['s_nivel'],$_SESSION['s_nivel_desc'],1, 'helpconfiggeral.php');
 
 
-    	print "<BR><B>".TRANS('TTL_APPEARANCE','Configurações de aparência do sistema').":</b><BR>";
+    	print "<BR><B>".TRANS('TTL_APPEARANCE','Configuraï¿½ï¿½es de aparï¿½ncia do sistema').":</b><BR>";
 
 		$query = "SELECT * FROM styles ";
-        	$resultado = mysql_query($query) or die (TRANS('ERR_QUERY'));
-		$row = mysql_fetch_array($resultado);
+        	$resultado = mysqli_query($query) or die (TRANS('ERR_QUERY'));
+		$row = mysqli_fetch_array($resultado);
 
 
 	if ((empty($_GET['action'])) and empty($_POST['submit'])){
 
 		print "<br><TD align='left'>".
-				"<input type='button' class='button' id='idBtIncluir' value='".TRANS('BT_EDIT_CONFIG','Editar Configuração',0)."' onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cellStyle=true');\">".
+				"<input type='button' class='button' id='idBtIncluir' value='".TRANS('BT_EDIT_CONFIG','Editar Configuraï¿½ï¿½o',0)."' onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cellStyle=true');\">".
 			"</TD><br><BR>";
-		if (mysql_numrows($resultado) == 0)
+		if (mysqli_numrows($resultado) == 0)
 		{
 			echo mensagem(TRANS('ALERT_CONFIG_EMPTY'));
 		}
@@ -64,14 +67,14 @@
 		{
 				$cor=TD_COLOR;
 				$cor1=TD_COLOR;
-				$linhas = mysql_numrows($resultado);
+				$linhas = mysqli_numrows($resultado);
 				print "<td>";
 				print "<TABLE border='0' cellpadding='5' cellspacing='0'  width='50%'>";
 				print "<TR class='header'><td>".TRANS('OPT_DIRETIVA','Diretiva')."</TD><td>".TRANS('OPT_VALOR','Valor')."</TD></TD></tr>";
 				print "<tr><td colspan='2'>&nbsp;</td></tr>";
 
 
-				print "<tr><td colspan='2'><b>".TRANS('OPT_APPEARANCE','APARÊNCIA')."</b></td></tr>";
+				print "<tr><td colspan='2'><b>".TRANS('OPT_APPEARANCE','APARï¿½NCIA')."</b></td></tr>";
 
 				print "<tr><td>".TRANS('COLOR_MAIN_BAR','COR DA BARRA PRINCIPAL').":</td><td>".
 						"<input type='text'  class='mini2' name='topo' id='idTopo' ".
@@ -149,19 +152,19 @@
 						"</td>".
 					"</tr>";
 
-				print "<tr><td>".TRANS('COLOR_ODD_LINE','COR DAS LINHAS ÍMPARES').":</td><td>".
+				print "<tr><td>".TRANS('COLOR_ODD_LINE','COR DAS LINHAS ï¿½MPARES').":</td><td>".
 						"<input type='text'  class='mini2' name='cor_lin_impar' id='idLin_impar' ".
 							"value='".$row['tm_color_lin_impar']."' ".
 							"style=\"{background-color:".$row['tm_color_lin_impar'].";}\"readonly>".
 						"</td>".
 					"</tr>";
 
-				print "<tr><td>".TRANS('COLOR_LINE_SELECTION','COR DA SELEÇÃO DE LINHAS').":</td><td>".
+				print "<tr><td>".TRANS('COLOR_LINE_SELECTION','COR DA SELEï¿½ï¿½O DE LINHAS').":</td><td>".
 						"<input type='text'  class='mini2' name='cor_destaca' id='idDestaca' ".
 							"value='".$row['tm_color_destaca']."' ".
 							"style=\"{background-color:".$row['tm_color_destaca'].";}\"readonly></td>".
 					"</tr>";
-				print "<tr><td>".TRANS('COLOR_LINE_MARK','COR DA MARCAÇÃO DAS LINHAS').":</td><td>".
+				print "<tr><td>".TRANS('COLOR_LINE_MARK','COR DA MARCAï¿½ï¿½O DAS LINHAS').":</td><td>".
 						"<input type='text'  class='mini2' name='cor_marca' id='idMarca' ".
 							"value='".$row['tm_color_marca']."' ".
 							"style=\"{background-color:".$row['tm_color_marca'].";}\"readonly></td>".
@@ -196,7 +199,7 @@
 						"</td>".
 					"</tr>";
 
-				print "<tr><td>".TRANS('COLOR_TABLE_HEADER','COR DOS CABEÇALHOS DAS TABELAS').":</td><td>".
+				print "<tr><td>".TRANS('COLOR_TABLE_HEADER','COR DOS CABEï¿½ALHOS DAS TABELAS').":</td><td>".
 						"<input type='text'  class='mini2' name='tr_header' id='idTrHeader' ".
 							"value='".$row['tm_tr_header']."' readonly ";
 							if ($row['tm_tr_header'] == "IMG_DEFAULT") {
@@ -206,7 +209,7 @@
 						print "</td>".
 					"</tr>";
 
-				print "<tr><td>".TRANS('COLOR_FONT_TABLE_HEADER','COR DA FONTE DOS CABEÇALHOS DAS TABELAS').":</td><td>".
+				print "<tr><td>".TRANS('COLOR_FONT_TABLE_HEADER','COR DA FONTE DOS CABEï¿½ALHOS DAS TABELAS').":</td><td>".
 						"<input type='text'  class='mini2' name='font_tr_header' id='idFontTrHeader' ".
 							"value='".$row['tm_color_font_tr_header']."' readonly ";
 							print "style=\"{background-color:".$row['tm_color_font_tr_header'].";}\">";
@@ -351,7 +354,7 @@
 					"&nbsp;&nbsp;<a onClick=\"loadDefaultValue('idLin_par','#E3E1E1');\" title='".TRANS('HNT_LOAD_DEFAULT_COLOR')."'>".
 					"<img src='".ICONS_PATH."rebuild.png' width='16' height='16' border='0'></a></td>".
 			"</tr>";
-		print "<tr><td>".TRANS('COLOR_ODD_LINE','COR DAS LINHAS ÍMPARES').":</td><td>".
+		print "<tr><td>".TRANS('COLOR_ODD_LINE','COR DAS LINHAS ï¿½MPARES').":</td><td>".
 				"<input type='text'  class='mini2' name='cor_lin_impar' id='idLin_impar' ".
 					"value='".$row['tm_color_lin_impar']."' ".
 					"style=\"{background-color:".$row['tm_color_lin_impar'].";}\">".
@@ -361,7 +364,7 @@
 					"<img src='".ICONS_PATH."rebuild.png' width='16' height='16' border='0'></a></td>".
 			"</tr>";
 
-		print "<tr><td>".TRANS('COLOR_LINE_SELECTION','COR DA SELEÇÃO DE LINHAS').":</td><td>".
+		print "<tr><td>".TRANS('COLOR_LINE_SELECTION','COR DA SELEï¿½ï¿½O DE LINHAS').":</td><td>".
 				"<input type='text'  class='mini2' name='cor_destaca' id='idDestaca' ".
 					"value='".$row['tm_color_destaca']."' ".
 					"style=\"{background-color:".$row['tm_color_destaca'].";}\">".
@@ -371,7 +374,7 @@
 					"<img src='".ICONS_PATH."rebuild.png' width='16' height='16' border='0'></a></td>".
 			"</tr>";
 
-		print "<tr><td>".TRANS('COLOR_LINE_MARK','COR DA MARCAÇÃO DAS LINHAS').":</td><td>".
+		print "<tr><td>".TRANS('COLOR_LINE_MARK','COR DA MARCAï¿½ï¿½O DAS LINHAS').":</td><td>".
 				"<input type='text'  class='mini2' name='cor_marca' id='idMarca' ".
 					"value='".$row['tm_color_marca']."' ".
 					"style=\"{background-color:".$row['tm_color_marca'].";}\">".
@@ -426,7 +429,7 @@
 					"</td>".
 			"</tr>";
 
-		print "<tr><td>".TRANS('COLOR_TABLE_HEADER','COR DOS CABEÇALHOS DAS TABELAS').":</td><td>".
+		print "<tr><td>".TRANS('COLOR_TABLE_HEADER','COR DOS CABEï¿½ALHOS DAS TABELAS').":</td><td>".
 				"<input type='text'  class='mini2' name='tr_header' id='idTrHeader' ".
 					"value='".$row['tm_tr_header']."' ";
 					if ($row['tm_tr_header'] == "IMG_DEFAULT") {
@@ -440,7 +443,7 @@
 					"</td>".
 			"</tr>";
 
-		print "<tr><td>".TRANS('COLOR_FONT_TABLE_HEADER','COR DA FONTE DOS CABEÇALHOS DAS TABELAS').":</td><td>".
+		print "<tr><td>".TRANS('COLOR_FONT_TABLE_HEADER','COR DA FONTE DOS CABEï¿½ALHOS DAS TABELAS').":</td><td>".
 				"<input type='text'  class='mini2' name='font_tr_header' id='idFontTrHeader' ".
 					"value='".$row['tm_color_font_tr_header']."' ";
 					print "style=\"{background-color:".$row['tm_color_font_tr_header'].";}\">";
@@ -465,10 +468,10 @@
 
 
 		print "<tr><td colspan='2'>&nbsp;</td></tr>";
-		print "<tr><td colspan='2'><a class='href' onClick=\"loadAllDefaults();\" title='Carrega as cores padrão!'>".TRANS('OPT_SELECT_DEFAULT_SQUEMA','SELECIONA O ESQUEMA DE CORES PADRÃO')."</a></td>".
+		print "<tr><td colspan='2'><a class='href' onClick=\"loadAllDefaults();\" title='Carrega as cores padrï¿½o!'>".TRANS('OPT_SELECT_DEFAULT_SQUEMA','SELECIONA O ESQUEMA DE CORES PADRï¿½O')."</a></td>".
 			"</tr>";
 		print "<tr><td colspan='2'>&nbsp;</td></tr>";
-		print "<tr><td colspan='2'><a class='href' onClick=\"varreCampos('form1')\">".TRANS('OPT_SAVE_SQUEMA','SALVAR SELEÇÃO PARA ESQUEMA DE CORES')."</td></a>".
+		print "<tr><td colspan='2'><a class='href' onClick=\"varreCampos('form1')\">".TRANS('OPT_SAVE_SQUEMA','SALVAR SELEï¿½ï¿½O PARA ESQUEMA DE CORES')."</td></a>".
 			"</tr>";
 		print "<tr><td colspan='2'>&nbsp;</td></tr>";
 		print "<tr><td><a class='href' onClick=\"mini_popup('saveTheme.php?action=LOAD');\" title='Carrega um tema salvo previamente!'>".TRANS('OPT_LOAD_SQUEMA','CARREGA ESQUEMA SALVO')."</a></td>".
@@ -530,10 +533,10 @@
 
 		//print $qry;
 		//exit;
-		$exec= mysql_query($qry) or die(TRANS('ERR_EDIT'));
+		$exec= mysqli_query($conec->con,$qry) or die(TRANS('ERR_EDIT'));
 
-		//print "<script>mensagem('Configuração alterada com sucesso!'); window.open('../../index.php?LOAD=ADMIN','_parent',''); </script>";
-		print "<script>mensagem('".TRANS('MSG_SUCCESS_CONFIG_SQUEMA','Configuração alterada com sucesso!\\nO Esquema selecionado será carregado agora',0)."!'); window.open('../../index.php?LOAD=ADMIN','_parent',''); </script>";
+		//print "<script>mensagem('Configuraï¿½ï¿½o alterada com sucesso!'); window.open('../../index.php?LOAD=ADMIN','_parent',''); </script>";
+		print "<script>mensagem('".TRANS('MSG_SUCCESS_CONFIG_SQUEMA','Configuraï¿½ï¿½o alterada com sucesso!\\nO Esquema selecionado serï¿½ carregado agora',0)."!'); window.open('../../index.php?LOAD=ADMIN','_parent',''); </script>";
 		//redirect('configGeral.php');
 	}
 
@@ -552,8 +555,8 @@
 		if (ok) var ok =  validaForm('idFundoDestaque','COR','Cor do fundo em destaque',1);
 		if (ok) var ok =  validaForm('idLin_par','COR','Linhas pares',1);
 		if (ok) var ok =  validaForm('idLin_impar','COR','Linhas impares',1);
-		if (ok) var ok =  validaForm('idDestaca','COR','Cor de seleção de linhas',1);
-		if (ok) var ok =  validaForm('idMarca','COR','Cor de marcação de linhas',1);
+		if (ok) var ok =  validaForm('idDestaca','COR','Cor de seleï¿½ï¿½o de linhas',1);
+		if (ok) var ok =  validaForm('idMarca','COR','Cor de marcaï¿½ï¿½o de linhas',1);
 		if (ok) var ok =  validaForm('idBody','COR','Cor Body',1);
 		//if (ok) var ok =  validaForm('idTab','QUALQUER','Cor Tab',1);
 		if (ok) var ok =  validaForm('idTD','COR','Cor TD',1);

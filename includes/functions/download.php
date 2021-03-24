@@ -25,12 +25,9 @@ session_start();
 		// if id is set then get the file with the id from database
 
 		$query = "SELECT img_nome, img_tipo, img_size, img_bin FROM imagens WHERE  img_cod=".$_GET['cod']."";
-		$result = mysql_query($query) or die("ERRO NA TENTATIVA DE RECUPERAR AS INFORMAÇÕES DA IMAGEM");
-		//$data = @ mysql_fetch_array($result);
+		$result = mysqli_query($conec->con,$query) or die("ERRO NA TENTATIVA DE RECUPERAR AS INFORMAï¿½ï¿½ES DA IMAGEM");
 
-		//list($name, $type, $size, $content) = mysql_fetch_array($result);
-
-		list($img_nome, $img_tipo, $img_size, $img_bin) =mysql_fetch_array($result);
+		list($img_nome, $img_tipo, $img_size, $img_bin) =mysqli_fetch_array($result);
 
 		header("Content-length: ".$img_size."");
 		header("Content-type: ".$img_tipo."");

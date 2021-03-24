@@ -15,6 +15,9 @@
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -48,10 +51,10 @@
 		print "<select class='select2' name='plano' id='idplano'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,descricao from carne_tipoplano where status = 0 and unidade =".$_SESSION['s_local']." order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						//if($row['id']==$rowA['plano']) { $selected = " selected"; } else { $selected = "";}
 						$selected = " selected";
@@ -66,9 +69,9 @@
 		print "<select class='select2' name='localpagto' id='idlocalpagto' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Todos"."</option>";
 					$sql="Select id,descricao from carne_localpagto where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -81,10 +84,10 @@
 		print "<select class='select2' name='cidade' id='idcidade'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="SELECT distinct cidade FROM carne_titular order by cidade";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['cidade'].">".$row['cidade']."</option>";
 						$i++;

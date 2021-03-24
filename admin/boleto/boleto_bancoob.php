@@ -37,7 +37,9 @@
 	include ("../../includes/include_geral_III.php");
 	include ("../../includes/classes/paging.class.php");
 
-	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$bancoEmissor = $_POST['bancoemissor'];
@@ -64,21 +66,21 @@
 	
 	// Dados da Empresa
 	$qrylocal = "SELECT * from cadastro_unidades where codigo=".$_SESSION['s_local']."";
-	$exelocal = mysql_query($qrylocal) or die('Erro na query: ' .$qrylocal. mysql_error());
-	$rowempresa = mysql_fetch_array($exelocal);
+	$exelocal = mysqli_query($conec->con,$qrylocal) or die('Erro na query: ' .$qrylocal. mysqli_error($conec->con));
+	$rowempresa = mysqli_fetch_array($exelocal);
 
 	// Dados do Banco
    	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca FROM carne_bancos where nome = '".$bancoEmissor."'";
-	$resulConfig = mysql_query($queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
-	$rowconfig = mysql_fetch_array($resulConfig);
+	$resulConfig = mysqli_query($conec->con,$queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
+	$rowconfig = mysqli_fetch_array($resulConfig);
 	
 
 	// Qtde de Dependentes
 	
    	$queryCliente = "SELECT count(*) as qtde_dep FROM carne_dependente where idtitular = '".$_POST['titular']."'";
-	$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+	$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 	$i=0;
-	while($rowQtde = mysql_fetch_array($resulCliente)){
+	while($rowQtde = mysqli_fetch_array($resulCliente)){
 		$qtde = $rowQtde['qtde_dep'];
 		$i++;
 	}
@@ -98,12 +100,12 @@
    	" join carne_tipoplano c on c.id = b.plano".
    	" join carne_competenciaplano d on d.idplano = c.id".   	
    	" where a.id = '".$_POST['titular']."'";
-	$resulCliente = mysql_query($queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
+	$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 
 $DataVencimento = $_POST['datainicio'];
 $somames = 1;
 
-while($rowcliente = mysql_fetch_array($resulCliente)){
+while($rowcliente = mysqli_fetch_array($resulCliente)){
 
 $contador = 1;
 $qtdeInicio = $MesFim;
@@ -120,8 +122,8 @@ For ($x=$MesIni; $x<=$MesFim; $x++) {
  
  // Dados do numero do documento - numero_documento
  $qryNroDoc = "SELECT a.AUTO_INCREMENT as proximo FROM information_schema.tables a  WHERE a.table_name = 'carne_remessabanco' and table_schema = '".SQL_DB."'";
- $exeNroDoc = mysql_query($qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysql_error());
- $rownrodoc = mysql_fetch_array($exeNroDoc);
+ $exeNroDoc = mysqli_query($conec->con,$qryNroDoc) or die('Erro na query: ' .$qryNroDoc. mysqli_error($conec->con));
+ $rownrodoc = mysqli_fetch_array($exeNroDoc);
  $numero_documento = $rownrodoc['proximo'];
  
  	
@@ -277,10 +279,10 @@ $dadosboleto["conta_dv"] = $conta_dv; 	// Digito do Num da conta
 
 
 // DADOS PERSONALIZADOS - Bradesco
-$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente Números)
+$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente Nï¿½meros)
 $dadosboleto["conta_cedente_dv"] = $conta_dv; // Digito da ContaCedente do Cliente
 if($bancoEmissor=='Bradesco') {
-	$dadosboleto["carteira"] = "06";  // Código da Carteira: pode ser 06 ou 03
+	$dadosboleto["carteira"] = "06";  // Cï¿½digo da Carteira: pode ser 06 ou 03
 }
 
 
@@ -314,7 +316,7 @@ $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 
 	if($bancoEmissor=='Bradesco') {
 	
-		// NÃO ALTERAR!
+		// Nï¿½O ALTERAR!
 		if($x==$MesIni) {
 			include("include/funcoes_bradesco.php");
 			header ('Content-type: text/html; charset=ISO-8859-1');
@@ -330,7 +332,7 @@ $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 	
 		// Insert em carne_remessabanco
 	   	$queryRemessa= "insert into carne_remessabanco (data,unidade,usuario) values ('".$datageracao."',".$_SESSION['s_local'].",".$_SESSION['s_uid'].")";
-		$resulConfig = mysql_query($queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
+		$resulConfig = mysqli_query($conec->con,$queryRemessa) or die('ERRO NA QUERY !'.$queryRemessa);
 		$remessa = $numero_documento;
 		
 		include("../geral/remessabanco.php");

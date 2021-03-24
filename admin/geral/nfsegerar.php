@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/11/2019 10:38 GLPI 16792
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Opção de geração de NFSe conforme recebimentos bancario
+		Opï¿½ï¿½o de geraï¿½ï¿½o de NFSe conforme recebimentos bancario
 
 */
 	session_start();
@@ -15,7 +15,9 @@
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
 
-	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -92,11 +94,11 @@ $dtfinal = Fdate($_POST['datafim']);
 
 		$sqlQuery = "SELECT sum(valor) as total FROM retornobanco
 		where datapagto between '".$dtinicial."' and '".$dtfinal."' and nfse = 1";
-		$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
+		$commit=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
 		
-		if (mysql_num_rows($commit) > 0){
+		if (mysqli_num_rows($commit) > 0){
 			
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 				$nValorMax = (($row['total'] * $_SESSION['percentualfiltro']) / 100);
 			}
 		}
@@ -122,9 +124,9 @@ $dtfinal = Fdate($_POST['datafim']);
 	left join carne_loterps l on l.id = g.lote
 	where g.datapagto between '".$dtinicial."' and '".$dtfinal."' and nfse = 1 ".$situacao." group by g.cpfcnpj order by g.datapagto,c.nometitular";
 	
-	$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
+	$commit=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
 	
-	if (mysql_num_rows($commit) == 0){
+	if (mysqli_num_rows($commit) == 0){
 	
 		print "<div class='alert alert-danger'>Nenhum Registro encontrato..</div>";
 	
@@ -150,7 +152,7 @@ $dtfinal = Fdate($_POST['datafim']);
 		doubleval($nTotalGeral);
 		
 		
-		while($row = mysql_fetch_array($commit)){
+		while($row = mysqli_fetch_array($commit)){
 	
 			if ($j % 2)
 			{
@@ -223,7 +225,7 @@ print "</form>";
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 // Verifica se marcou algum CheckBox
 function verificaChecks() {

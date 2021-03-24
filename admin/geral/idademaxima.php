@@ -17,8 +17,8 @@ $cod = $_GET["cod"];
   
 $sqlQuery = "select idademaxima from carne_tipodependente where id ='".$cod."'";
 
-$slProduto=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
-$rest=mysql_fetch_array($slProduto);
+$slProduto=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
+$rest=mysqli_fetch_array($slProduto);
  
  // se existem dados 
 echo "$rest[idademaxima],00";

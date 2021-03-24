@@ -15,6 +15,8 @@
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -47,7 +49,13 @@
 			$dtinicialcontrato = "16"."/".$diaDoMes[1]."/".$diaDoMes[2];
 		}
 
-		
+	$ChechedMes = ' selected';
+	$CheckedCon = '';
+	if(isset($_POST['filtro']) && $_POST['filtro'] == 'Contrato'){
+		$ChechedMes = '';
+		$CheckedCon = ' selected';
+	}
+
 	if(isset($_POST['datainicio'])) {
 
 		$dtinicial = $_POST['datainicio'];
@@ -76,9 +84,9 @@
 		print "</TR><TR>";			
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Filtrar Por".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
-		print "<select class='select2' name='filtro' id='filtro_' >";
-		print "<option value='Mes' selected>M&ecirc;s/Ano de Vencto</option>";  
-		print "<option value='Contrato'>Inicio/Fim Contrato</option>";  
+		print "<select class='select2' name='filtro' id='filtro' >";
+		print "<option value='Mes' ".$ChechedMes.">M&ecirc;s/Ano de Vencto</option>";  
+		print "<option value='Contrato' ".$CheckedCon.">Inicio/Fim Contrato</option>";  
 		print "</select>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."M&ecirc;s/Ano de Vencto".":</TD>";
@@ -151,9 +159,9 @@ if(isset($_POST['mesano'])) {
 				left Join carne_competenciaplano d on d.idplano = b.plano".$pcWhere;
 
 
-	$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
+	$commit=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
 	
-	if (mysql_num_rows($commit) == 0){
+	if (mysqli_num_rows($commit) == 0){
 	
 		print "<div class='alert alert-danger'>Nenhum Registro encontrato..</div>";
 	
@@ -185,7 +193,7 @@ if(isset($_POST['mesano'])) {
 		doubleval($nTotalGeral);
 		
 		
-		while($row = mysql_fetch_array($commit)){
+		while($row = mysqli_fetch_array($commit)){
 	
 			if ($j % 2)
 			{

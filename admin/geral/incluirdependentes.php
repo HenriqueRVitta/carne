@@ -1,15 +1,15 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -17,7 +17,10 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
-	
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -37,8 +40,8 @@
 		$search = "";
 	
 	$query = "SELECT nometitular from carne_titular where id = ".$_GET['cod']."";
-	$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$rowTitular = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$rowTitular = mysqli_fetch_array($resultado);
 		
 	print "<BR><B><font size=4>"."Inclus&atilde;o Dependente no Contrato de ".$rowTitular['nometitular']."</font></B><BR>";
 
@@ -56,8 +59,8 @@
 
    		//$query = "SELECT * FROM carne_dependente order by nome";
 		$query = "SELECT d.id,d.nome,d.datanasc,p.descricao as parentesco from carne_dependente d Left Join carne_tipodependente p on p.id = d.parentesco order by d.nome desc";
-   		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+   		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -74,7 +77,7 @@
 		print "<td colspan='4'></td>";
 		print "<TD class='line'><a href='abas.php?cod=".$_GET['cod']."'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD></TR>";
 			
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 		}
@@ -91,7 +94,7 @@
 				"</TD><td class='line' align='center'>".TRANS('COL_INC')."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{

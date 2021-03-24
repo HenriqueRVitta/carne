@@ -1,18 +1,21 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 
 session_start();
 
 include ("../../includes/include_geral_III.php");
+
+$conec = new conexao;
+$conec->conecta('MYSQL');
 
 ini_set('memory_limit', '-1');
 
@@ -76,8 +79,8 @@ ini_set('memory_limit', '-1');
 
 	if($_POST['usuario'] <> -1) {
 		$sql="SELECT nome FROM usuarios where codigo = ".$_POST['usuario']." ";
-		$commit = mysql_query($sql);
-		$row = mysql_fetch_array($commit);
+		$commit = mysqli_query($conec->con,$sql);
+		$row = mysqli_fetch_array($commit);
 
 		$lcBorda.="<td align='right'>Usu&aacute;rio:</TD>
 	<td align='left'>".retira_acentos_UTF8($row['nome'])."</TD>";
@@ -89,9 +92,9 @@ ini_set('memory_limit', '-1');
 	if(isset($_POST['plano'])) {
 
 		$sql="SELECT descricao FROM carne_tipoplano where id = ".$_POST['plano']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -104,9 +107,9 @@ ini_set('memory_limit', '-1');
 	if(isset($_POST['localpagto'])) {
 
 		$sql="SELECT descricao FROM carne_localpagto where id = ".$_POST['localpagto']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Local Pagamento:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -128,9 +131,9 @@ ini_set('memory_limit', '-1');
 		$lcBorda.= "<table border='0' cellspacing='2' cellpadding='2'>";
 		
 		$sql="SELECT nometitular FROM carne_titular where id = ".$_POST['titular']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Cliente:</TD>
 				<td align='left'>".$row['nometitular']."</TD>";
@@ -195,7 +198,7 @@ ini_set('memory_limit', '-1');
 			
 	}
 	
-	// Começa aqui a listar os registros
+	// Comeï¿½a aqui a listar os registros
        $query = "SELECT c.id, c.nometitular, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim, ".
        " k.id as idpagto, k.nrocarne, k.mesano, k.databaixa, l.descricao as desclocal, k.localpagto, sum(k.vlrpago) as vlrpago, u.nome FROM carne_titular c ".
        " left Join carne_contratos p on p.idtitular = c.id ".
@@ -208,7 +211,7 @@ ini_set('memory_limit', '-1');
 	
 
      
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' align='center' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
@@ -222,11 +225,11 @@ ini_set('memory_limit', '-1');
 	<th scope='col' align='center'>Usu&aacute;rio</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 		$lntotalpg+=$row['vlrpago'];
 		

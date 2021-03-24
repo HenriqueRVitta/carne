@@ -19,9 +19,9 @@ $cod=$_GET["cod"];
 
 $sqlQuery = "select id, nometitular, nrocarne, prontuario, plano from carne_titular where nrocarne='".$cod."'"; 
 
-$slProduto=mysql_query($sqlQuery) or die('ERRO NA EXECU��O DA QUERY DE CONSULTA!');
+$slProduto=mysqli_query($conec->con,$sqlQuery) or die('ERRO NA EXECU��O DA QUERY DE CONSULTA!');
 	
-$rest=mysql_fetch_array($slProduto);
+$rest=mysqli_fetch_array($slProduto);
  	 
 echo"$rest[id],$rest[nometitular],$rest[nrocarne],$rest[prontuario],$rest[plano],00";
 

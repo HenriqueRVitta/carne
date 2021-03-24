@@ -1,17 +1,17 @@
 <?php 
 header ('Content-type: text/html; charset=ISO-8859-1');
 
-/*      Copyright 2014 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2014 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Essa aplicação tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem “contribuição” mensal com a Unidade de Saúde (Hospital) para obter 
-		um desconto em realização de atendimentos “Particular” ou até mesmo algum 
-		diferencial em caso de internação SUS
+		Essa aplicaï¿½ï¿½o tem como objetivo geral controlar os Titulares e dependentes 
+		que fazem ï¿½contribuiï¿½ï¿½oï¿½ mensal com a Unidade de Saï¿½de (Hospital) para obter 
+		um desconto em realizaï¿½ï¿½o de atendimentos ï¿½Particularï¿½ ou atï¿½ mesmo algum 
+		diferencial em caso de internaï¿½ï¿½o SUS
 
 */
 	session_start();
@@ -19,6 +19,9 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+	
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -51,8 +54,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 
        	$query = "SELECT tm_color_topo, tm_color_td, tm_color_body from styles";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$style = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$style = mysqli_fetch_array($resultado);
 
        	$query = "SELECT bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM config";
 
@@ -60,8 +63,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
        		$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM carne_bancos where nome = '".$_POST['bancoemissor']."'";
 		}
        	
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$config = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$config = mysqli_fetch_array($resultado);
 		
 		$localpagto = $config['localpagto'];
 		
@@ -104,12 +107,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='dirarquivoremessa' maxlength='250' id='iddirarquivoremessa' value='".$config['dirarquivoremessa']."'></td>";
 		
 		// Campo oculto Diretorio do Arquivo Retorno
-		// desixar para o usuário escolher a pasta quando for importar o retorno do banco
+		// desixar para o usuï¿½rio escolher a pasta quando for importar o retorno do banco
 		print "<INPUT type='hidden' class='text3' name='dirarquivoretorno' maxlength='250' id='iddirarquivoretorno' value='".$config['dirarquivoretorno']."'></td>";
 
 		print "</TR><TR>";
 
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Carteira de Cobrança".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Carteira de Cobranï¿½a".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		
 		if($config['carteiracobranca']=='Com Registro') { $comRegistro = " selected"; } else { $comRegistro = "";}
@@ -164,12 +167,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 
 		print "<select class='select2' name='localpagto' id='localpagto'>";  
 		$sql="select id,descricao from carne_localpagto where id =".$localpagto."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione Local"."</option>";
 				$sql="select id, descricao from carne_localpagto where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['id'] ) {
                             				print " selected";
@@ -195,9 +198,9 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_ALTER')))) {	
 
 		$query2 = "select bancoemissor, localpagto from carne_bancos where nome = '".$_POST['bancoemissor']."'";
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
-		$linha=mysql_num_rows($resultado2);
+		$linha=mysqli_num_rows($resultado2);
 
 		$barra = '"\"';
 		
@@ -214,7 +217,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 			$_POST['instrucaocaixa1']."','".$_POST['instrucaocaixa2']."','".$_POST['instrucaocaixa3']."','".
 			$_POST['dirarquivoretorno']."','".$dirarquivoremessa."','".$carteira."',".$_POST['retornobanco'].",".$_POST['localpagto'].")";
 			
-			$resultadoinsert = mysql_query($queryinsert) or die('Erro na query: '.$queryinsert);
+			$resultadoinsert = mysqli_query($conec->con,$queryinsert) or die('Erro na query: '.$queryinsert);
 			
 				if ($resultadoinsert == 0)
 				{
@@ -238,7 +241,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 			"', dirarquivoremessa='".$dirarquivoremessa."', carteiracobranca='".$carteira."', idretornobanco = ".$_POST['retornobanco'].", localpagto = ".$_POST['localpagto'].
 			" Where nome = '".$_POST['bancoemissor']."'";
 			
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 				if ($resultado2 == 0)
 				{
@@ -263,7 +266,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script language="JavaScript" type="text/javascript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 $(document).ready(function() {
 
@@ -334,7 +337,7 @@ function BuscaBanco(Id, pStr) {
    	    ajax = new XMLHttpRequest(); 
    	   } 
    	   catch(exc) { 
-   	    alert("Esse browser não tem recursos para uso do Ajax"); 
+   	    alert("Esse browser nï¿½o tem recursos para uso do Ajax"); 
    	    ajax = null; 
    	   } 
    	  } 

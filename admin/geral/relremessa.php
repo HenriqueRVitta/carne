@@ -26,20 +26,12 @@ ini_set('memory_limit', '-1');
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
     $sql="SELECT a.data,a.banco,a.arquivo,b.nome FROM carne_lote a join usuarios b on b.codigo = a.usuario  where a.id = ".$_GET['lote']." ";
-    $commit = mysql_query($sql);
-    $rowlote = mysql_fetch_array($commit);
-
-        /*
-        while($row = mysql_fetch_array($commit)){
-
-            $lcBorda.= "<td align='right'>Tipo de Plano:</TD>
-            <td align='left'>".$row['descricao']."</TD>";
-            
-            $i++;
-        }
-
-      */
+    $commit = mysqli_query($conec->con,$sql);
+    $rowlote = mysqli_fetch_array($commit);
 
 	// Inicio Dados Cabecalho	
 	$lcBorda.="<table>";
@@ -86,13 +78,13 @@ ini_set('memory_limit', '-1');
 	<th scope='col' align='center'>Venc.Contrato</th>	
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$geral = 0;
 	$vlrtotal = 0;
 	
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 		
 		$dtvencto = str_replace('/','',substr(converte_datacomhora($row['data_vencimento']),0,10));
         $dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));

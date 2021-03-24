@@ -1,18 +1,18 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 03/02/2015 13:00
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos pagamentos registrados
+		Relatï¿½rio dos pagamentos registrados
 
 */
 
 	session_start();
 
-// Definições da barra de progresso
+// Definiï¿½ï¿½es da barra de progresso
 //==============================================================
 define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
@@ -22,6 +22,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	
 	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 
 	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	$dtinicial = Fdate($_POST['datainicio']);
@@ -79,8 +81,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 
 	if(isset($_POST['usuario']) && $_POST['usuario'] <> -1) {
 		$sql="SELECT nome FROM usuarios where codigo = ".$_POST['usuario']." ";
-		$commit = mysql_query($sql);
-		$row = mysql_fetch_array($commit);
+		$commit = mysqli_query($conec->con,$sql);
+		$row = mysqli_fetch_array($commit);
 
 		$lcBorda.="<td align='right'>Usu&aacute;rio:</TD>
 	<td align='left'>".retira_acentos_UTF8($row['nome'])."</TD>";
@@ -92,9 +94,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if(isset($_POST['plano'])) {
 
 		$sql="SELECT descricao FROM carne_tipoplano where id = ".$_POST['plano']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -107,9 +109,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	if(isset($_POST['localpagto'])) {
 
 		$sql="SELECT descricao FROM carne_localpagto where id = ".$_POST['localpagto']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Local Pagamento:</TD>
 				<td align='left'>".$row['descricao']."</TD>";
@@ -131,9 +133,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		$lcBorda.= "<table border='0' cellspacing='2' cellpadding='2'>";
 		
 		$sql="SELECT nometitular FROM carne_titular where id = ".$_POST['titular']." ";
-		$commit = mysql_query($sql);
+		$commit = mysqli_query($conec->con,$sql);
 		$i=0;
-			while($row = mysql_fetch_array($commit)){
+			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Cliente:</TD>
 				<td align='left'>".$row['nometitular']."</TD>";
@@ -218,7 +220,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
       //print_r($query);
       //break;
       
-	// Cabeçalho do regisrtos encontrados
+	// Cabeï¿½alho do regisrtos encontrados
 	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Filtro</th>
@@ -226,12 +228,12 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	<th scope='col' align='center'>Vlr Total</th>
 	</tr>";
        
-    $resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
+    $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
 	$lnqtde = 0.00;
 	
-	while($row = mysql_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)){
 
 		$dtpagto = str_replace('/','',substr(converte_datacomhora($row['databaixa']),0,10));
 
@@ -325,16 +327,16 @@ if($_POST['gerarexecel'] == 2) {
 	
 $dadosXls = $header.$lcString.$footer;
 
-// Definimos o nome do arquivo que será exportado  
+// Definimos o nome do arquivo que serï¿½ exportado  
 $arquivo = "RecebimentoCarneSintetico".$date.".xls";  
-// Configurações header para forçar o download  
+// Configuraï¿½ï¿½es header para forï¿½ar o download  
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment;filename="'.$arquivo.'"');
 header('Cache-Control: max-age=0');
-// Se for o IE9, isso talvez seja necessário
+// Se for o IE9, isso talvez seja necessï¿½rio
 header('Cache-Control: max-age=1');
        
-// Envia o conteúdo do arquivo  
+// Envia o conteï¿½do do arquivo  
 echo $dadosXls;
 	
 

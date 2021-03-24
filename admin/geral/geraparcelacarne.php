@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/02/2015 14:13
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Opção de geração de Carnê/Boleto de cobrança
+		Opï¿½ï¿½o de geraï¿½ï¿½o de Carnï¿½/Boleto de cobranï¿½a
 
 */
 	session_start();
@@ -14,6 +14,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -31,7 +34,7 @@
 
 	//print_r($_POST);
 	
-	// Exibe o campo para informar o Nro do Carnê
+	// Exibe o campo para informar o Nro do Carnï¿½
 	if(!isset($_POST['processar']) && empty($_POST['submit'])) {
 		
 	print "<FORM name='geraparcelacarne' method='POST' action='geraparcelacarne.php' onSubmit=\"return valida()\">";	
@@ -57,10 +60,10 @@
 		print "<select class='select2' name='idtitular' id='idtitular' required>";  
 		print "<option value=''>"."Todos"."</option>";
 			$sql="Select id,nometitular from carne_titular where situacao = 'ATIVO' order by nometitular";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['id'].">".$row['nometitular']."</option>";
 						$i++;
@@ -76,8 +79,8 @@
 		print "</br>";
 		
        	$query = "SELECT max(id) as id FROM carne_titular ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE MAX ID!');
-       	$maxid = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUï¿½ï¿½O DA QUERY DE MAX ID!');
+       	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
        	$query = "SELECT c.*, p.dtregistro, p.id as idparcela, p.databaixa, p.vlrmensal, p.vlrparcelado, p.taxa, p.mesano FROM carne_titular c Join carne_parcelamento p on p.idcliente=c.id ";
@@ -94,10 +97,10 @@
 			$query.=" and c.unidade =".$_SESSION['s_local']." ORDER BY p.id desc limit 50";
 		}
 
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃ‡Ã‚O DA QUERY DE CONSULTA 1! '.$query);
+		$registros = mysqli_num_rows($resultado);
 
-		// variável que controla permissões dos botões para incluir, editar e excluir  do usuário
+		// variï¿½vel que controla permissï¿½es dos botï¿½es para incluir, editar e excluir  do usuï¿½rio
 		$disabled = '';
 		$clasbutton = " class='button'"; 	
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
@@ -114,8 +117,7 @@
 			
 			$j=2;
 			$id = "";
-			//while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
-			while ($row = mysql_fetch_array($resultado))
+			while ($row = mysqli_fetch_array($resultado))
 			{
 				if ($j % 2)
 				{
@@ -173,7 +175,7 @@
 	if (isset($_GET['action']) && $_GET['action'] == "excluir"){
 		
 			$query2 = "DELETE FROM carne_parcelamento WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro na exclusão '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusï¿½o '.$query2);
 		
 			if ($resultado2 == 0)
 			{
@@ -193,7 +195,7 @@
 
 	}
 	
-	// Exibe os Dados de Pagamento do Carnê e Gera o Parcelamento
+	// Exibe os Dados de Pagamento do Carnï¿½ e Gera o Parcelamento
 	if(!empty($_POST['submit']) && $_POST['submit']=='PROCESSAR') {
 
 	$PAGE = new paging("PRINCIPAL");
@@ -220,8 +222,8 @@
        	" Join carne_competenciaplano d on d.idplano = p.plano ".$Where;
        	
 		
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$rowA = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$rowA = mysqli_fetch_array($resultado);
 		$valor  = Round($rowA['valor']).".00";
 		$percentual = $rowA['percdesc'];
 		
@@ -258,10 +260,10 @@
 		print "<select class='select3' name='plano' id='idplano' disabled='disabled'>";  
 		print "<option value=-1>"."Tipo de Plano"."</option>";
 			$sql="Select id,descricao from carne_tipoplano order by id";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($conec->con,$commit)){
 
 						if($row['id']==$rowA['plano']) { $selected = " selected"; } else { $selected = "";}
 						
@@ -321,7 +323,7 @@
 
 	
 		/***********
-		 * Começa aqui a lista dos pagamentos edetuados pelo cliente
+		 * Comeï¿½a aqui a lista dos pagamentos edetuados pelo cliente
 		 * Henrique 11/03/2015 14:20
 		 */
 
@@ -342,9 +344,9 @@
 					
 		$queryPrincipal.=" and p.unidade =".$_SESSION['s_local']." ORDER BY p.id desc";
 		
-		$resultado = mysql_query($queryPrincipal) or die('ERRO NA QUERY !'.$queryPrincipal);
+		$resultado = mysqli_query($conec->con,$queryPrincipal) or die('ERRO NA QUERY !'.$queryPrincipal);
 	
-		$registros = mysql_num_rows($resultado);
+		$registros = mysqli_num_rows($resultado);
 
 	    $disabled = '';
 	    $clasbutton = " class='button'";
@@ -361,7 +363,7 @@
 			$cellStyle = "cellpadding='5' cellspacing='1'";
 		print "<TABLE border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
 		
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem('Nenhum pagamento registrado')."</td></tr>";
 		}
@@ -378,7 +380,7 @@
 			$lcLibera2 = liberamenu('Excluir Pagamento Carne');
 		
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -417,7 +419,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

@@ -18,6 +18,9 @@
 	include ('../../includes/include_geral_II.inc.php');
 	include ('../../includes/classes/paging.class.php');
 	include ("../../includes/javascript/funcoes.js");
+
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -556,13 +559,13 @@ print "<td height='460' class='tb-conteudo' colspan='4'>";
 
 		if ((isset($_GET['action'])  && ($_GET['action'] == "incluir") )&& empty($_POST['submit'])) {
 	      	$query = "SELECT max(id) as id FROM carne_titular ";
-			$resultado = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 1 !');
-	       	$maxidtitular = mysql_fetch_array($resultado);
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 1 !');
+	       	$maxidtitular = mysqli_fetch_array($resultado);
 		}
 
 		$queryRR = "SELECT dtnascdepobriga FROM config";
-		$resultadoRR = mysql_query($queryRR) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 01!');
-       	$configuraRR = mysql_fetch_array($resultadoRR);
+		$resultadoRR = mysqli_query($conec->con,$queryRR) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 01!');
+       	$configuraRR = mysqli_fetch_array($resultadoRR);
 		$dtnascdepobriga = $configuraRR['dtnascdepobriga'];
 		
 
@@ -574,7 +577,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		if ((isset($_GET['action'])) && $_GET['action']=='incluirdependente') {
 
 			$query2 = "Update carne_dependente set idtitular=".$_GET['cod']." WHERE id='".$_GET['coddep']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -592,7 +595,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		if ((isset($_GET['action'])) && $_GET['action']=='excluir') {
 
 			$query2 = "Update carne_dependente set idtitular=0 WHERE id='".$_GET['cod']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -626,8 +629,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 			
 			
 		$query = "SELECT max(id) as id FROM carne_titular ";
-		$resid = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 2!');
-       	$maxid = mysql_fetch_array($resid);
+		$resid = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 2!');
+       	$maxid = mysqli_fetch_array($resid);
        	
        	print "<BR><b><font size=2 color='blue'>"."Inclus&atilde;o do Cliente"."</b></font><BR>";
 
@@ -644,8 +647,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		// Se utiliza controle por carn�
 		if($_SESSION['s_utilizacontrato']=='Nao') {
 		    $queryR = "SELECT prox_contrato,dtnascdepobriga FROM config";
-			$resultado = mysql_query($queryR) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
-	       	$configura = mysql_fetch_array($resultado);
+			$resultado = mysqli_query($conec->con,$queryR) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
+	       	$configura = mysqli_fetch_array($resultado);
 	       	$proximocarne = $configura['prox_contrato']+1;
 
 	       	if($_SESSION['s_utilizacontrato']=='Nao') { $ready2 = "readonly=true"; } else { $ready2 = ""; } 
@@ -791,9 +794,9 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<select class='select2' name='grupo' id='idgrupo' onBlur='return Dados(this.value)'>";  
 				print "<option value=-1>"."Selecione o Grupo"."</option>";
 					$sql="Select id,descricao from carne_grupo where unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -848,9 +851,9 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 					$sql="Select id,nome from carne_vendedor where ativo = 1 and unidade = ".$_SESSION['s_local'];
 				}
 
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['nome']."</option>";
 						$i++;
 					}
@@ -880,10 +883,10 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		if (isset($_GET['cod'])) {
 			$query.= " WHERE id = ".$_GET['cod']." ";
 		}
-		$resultado = mysql_query($query) or die('ERRO na Query Alterar dados!');
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO na Query Alterar dados!');
+		$registros = mysqli_num_rows($resultado);
 		
-		$row = mysql_fetch_array($resultado);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Cliente"."</b></font><BR>";		
 
@@ -1065,12 +1068,12 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 
 		print "<select class='select2' name='grupo' id='idgrupo'>";  
 		$sql="select id,descricao from carne_grupo where id =".$row['grupo']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione o Grupo"."</option>";
 				$sql="select id, descricao from carne_grupo where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['id'] ) {
                             				print " selected";
@@ -1139,12 +1142,12 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 
 		print "<select class='select2' name='vendedor' id='idvendedor'>";  
 		$sql="select id,nome from carne_vendedor where id =".$row['vendedor']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione o Vendedor"."</option>";
 				$sql="select id, nome from carne_vendedor where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['id'] ) {
                             				print " selected";
@@ -1161,9 +1164,9 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				join carne_tipoplano c on c.id = b.plano
 				join carne_competenciaplano d on d.idplano = c.id
 				where b.idtitular = ".$row['id']." and d.vlrfixonegociado = 2";
-		$vlrfixo = mysql_query($sql) or die ('Erro na Query '.$sql);;
+		$vlrfixo = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
 		$vlrfixonegociado = 0;
-		while($rowVlr = mysql_fetch_array($vlrfixo)){
+		while($rowVlr = mysqli_fetch_array($vlrfixo)){
 			$vlrfixonegociado = $rowVlr['vlrfixonegociado'];
 		}
 		
@@ -1230,10 +1233,10 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 
 				// Verifico se existe somente um Plano cadastrado
 				$sqlplano="SELECT count(*) as qtde,id FROM carne_tipoplano";
-				$qtdplano = mysql_query($sqlplano) or die ('Erro na Query '.$sql);;
+				$qtdplano = mysqli_query($conec->con,$sqlplano) or die ('Erro na Query '.$sql);;
 				$qtdplanoexiste = 0;
 				$idplano = 0;
-				while($rowplan = mysql_fetch_array($qtdplano)){
+				while($rowplan = mysqli_fetch_array($qtdplano)){
 					$qtdplanoexiste = $rowplan['qtde'];
 					$idplano = $rowplan['id'];
 				}
@@ -1242,8 +1245,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				$erro=false;
 		
 				$qryl = "SELECT * FROM carne_titular WHERE nometitular='".$_POST['nometitular']."' and nomemae='".$_POST['nomemae']."' and datanasc = '".$nascimento."'";
-				$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-				$linhas = mysql_num_rows($resultado);
+				$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+				$linhas = mysqli_num_rows($resultado);
 				
 				
 				if ($linhas > 0)
@@ -1289,7 +1292,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 					$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne) ".
 							" values ('".$lcnome."','".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."')";
 
-					$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+					$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					if ($resultado == 0)
 					{
 						$aviso = TRANS('ERR_INSERT');
@@ -1303,20 +1306,20 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 						// $idplano = $rowplan['id'];
 						
 							$sqlplano="select max(id) as ultimoid from carne_titular";
-							$qtdplano = mysql_query($sqlplano) or die ('Erro na Query '.$sql);;
+							$qtdplano = mysqli_query($conec->con,$sqlplano) or die ('Erro na Query '.$sql);;
 							$ultimoid = 0;
-							while($rowplan = mysql_fetch_array($qtdplano)){
+							while($rowplan = mysqli_fetch_array($qtdplano)){
 								$ultimoid = $rowplan['ultimoid'];
 							}
 							
 							$sqlplano="select datainicio, day(datainicio) dia, unidade, nrocarne from carne_titular where id = '".$ultimoid."'";
-							$qtdplano = mysql_query($sqlplano) or die ('Erro na Query '.$sql);;
+							$qtdplano = mysqli_query($conec->con,$sqlplano) or die ('Erro na Query '.$sql);;
 							$datainicio = '1900-01-01 00:00:00';
 							$dia = 0;
 							$unidade = 1;
 							$nrocarne = 0;
 							
-							while($rowplan = mysql_fetch_array($qtdplano)){
+							while($rowplan = mysqli_fetch_array($qtdplano)){
 								$datainicio = $rowplan['datainicio'];
 								$dia = $rowplan['dia'];
 								$unidade = $rowplan['unidade'];
@@ -1327,7 +1330,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 							
 							$query = "INSERT INTO carne_contratos (nrocontrato,plano,datacontrato,diavencto,status,idtitular,unidade,registro)".
 									" values ('".$nrocarne."','".$idplano."','".$datainicio."','".$dia."','0','".$ultimoid."',".$unidade.",'".$registro."')";
-							$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+							$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					
 						}
 					
@@ -1341,8 +1344,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				
 
 			 $query = "SELECT max(id) as id FROM carne_titular ";
-			 $resultado = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 3!');
-	       	 $maxidtitular = mysql_fetch_array($resultado);
+			 $resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 3!');
+	       	 $maxidtitular = mysqli_fetch_array($resultado);
 
 	       	 $Log1 = liberamenu('Incluir Titular');
 	    	 $Log2 = $maxidtitular['id'];
@@ -1419,7 +1422,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				
 				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$_POST['endereco']."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano." WHERE id=".$_POST['alteratitular']." ";		
 				
-				$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 	       	 $Log1 = liberamenu('Alterar Titular');
 	    	 $Log2 = $_POST['alteratitular'];
@@ -1475,7 +1478,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				
 				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$row['endereco']."', numero='".$row['numero']."', cep='".$cep."', bairro='".$row['bairro']."', cidade='".$row['cidade']."', codcidade='"."', uf='".$row['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', datanasc='".$nascimento."', qtdefilhos=".$row['qtdefilhos'].", escolaridade='".$row['escolaridade']."', localtrabalho='".$row['localtrabalho']."', profissao='".$row['profissao']."', identidade='".$row['identidade']."', cpf='".$row['cpf']."', estadocivil='".$row['estadocivil']."', sexo='".$row['sexo']."', nomemae='".$row['nomemae']."', nomepai='".$row['nomepai']."', email='".strtolower($row['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."' WHERE id=".$row['id']." ";
 				
-				$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 		
 				if ($resultado2 == 0)
 				{
@@ -1507,12 +1510,12 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$idDep = $_GET['iddependente'];
 			
 			$query2 = "select nome from carne_dependente where id =".$_GET['iddependente']."";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-			$rowNome = mysql_fetch_array($resultado2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+			$rowNome = mysqli_fetch_array($resultado2);
 			$nomedep = $rowNome['nome'];
 
 			$query2 = "delete from carne_dependente where id =".$_GET['iddependente']."";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 			
 			if ($resultado2 == 0)
 			{
@@ -1546,8 +1549,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		print "<FORM name='abastitular' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return validadep()\">";
 			
 		       	$query = "SELECT max(id) as id FROM carne_dependente ";
-				$resultado = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 4!');
-		       	$maxid = mysql_fetch_array($resultado);
+				$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID 4!');
+		       	$maxid = mysqli_fetch_array($resultado);
 				
 				print "<BR><b><font size=2 color='blue'>"."Inclus&atilde;o do Cliente"."</b></font><BR>";
 		
@@ -1584,9 +1587,9 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				print "<select class='select2' name='parentesco' id='idparentesco' onBlur='return Dados(this.value)'>";  
 						print "<option value=-1>"."Selecione Tipo Dependente"."</option>";
 							$sql="Select id,descricao from carne_tipodependente where unidade = ".$_SESSION['s_local'];
-							$commit = mysql_query($sql);
+							$commit = mysqli_query($conec->con,$sql);
 							$i=0;
-							while($row = mysql_fetch_array($commit)){
+							while($row = mysqli_fetch_array($commit)){
 								print "<option value=".$row['id'].">".$row['descricao']."</option>";
 								$i++;
 							}
@@ -1631,8 +1634,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 
 		// Come�a aqui a listar os dependentes		
    		$query = "SELECT * FROM carne_dependente WHERE idtitular = ".$_GET['cod']." ";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -1650,7 +1653,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 	    }
 		
 		
-				if (mysql_num_rows($resultado) == 0)
+				if (mysqli_num_rows($resultado) == 0)
 				{
 					echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 				}
@@ -1667,7 +1670,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 						"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 					
 					$j=2;
-					while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+					while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 					{
 						if ($j % 2)
 						{
@@ -1715,8 +1718,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 	print "<FORM name='abastitular' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return validadep()\">";
 		
 		$query = "SELECT * FROM carne_dependente WHERE id = ".$_GET['cod']." ";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$row = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o Dados do Dependente"."</b></font><BR>";		
 
@@ -1754,12 +1757,12 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		
 		print "<select class='select2' name='parentesco' id='parentesco'>";  
 		$sql="select id,nome,parentesco from carne_dependente where id =".$_GET['cod']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione Tipo Dependente"."</option>";
 				$sql="select id, descricao from carne_tipodependente where unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['parentesco'] ) {
                             				print " selected";
@@ -1843,8 +1846,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$erro=false;
 	
 			$qryl = "SELECT * FROM carne_dependente WHERE idtitular = ".$_POST['idtitular']." and nome='".$_POST['nomedep']."' and datanasc = '".$nascimento."'";
-			$resultado = mysql_query($qryl) or die('Erro na Query :'.$qryl);
-			$linhas = mysql_num_rows($resultado);
+			$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
+			$linhas = mysqli_num_rows($resultado);
 	
 			if ($linhas > 0)
 			{
@@ -1862,7 +1865,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs)".
 						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."')";
 							
-				$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				if ($resultado == 0)
 				{
 					$aviso = TRANS('ERR_INSERT');
@@ -1900,7 +1903,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			
 			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."' WHERE id=".$_POST['codigo']." ";		
 			
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 	
 			if ($resultado2 == 0)
 			{
@@ -1929,8 +1932,8 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		if ((isset($_GET['action'])) && $_GET['action']=='excluircontrato') {
 
 			 $query2 = "select c.idtitular, t.nometitular from carne_contratos c join carne_titular t on t.id = c.idtitular where c.id ='".$_GET['idcontrato']."'";
-			 $resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-			 $rowCont = mysql_fetch_array($resultado2);
+			 $resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+			 $rowCont = mysqli_fetch_array($resultado2);
 			 
 			
  			 $Log1 = liberamenu('Excluir Contrato');
@@ -1941,7 +1944,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 	 	     grava_log($_SESSION['s_uid'],$_SESSION['s_codoperacao'],$Log2,$log3,$log4,$log4,$log4,$log5);
 			
 			$query2 = "delete from carne_contratos where id ='".$_GET['idcontrato']."'";
-			$resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 
 			if ($resultado2 == 0)
 			{
@@ -1971,8 +1974,8 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		print "</form>";
 
 		    $query = "SELECT prox_cartao_desc,prox_contrato,dtnascdepobriga FROM config";
-			$resultado = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
-	       	$config = mysql_fetch_array($resultado);
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
+	       	$config = mysqli_fetch_array($resultado);
 	       	$proximocartao = $config['prox_cartao_desc']+1;
 	       	$proximocontra = $config['prox_contrato']+1;
 	       	$dtnascdepobriga = $config['dtnascdepobriga'];
@@ -2008,9 +2011,9 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		print "<select class='select3' name='plano' id='idplano'>";  
 				print "<option value=-1>"."Selecione o Plano"."</option>";
 					$sql="Select id,descricao from carne_tipoplano where status = 0 and unidade = ".$_SESSION['s_local'];
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 						print "<option value=".$row['id'].">".$row['descricao']."</option>";
 						$i++;
 					}
@@ -2033,12 +2036,12 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 
 		
 		$query = "SELECT nometitular from carne_titular where id = ".$_GET['cod']."";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$rowTitular = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$rowTitular = mysqli_fetch_array($resultado);
 		
 		$query = "SELECT c.id, c.nrocontrato, c.idtitular, c.datacontrato, c.plano, c.diavencto, c.status, c.registro, p.descricao from carne_contratos c Join carne_tipoplano p on p.id = c.plano where c.idtitular=".$_GET['cod']." order by p.descricao desc";
-		$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-		$registros = mysql_num_rows($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+		$registros = mysqli_num_rows($resultado);
 
 		if (isset($_GET['LIMIT']))
 		$PAGE->setLimit($_GET['LIMIT']);
@@ -2047,7 +2050,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		$PAGE->execSQL();
 
 		// Nenhum registro encontrado
-		if (mysql_num_rows($resultado) == 0)
+		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
 			echo "<tr><td colspan='4' align='lefth'></td></tr>";			
@@ -2065,7 +2068,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CARTAO"."</TD></tr>";
 			
 			$j=2;
-			while ($row = mysql_fetch_array($PAGE->RESULT_SQL))
+			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))
 			{
 				if ($j % 2)
 				{
@@ -2141,8 +2144,8 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 	    }
 
        	$query = "SELECT * FROM carne_contratos  WHERE id = ".$_GET['cod']." ";
-		$resultado = mysql_query($query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
-		$row = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
+		$row = mysqli_fetch_array($resultado);
 
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o do Contrato"."</b></font><BR>";		
 		print "<TR>";
@@ -2168,12 +2171,12 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 
 		print "<select class='select3' name='plano' id='idplano'>";  
 		$sql="select plano from carne_contratos where id =".$_GET['cod']."";
-		$commit = mysql_query($sql) or die ('Erro na Query '.$sql);
-		$rowR = mysql_fetch_array($commit);		
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione o Plano"."</option>";
 				$sql="Select id,descricao from carne_tipoplano where status = 0 and unidade =".$_SESSION['s_local']." order by id";
-				$commit = mysql_query($sql) or die ('Erro na Query '.$sql);;
-							while($rowB = mysql_fetch_array($commit)){
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
                         			if ($rowB['id'] == $rowR['plano'] ) {
                             				print " selected";
@@ -2223,8 +2226,8 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == 'Salvar Contrato'))) {	
 
 	    $query = "SELECT prox_cartao_desc,prox_contrato,dtnascdepobriga FROM config";
-		$resultado = mysql_query($query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
-       	$config = mysql_fetch_array($resultado);
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
+       	$config = mysqli_fetch_array($resultado);
        	$proximocartao = $config['prox_cartao_desc']+1;
        	$proximocontra = $config['prox_contrato']+1;
        	$dtnascdepobriga = $config['dtnascdepobriga'];
@@ -2235,7 +2238,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		$query = "INSERT INTO carne_contratos (nrocontrato,plano,datacontrato,diavencto,status,idtitular,unidade,registro)".
 				" values ('".$_POST['codigo']."','".$_POST['plano']."','".$dtcontrato."','".$_POST['diavencto']."','".$_POST['status']."','".$_POST['idtitular']."',".$_SESSION['s_local'].",'".$registro."')";
 					
-		$resultado = mysql_query($query) or die('Erro no Insert '.$query);
+		$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 		if ($resultado == 0)
 		{
 			$aviso = TRANS('ERR_INSERT');
@@ -2245,10 +2248,10 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 			$aviso = TRANS('OK_INSERT');
 			
 			$query = "update carne_titular set nrocontrato=".$_POST['codigo']." where id =".$_POST['titular']."";
-			$resultado = mysql_query($query) or die('Erro no Update '.$query);
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Update '.$query);
 
 			$query2 	= "UPDATE config SET prox_contrato='".$proximocontra."'";
-			$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 			
 		}
 		
@@ -2267,8 +2270,8 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == 'Alterar Contrato'))) {	
 					
 			 $query2 = "select c.idtitular, t.nometitular from carne_contratos c join carne_titular t on t.id = c.idtitular where c.id ='".$_POST['contrato']."'";
-			 $resultado2 = mysql_query($query2) or die('Erro ... '.$query2);
-			 $rowCont = mysql_fetch_array($resultado2);
+			 $resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+			 $rowCont = mysqli_fetch_array($resultado2);
 		
 		 $Log1 = liberamenu('Alterar Contrato');
        	 $Log2 = $rowCont['idtitular'];
@@ -2278,7 +2281,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
  	     grava_log($_SESSION['s_uid'],$_SESSION['s_codoperacao'],$Log2,$log3,$log4,$log4,$log4,$log5);
 							
  	    $query2 = "UPDATE carne_contratos SET nrocontrato='".$_POST['codigo']."',plano='".$_POST['plano']."', datacontrato='".$dtcontrato."', diavencto='".$_POST['diavencto']."', status='".$_POST['status']."', idtitular='".$_POST['titular']."', unidade=".$_SESSION['s_local']." where id=".$_POST['contrato']."";		
-		$resultado2 = mysql_query($query2) or die('Erro na query: '.$query2);
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
 		if ($resultado2 == 0)
 		{

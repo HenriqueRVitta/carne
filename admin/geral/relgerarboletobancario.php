@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/02/2015 14:13
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Opção de geração de Carnê/Boleto de cobrança
+		Opï¿½ï¿½o de geraï¿½ï¿½o de Carnï¿½/Boleto de cobranï¿½a
 
 */
 	session_start();
@@ -14,7 +14,9 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
-
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
@@ -47,10 +49,10 @@
 		print "<select class='select2' name='titular' id='idtitular'>";  
 		print "<option value=''>"."Todos"."</option>";
 			$sql="Select id,nometitular from carne_titular where situacao = 'ATIVO' order by nometitular";
-					$commit = mysql_query($sql);
+					$commit = mysqli_query($conec->con,$sql);
 					$i=0;
 		
-					while($row = mysql_fetch_array($commit)){
+					while($row = mysqli_fetch_array($commit)){
 
 						print "<option value=".$row['id'].">".$row['nometitular']."</option>";
 						$i++;
@@ -84,7 +86,7 @@
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 function formatar(src, mask) 
 {

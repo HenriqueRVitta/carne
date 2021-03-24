@@ -1,12 +1,12 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Informática LTDA
+/*      Copyright 2015 MCJ Assessoria Hospitalar e Informï¿½tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/10/2020 14:43 GLPI 20676
 
-		* Módulo Carnê *
+		* Mï¿½dulo Carnï¿½ *
 
-		Relatório dos Cadastros do Sistema
+		Relatï¿½rio dos Cadastros do Sistema
 
 */
 	session_start();
@@ -14,10 +14,12 @@
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/classes/paging.class.php");
 	include ("../../includes/calendario.php");
-
+	$conec = new conexao;
+	$conec->conecta('MYSQL');
+	
     $query = "SELECT prox_cartao_desc, prox_contrato, dtvencontrato, qtdepagtocaren, nromaxdepend, modelomenu, vlrbasecarne, contrato, ctacaixa, ctacontabil, centrocusto, historicopadrao, codcliente, modelocarne, modelocontrato, dtnascdepobriga, mesesematraso FROM config";
-	$resultado = mysql_query($query) or die('ERRO NA QUERY !'.$query);
-	$config = mysql_fetch_array($resultado);
+	$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+	$config = mysqli_fetch_array($resultado);
 	
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 	
@@ -114,9 +116,9 @@ print "<FORM name='relcartaocontribuinte' method='POST' ".$action." onSubmit=\"r
 				left Join carne_competenciaplano d on d.idplano = b.plano
 				where b.datacontrato between '".$dtinicial."' and '".$dtfinal."' and a.situacao = 'ATIVO' order by a.nometitular";
 	
-	$commit=mysql_query($sqlQuery) or die('ERRO na query'.$sqlQuery);
+	$commit=mysqli_query($conec->con,$sqlQuery) or die('ERRO na query'.$sqlQuery);
 	
-	if (mysql_num_rows($commit) == 0){
+	if (mysqli_num_rows($commit) == 0){
 	
 		print "<div class='alert alert-danger'>Nenhum Registro encontrato..</div>";
 	
@@ -142,7 +144,7 @@ print "<FORM name='relcartaocontribuinte' method='POST' ".$action." onSubmit=\"r
 		doubleval($nTotalGeral);
 		
 		
-		while($row = mysql_fetch_array($commit)){
+		while($row = mysqli_fetch_array($commit)){
 	
 			if ($j % 2)
 			{
@@ -206,7 +208,7 @@ print "</form>";
 ?>
 
 <script language="JavaScript">
-/* Formatação para qualquer mascara */
+/* Formataï¿½ï¿½o para qualquer mascara */
 
 // Verifica se marcou algum CheckBox
 function verificaChecks() {
