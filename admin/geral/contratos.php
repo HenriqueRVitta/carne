@@ -153,7 +153,7 @@
 				}
 				print "<td class='line'>".$row['nrocontrato']."</td>";
 				
-				print "<td class='line' align='center'><a onClick=\"redirect('abas.php?action=dependentes&cod=".$row['id']."&cellStyle=true')\"><img height='18' width='18' src='".ICONS_PATH."contents.png' title='"."Acessar informa��es do Contrato"."'></a></td>";
+				print "<td class='line' align='center'><a onClick=\"redirect('abas.php?action=dependentes&cod=".$row['id']."&cellStyle=true')\"><img height='18' width='18' src='".ICONS_PATH."contents.png' title='"."Acessar dados do Contrato"."'></a></td>";
 				print "<td class='line'><a href=\"redirect('abas.php?action=excluir&cod=".$row['id']."')\"></a></TD>";
 				
 				print "</TR>";

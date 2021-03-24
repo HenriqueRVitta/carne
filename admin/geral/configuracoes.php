@@ -72,7 +72,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='prox_contrato' maxlength='6' id='idprox_contrato' value='".strzero($config['prox_contrato'],6)."'".$ready2."></td>";
 		print "</TR><TR>";		
 		$dtcontrato = str_replace('/','',substr(converte_datacomhora($config['dtvencontrato']),0,10));
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Data Padr�o Vencto Contrato/Carn&ecirc;".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Data Padrao Vencto Contrato/Carn&ecirc;".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtvencontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='iddtvencontrato' onBlur='return doDateVenc(this.id,this.value, 4)' value='".mask($dtcontrato,'##/##/####')."'></td>";
 		print "</TR><TR>";
 		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Qtde Pagto para Car&ecirc;ncia Contrato/Carn&ecirc;".":</TD>";
@@ -158,7 +158,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if($config['modelocarne']=='4'){ $selected4 = " selected"; } else { $selected4 = "";}
 		if($config['modelocarne']=='5'){ $selected5 = " selected"; } else { $selected5 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Modelo do Carn�".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Modelo do Carn&ecirc".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='modelocarne' id='idmodelocarne'>";  
 		print "<option value='1'".$selected1.">Modelo 01</option>";  

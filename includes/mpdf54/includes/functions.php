@@ -61,11 +61,25 @@ function PreparePreText($text,$ff='//FF//') {
 
 if(!function_exists('strcode2utf')){ 
   function strcode2utf($str,$lo=true) {
+
+	/*
 	//converts all the &#nnn; and &#xhhh; in a string to Unicode
 	if ($lo) { $lo = 1; } else { $lo = 0; }
 	$str = preg_replace('/\&\#([0-9]+)\;/me', "code2utf('\\1',{$lo})",$str);
 	$str = preg_replace('/\&\#x([0-9a-fA-F]+)\;/me', "codeHex2utf('\\1',{$lo})",$str);
 	return $str;
+	*/
+
+	$str = preg_replace_callback('/\&\#(\d+)\;/m', function ($matches) use ($lo) {
+		return static::code2utf($matches[1], $lo ? 1 : 0);
+	}, $str);
+	$str = preg_replace_callback('/\&\#x([0-9a-fA-F]+)\;/m', function ($matches) use ($lo) {
+		return static::codeHex2utf($matches[1], $lo ? 1 : 0);
+	}, $str);
+
+	return $str;
+
+	
   }
 }
 

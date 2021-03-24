@@ -29,7 +29,7 @@
 ?>
 
 <head> 
-<title> Administra��o de Contratos </title> 
+<title> Administra&ccedil;&atilde;o de Contratos </title> 
 <style>
 
 body, table { 
@@ -135,7 +135,7 @@ function Limitedep(cod) {
 				redirect("incluirdependentes.php?action=incluir&cellStyle=true&cod="+cod);				
 			} else {
 				
-					alert('Quantidade m�xima de '+npermitido+' Dependentes por Titular atingido.');
+					alert('Quantidade máxima de '+npermitido+' Dependentes por Titular atingido.');
 								
 				}
 				
@@ -197,7 +197,7 @@ print "</head>";
 
 print "<body onLoad=\"AlternarAbas('td_cadastro','div_cadastro')\">"; 
 
-print "<h2 align='left'><B><font size='4'>Administra��o de Contratos</font></B></h2>";
+print "<h2 align='left'><B><font size='4'>Administra&ccedil;&atildeo de Contratos</font></B></h2>";
 print "<input type='text' name='titular' id='idtitular' value='".$_GET['cod']."' hidden='true'>";
 
 print "<table width='100%' height='480' cellspacing='0' cellpadding='0' 
@@ -428,7 +428,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
 			print "<TR class='header'><td class='line' width='10%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Data Contrato"."<td class='line' width='50%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."</TD>".
-				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CART�O"."</TD></tr>";
+				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD><td class='line'>"."CONTRATO"."</TD><td class='line'>"."CART&Aring;O"."</TD></tr>";
 			
 			$j=2;
 			while ($row = mysqli_fetch_array($PAGE->RESULT_SQL))

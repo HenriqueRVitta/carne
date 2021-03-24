@@ -68,7 +68,14 @@ define("_DSIZE", strlen($test));
 class mPDF
 {
 
-///////////////////////////////
+
+	/**
+	 * @var \Mpdf\TableOfContents
+	 */
+	private $tableOfContents;
+
+	
+	///////////////////////////////
 // EXTERNAL (PUBLIC) VARIABLES
 // Define these in config.php
 ///////////////////////////////
@@ -1734,49 +1741,80 @@ function Open() {
 	if($this->state==0)	$this->_begindoc();
 }
 
-function Close() {
-	if ($this->progressBar) { $this->UpdateProgressBar(2,'2','Closing last page'); }	// *PROGRESS-BAR*
-	//Terminate document
-	if($this->state==3)	return;
-	if($this->page==0) $this->AddPage($this->CurOrientation);
-	if (count($this->cellBorderBuffer)) { $this->printcellbuffer(); }	// *TABLES*
-	if ($this->tablebuffer) { $this->printtablebuffer(); }	// *TABLES*
-/*-- COLUMNS --*/
+function Close()
+{
+	// @log Closing last page
+
+	// Terminate document
+	if ($this->state == 3) {
+		return;
+	}
+	if ($this->page == 0) {
+		$this->AddPage($this->CurOrientation);
+	}
+	if (count($this->cellBorderBuffer)) {
+		$this->printcellbuffer();
+	} // *TABLES*
+	if ($this->tablebuffer) {
+		$this->printtablebuffer();
+	} // *TABLES*
+	/* -- COLUMNS -- */
 
 	if ($this->ColActive) {
 		$this->SetColumns(0);
-		$this->ColActive = 0; 
-		if (count($this->columnbuffer)) { $this->printcolumnbuffer(); }
+		$this->ColActive = 0;
+		if (count($this->columnbuffer)) {
+			$this->printcolumnbuffer();
+		}
 	}
-/*-- END COLUMNS --*/
-	if (count($this->divbuffer)) { $this->printdivbuffer(); }
+	/* -- END COLUMNS -- */
 
 	// BODY Backgrounds
 	$s = '';
 
 	$s .= $this->PrintBodyBackgrounds();
-
 	$s .= $this->PrintPageBackgrounds();
-	$this->pages[$this->page] = preg_replace('/(___BACKGROUND___PATTERNS'.date('jY').')/', "\n".$s."\n".'\\1', $this->pages[$this->page]);
-	$this->pageBackgrounds = array();
 
-	// mPDF 5.3.41
-	if($this->visibility!='visible')
+	$this->pages[$this->page] = preg_replace(
+		'/(___BACKGROUND___PATTERNS' . $this->uniqstr . ')/',
+		"\n" . $s . "\n" . '\\1',
+		$this->pages[$this->page]
+	);
+
+	$this->pageBackgrounds = [];
+
+	if ($this->visibility != 'visible') {
 		$this->SetVisibility('visible');
-
-	if (!$this->tocontents || !$this->tocontents->TOCmark) { //Page footer
-		$this->InFooter=true;
-		$this->Footer();
-		$this->InFooter=false;
 	}
-	if ($this->tocontents && ($this->tocontents->TOCmark || count($this->tocontents->m_TOC))) { $this->tocontents->insertTOC(); }	// *TOC*
 
-	//Close page
+	$this->EndLayer();
+
+	if (!$this->tableOfContents->TOCmark) { // Page footer
+		$this->InFooter = true;
+		$this->Footer();
+		$this->InFooter = false;
+	}
+
+	//if ($this->tableOfContents->TOCmark || count($this->tableOfContents->m_TOC)) {
+	//	$this->tableOfContents->insertTOC();
+	//}
+
+	// *TOC*
+	// Close page
 	$this->_endpage();
 
-	//Close document
+	// Close document
 	$this->_enddoc();
 }
+
+function EndLayer()
+{
+	if ($this->current_layer > 0) {
+		$this->writer->write('EMCZ-index');
+		$this->current_layer = 0;
+	}
+}
+
 
 /*-- BACKGROUNDS --*/
 function _resizeBackgroundImage($imw, $imh, $cw, $ch, $resize=0, $repx, $repy) {
@@ -7193,10 +7231,17 @@ function _puthtmlheaders() {
 		$this->x = $this->lMargin;
 		$this->y = $this->margin_header;
 
+		/*
 		$html = str_replace('{PAGENO}',$this->pagenumPrefix.$this->docPageNum($n).$this->pagenumSuffix,$html);
 		$html = str_replace($this->aliasNbPgGp,$this->nbpgPrefix.$this->docPageNumTotal($n).$this->nbpgSuffix,$html );	// {nbpg}
 		$html = str_replace($this->aliasNbPg,$nb,$html );	// {nb}
 		$html = preg_replace('/\{DATE\s+(.*?)\}/e',"date('\\1')",$html );
+		*/
+
+		$html = str_replace('{PAGENO}', $pnstr, $html);
+		$html = str_replace($this->aliasNbPgGp, $pntstr, $html); // {nbpg}
+		$html = str_replace($this->aliasNbPg, $nb, $html); // {nb}
+		$html = preg_replace_callback('/\{DATE\s+(.*?)\}/', [$this, 'date_callback'], $html); // mPDF 5.7
 
 		$this->HTMLheaderPageLinks = array();
 		$this->HTMLheaderPageAnnots = array();
@@ -7271,7 +7316,8 @@ function _puthtmlheaders() {
 		$html = str_replace('{PAGENO}',$this->pagenumPrefix.$this->docPageNum($n).$this->pagenumSuffix,$html);
 		$html = str_replace($this->aliasNbPgGp,$this->nbpgPrefix.$this->docPageNumTotal($n).$this->nbpgSuffix,$html );	// {nbpg}
 		$html = str_replace($this->aliasNbPg,$nb,$html );	// {nb}
-		$html = preg_replace('/\{DATE\s+(.*?)\}/e',"date('\\1')",$html );
+		$html = preg_replace_callback('/\{DATE\s+(.*?)\}/', [$this, 'date_callback'], $html); // mPDF 5.7
+		
 
 
 		$this->HTMLheaderPageLinks = array();
@@ -14332,15 +14378,28 @@ function _mergeBorders(&$b, &$a) {	// Merges $a['BORDER-TOP-STYLE'] to $b['BORDE
 
 
 function MergeCSS($inherit,$tag,$attr) {
-	$p = array();
-	$zp = array(); 
+	$p = [];
 
-	$classes = array();
+	$attr = is_array($attr) ? $attr : [];
+
+	$classes = [];
 	if (isset($attr['CLASS'])) {
-		$classes = preg_split('/\s+/',$attr['CLASS']);
+		$classes = preg_split('/\s+/', $attr['CLASS']);
 	}
-	if (!isset($attr['ID'])) { $attr['ID']=''; }
-	//===============================================
+	if (!isset($attr['ID'])) {
+		$attr['ID'] = '';
+	}
+	// mPDF 6
+	$shortlang = '';
+	if (!isset($attr['LANG'])) {
+		$attr['LANG'] = '';
+	} else {
+		$attr['LANG'] = strtolower($attr['LANG']);
+		if (strlen($attr['LANG']) == 5) {
+			$shortlang = substr($attr['LANG'], 0, 2);
+		}
+	}
+		//===============================================
 /*-- TABLES --*/
 	// Set Inherited properties
 	if ($inherit == 'TOPTABLE') {	// $tag = TABLE
@@ -27318,6 +27377,12 @@ function _tableWrite(&$table, $split=false, $startrow=0, $startcol=0, $splitpg=0
 /////////////////////////END OF TABLE CODE//////////////////////////////////
 /*-- END TABLES --*/
 
+	// mPDF 5.7+
+	function date_callback($matches)
+	{
+		return date($matches[1]);
+	}
+
 
 function _putextgstates() {
 	for ($i = 1; $i <= count($this->extgstates); $i++) {
@@ -28279,7 +28344,6 @@ function TOC($tocfont='', $tocfontsize=8, $tocindent=5, $resetpagenum='', $pagen
 	if (empty($this->tocontents)) { $this->tocontents = new tocontents($this); }
 	$this->tocontents->TOC($tocfont, $tocfontsize, $tocindent, $resetpagenum, $pagenumstyle, $suppress, $toc_orientation, $TOCusePaging, $TOCuseLinking, $toc_id);
 }
-
 
 function TOCpagebreakByArray($a) {
 	if (!is_array($a)) { $a = array(); }

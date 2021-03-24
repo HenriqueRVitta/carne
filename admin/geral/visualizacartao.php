@@ -1,13 +1,14 @@
 <?php
 
 	session_start();
-  $conec = new conexao;
-  $conec->conecta('MYSQL');
   
 
 	include ("../../includes/include_geral.inc.php");
 	include ("../../includes/include_geral_II.inc.php");
 	include ("../../includes/classes/paging.class.php");
+
+  $conec = new conexao;
+  $conec->conecta('MYSQL');
 
 
 $query = "SELECT a.*, b.descricao, b.formapagto, c.valor, d.datacontrato, d.diavencto, d.nrocontrato, d.plano ".

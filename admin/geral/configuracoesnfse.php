@@ -74,8 +74,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo de Ambiente".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='tipoambiente' id='idtipoambiente'>";  
-		print "<option value='1'".$selected1.">Produ��o</option>";
-		print "<option value='2'".$selected2.">Homologa��o</option>";  
+		print "<option value='1'".$selected1.">Produ&ccedil;&atilde;o</option>";
+		print "<option value='2'".$selected2.">Homologa&ccedil;&atilde;o</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -102,7 +102,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "</TR><TR>";		
 
 		// Inscri��o Municipal
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Inscri��o Municipal do Emitente".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."Inscri&ccedil;&atilde;o Municipal do Emitente".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='im' class='text4' id='idim' maxlength='45' value='".$config['im']."'></td>";
 		print "</TR><TR>";
 
@@ -129,15 +129,15 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if($config['naturezaoperacao']=='5'){ $selected5 = " selected"; } else { $selected5 = "";}
 		if($config['naturezaoperacao']=='6'){ $selected6 = " selected"; } else { $selected6 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Natureza da Opera��o".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Natureza da Opera&ccedil;&atilde;o".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='naturezaoperacao' id='idnaturezaoperacao'>";  
-		print "<option value='1'".$selected1.">Tributa��o no munic�pio</option>";  
-		print "<option value='2'".$selected2.">Tributa��o fora do munic�pio</option>";  
-		print "<option value='3'".$selected3.">Isen��o</option>";  
+		print "<option value='1'".$selected1.">Tributa&ccedil;&atilde;o no munic&iacute;pio</option>";  
+		print "<option value='2'".$selected2.">Tributa&ccedil;&atilde;o fora munic&iacute;pio</option>";  
+		print "<option value='3'".$selected3.">Isen&ccedil;&atilde;o</option>";  
 		print "<option value='4'".$selected4.">Imune</option>";  
-		print "<option value='5'".$selected5.">Exigibilidade suspensa por decis�o judicial</option>";  
-		print "<option value='6'".$selected6."> Exigibilidade suspensa por procedimento administrativo</option>";  
+		print "<option value='5'".$selected5.">Exigibilidade suspensa por decisao judicial</option>";  
+		print "<option value='6'".$selected6.">Exigibilidade suspensa por procedimento administrativo</option>"; 
 		
 		print "</select>";
 		print "</TR><TR>";
@@ -148,7 +148,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if($config['regimetributa']=='3'){ $selected_3 = " selected"; } else { $selected_3 = "";}
 		if($config['regimetributa']=='4'){ $selected_4 = " selected"; } else { $selected_4 = "";}
 		
-		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Regime Especial de tributa��o".":</TD>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Regime Especial de tributa&ccedil;&atilde;o".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='regimetributa' id='idregimetributa'>";  
 		print "<option value='1'".$selected_1.">Microempresa municipal</option>";  
@@ -166,7 +166,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='optantesimples' id='idoptantesimples'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">N�o</option>";  
+		print "<option value='2'".$selected_2.">Nao</option>";  
 		print "</select>";
 		print "</TR><TR>";
 
@@ -179,7 +179,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='incentivadorcultural' id='idincentivadorcultural'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">N�o</option>";  
+		print "<option value='2'".$selected_2.">Nao</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -192,7 +192,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='retemiss' id='idretemiss'>";  
 		print "<option value='1'".$selected_1.">Sim</option>";  
-		print "<option value='2'".$selected_2.">N�o</option>";  
+		print "<option value='2'".$selected_2.">Nao</option>";  
 		print "</select>";
 		print "</TR><TR>";
 		
@@ -204,17 +204,17 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		
 		
 		// C�digo de identifica��o do munic�pio conforme Tabela do IBGE  
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C�digo Munic�ptio IBGE".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C&oacute;digo Munic&iacute;pio IBGE".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codtribmun' maxlength='7' class='text4' id='codtribmun' value='".$config['codtribmun']."'></td>";
 		print "</TR><TR>";
 		
 		// C�digo CNAE - C�digo Nacional Atividade Econ�mica Principal
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C�digo CNAE - C�digo Nacional Atividade Econ�mica".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C&oacute;digo CNAE - C&oacute;digo Nacional Atividade Econ&ocirc;mica".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigocnae' maxlength='45' class='text4' id='idcodigocnae' value='".$config['codigocnae']."'></td>";
 		print "</TR><TR>";
 		
 		// C�digo de item da lista de servi�o  
-		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C�digo Item Servi�o".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".TD_COLOR."'>"."C&oacute;digo Item Servico".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codservico' maxlength='45' class='text4' id='idcodservico' value='".$config['codservico']."'></td>";
 		print "</TR><TR>";
 
@@ -238,21 +238,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	
 	// Alterando o registro com UPDATE
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_ALTER')))) {	
-			$query2 	= "UPDATE config SET nfseprefeitura='".$_POST['nfseprefeitura'].
-			"', percentualfiltro=".$_POST['percentualfiltro'].
-			", cnpj='".$_POST['cnpj'].
-			"', im='".$_POST['im'].
-			"', tiporps=".$_POST['tiporps'].
-			", naturezaoperacao=".$_POST['naturezaoperacao'].
-			", regimetributa=".$_POST['regimetributa'].
-			", optantesimples=".$_POST['optantesimples'].
-			", incentivadorcultural=".$_POST['incentivadorcultural'].
-			", codservico='".$_POST['codservico'].
-			"', codigocnae='".$_POST['codigocnae'].
-			"', retemiss=".$_POST['retemiss'].
-			", aliquota=".$_POST['aliquota'].
-			", tipoambiente=".$_POST['tipoambiente'].
-			", codtribmun='".$_POST['codtribmun']."'";			
+
+			$query2 = "UPDATE config SET nfseprefeitura='".$_POST['nfseprefeitura']."', percentualfiltro=".$_POST['percentualfiltro'].", cnpj='".$_POST['cnpj']."', im='".$_POST['im']."', tiporps=".$_POST['tiporps'].", naturezaoperacao=".$_POST['naturezaoperacao'].", regimetributa=".$_POST['regimetributa'].", optantesimples=".$_POST['optantesimples'].", incentivadorcultural=".$_POST['incentivadorcultural'].", codservico='".$_POST['codservico']."', codigocnae='".$_POST['codigocnae']."', retemiss=".$_POST['retemiss'].", aliquota=".$_POST['aliquota'].", tipoambiente=".$_POST['tipoambiente'].", codtribmun='".$_POST['codtribmun']."'";
 						
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 

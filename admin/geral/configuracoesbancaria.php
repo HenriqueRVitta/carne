@@ -73,8 +73,6 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Banco para emissao do Boleto".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		
-		//print "<select class='select2' name='bancoemissor' id='bancoemissor' onChange='return BuscaBanco(this.id,this.value)'>";  
-		
 		print "<select class='select2' name='bancoemissor' id='bancoemissor' >";
 
 		if (isset($_POST['bancoemissor']) && !empty($_POST['bancoemissor'])) {
@@ -228,18 +226,10 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 						echo "<script>mensagem('Dados salvo com sucesso');</script>";
 						
 				}
-			
+
 		} else {
-		
-			$query2 = "UPDATE carne_bancos SET nome = '".$_POST['bancoemissor']."', bancoemissor='".$_POST['bancoemissor']."', nroagencia='".$_POST['nroagencia'].
-			"', digitoagencia='".$_POST['digitoagencia']."', nroconta='".$_POST['nroconta'].
-			"', digitoconta='".$_POST['digitoconta']."', nrocontrato='".$_POST['nrocontrato'].
-			"', infocliente1='".$_POST['infocliente1']."', infocliente2='".$_POST['infocliente2'].
-			"', infocliente3='".$_POST['infocliente3']."', instrucaocaixa1='".$_POST['instrucaocaixa1'].
-			"', instrucaocaixa2='".$_POST['instrucaocaixa2']."', instrucaocaixa3='".$_POST['instrucaocaixa3'].
-			"', dirarquivoretorno='".$_POST['dirarquivoretorno'].
-			"', dirarquivoremessa='".$dirarquivoremessa."', carteiracobranca='".$carteira."', idretornobanco = ".$_POST['retornobanco'].", localpagto = ".$_POST['localpagto'].
-			" Where nome = '".$_POST['bancoemissor']."'";
+
+			$query2 = "UPDATE carne_bancos SET nome = '".$_POST['bancoemissor']."', bancoemissor='".$_POST['bancoemissor']."', nroagencia='".$_POST['nroagencia']."', digitoagencia='".$_POST['digitoagencia']."', nroconta='".$_POST['nroconta']."', digitoconta='".$_POST['digitoconta']."', nrocontrato='".$_POST['nrocontrato']."', infocliente1='".$_POST['infocliente1']."', infocliente2='".$_POST['infocliente2']."', infocliente3='".$_POST['infocliente3']."', instrucaocaixa1='".$_POST['instrucaocaixa1']."', instrucaocaixa2='".$_POST['instrucaocaixa2']."', instrucaocaixa3='".$_POST['instrucaocaixa3']."', dirarquivoretorno='".$_POST['dirarquivoretorno']."', dirarquivoremessa='".$dirarquivoremessa."', carteiracobranca='".$carteira."', idretornobanco = ".$_POST['retornobanco'].", localpagto = ".$_POST['localpagto']." Where nome = '".$_POST['bancoemissor']."'";
 			
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
@@ -266,7 +256,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script language="JavaScript" type="text/javascript">
-/* Formata��o para qualquer mascara */
+/* Formatacao para qualquer mascara */
 
 $(document).ready(function() {
 
@@ -428,3 +418,4 @@ return false;
 <?php 
 print "</body>";
 print "</html>";
+
