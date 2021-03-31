@@ -3,7 +3,7 @@
 
 include("../mpdf.php");
 
-$mpdf=new mPDF(''); 
+$mpdf=new mPDF_(''); 
 
 $mpdf->restrictColorSpace = 1;	// forces to grayscale
 //==============================================================

@@ -93,40 +93,40 @@ a backupSubsFont is defined.
 
 Controlling mPDF mode
 =====================
-The first parameter of new mPDF('') works as follows:
-new mPDF('c') - forces mPDF to only use the built-in [c]ore Adobe fonts (Helvetica, Times etc)
+The first parameter of new mPDF_('') works as follows:
+new mPDF_('c') - forces mPDF to only use the built-in [c]ore Adobe fonts (Helvetica, Times etc)
 
-new mPDF('') - default - font subsetting behaviour is determined by the configurable variables
+new mPDF_('') - default - font subsetting behaviour is determined by the configurable variables
 	$this->maxTTFFilesize and $this->percentSubset (see below)
 	Default values are set so that: 1) very large font files are always subset
 	2) Fonts are embedded as subsets if < 30% of the characters are used
 
-new mPDF('..-x') - used together with a language or language/country code, this will cause
+new mPDF_('..-x') - used together with a language or language/country code, this will cause
 	mPDF to use only in-built core fonts (Helvetica, Times) if the language specified is appropiate; 
 	otherwise it will force subsetting (equivalent to using "")
-	e.g. new mPDF('de-x') or new mPDF('pt-BR-x') will use in-built core fonts
-	and new mPDF('ru-x') will use subsets of any available TrueType fonts
+	e.g. new mPDF_('de-x') or new mPDF_('pt-BR-x') will use in-built core fonts
+	and new mPDF_('ru-x') will use subsets of any available TrueType fonts
 	The languages that use core fonts are defined in config_cp.php (using the value $coreSuitable).
 
-new mPDF('..+aCJK')  new mPDF('+aCJK')
-new mPDF('..-aCJK')  new mPDF('-aCJK')
+new mPDF_('..+aCJK')  new mPDF_('+aCJK')
+new mPDF_('..-aCJK')  new mPDF_('-aCJK')
 	 - used optionally together with a language or language/country code, +aCJK will force mPDF
 	to use the Adobe non-embedded CJK fonts when a passage is marked with e.g. "lang: ja"
 	This can be used at runtime to override the value set for $mpdf->useAdobeCJK in config.php
 	Use in conjunction with settings in config_cp.php
 
-For backwards compatibility, new mPDF('-s') and new mPDF('s') will force subsetting by 
+For backwards compatibility, new mPDF_('-s') and new mPDF_('s') will force subsetting by 
 	setting $this->percentSubset=100 (see below)
-	new mPDF('utf-8-s') and new mPDF('ar-s') are also recognised
+	new mPDF_('utf-8-s') and new mPDF_('ar-s') are also recognised
 
 Language/Country (ll-cc)
 ------------------------
 You can use a language code ('en') or language/country code ('en-GB') to control which 
 mode/fonts are used. The behaviour is set up in config_cp.php file.
 The default settings show some of the things you can do:
-new mPDF('de') - as German is a Western European langauge, it is suitable to use the Adobe core fonts.
+new mPDF_('de') - as German is a Western European langauge, it is suitable to use the Adobe core fonts.
 	Using 'de' alone will do nothing, but if you use ('de-x'), this will use core fonts.
-new mPDF('th') - many fonts do not contain the characters necessary for Thai script. The value $unifonts 
+new mPDF_('th') - many fonts do not contain the characters necessary for Thai script. The value $unifonts 
 	defines a restricted list of fonts available for mPDF to use.
 
 NB <html dir="rtl"> or <body dir="rtl"> are supported.

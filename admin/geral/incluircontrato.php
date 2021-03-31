@@ -56,7 +56,7 @@ print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>
 
 	print "<FORM name='contratos' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return valida()\">";
 
-	$PAGE = new paging("PRINCIPAL");
+	$PAGE = new paging_("PRINCIPAL");
 	$PAGE->setRegPerPage($_SESSION['s_page_size']);
 	
 	

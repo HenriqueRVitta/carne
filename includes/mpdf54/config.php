@@ -37,7 +37,7 @@ $this->maxTTFFilesize = 2000;
 // or embed subset if <40% characters
 // 0 will force whole file to be embedded (NO subsetting)
 // 100 will force always to subset
-// This value is overridden if you set new mPDF('s)
+// This value is overridden if you set new mPDF_('s)
 // and/or Can set at runtime
 $this->percentSubset = 30;
 

@@ -19,7 +19,7 @@ $html = '<h3>Menu</h3>
 
 include("../mpdf.php");
 
-$mpdf=new mPDF(); 
+$mpdf=new mPDF_(); 
 
 $mpdf->WriteHTML($html);
 

@@ -4,7 +4,7 @@ ini_set("memory_limit","64M");
 
 include("../mpdf.php");
 
-$mpdf=new mPDF(''); 
+$mpdf=new mPDF_(''); 
 
 
 //==============================================================

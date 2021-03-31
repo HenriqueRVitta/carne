@@ -48,7 +48,7 @@ function checkedAll (frm1) {
 </head>
 <body>
 <p><span style="color:red; font-weight: bold;">WARNING</span>: This utility will OVERWRITE mpdf.php file in the current directory.</p>
-<p>Select the functions you wish to INCLUDE in your mpdf.php program. When you click generate, a new mpdf.php file will be written to the current directory.</p>
+<p>Select the functions you wish to INCLUDE in your mpdf.php program. When you click generate, a new mPDF_.php file will be written to the current directory.</p>
 <div><b>Notes</b>
 <ul>
 <li>HTML-CSS is required for many of the other functions to work including: Tables, Lists, Backgrounds, Forms, Border-radius and all other CSS</li>
@@ -163,7 +163,7 @@ unset($l);
 unset($x);
 
 include('mpdf.php');
-$mpdf = new mPDF();
+$mpdf = new mPDF_();
 
 echo '<div>Memory usage on loading mPDF class '.number_format((memory_get_usage(true)/(1024*1024)),2).' MB</div>';
 

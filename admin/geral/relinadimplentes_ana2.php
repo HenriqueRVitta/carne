@@ -253,7 +253,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
     </table>";
 
 
-$mpdf=new mPDF('en-x','A4','','',12,12,40,45,1,5);
+$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
 $mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
 $mpdf->useSubstitutions = false;	
 date_default_timezone_set('America/Sao_Paulo');	

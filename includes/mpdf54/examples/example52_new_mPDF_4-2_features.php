@@ -454,7 +454,7 @@ define('_MPDF_URI','../'); 	// required for the progress bar
 
 include("../mpdf.php");
 
-$mpdf=new mPDF('','A4','','',15,15,20,20,5,5); 
+$mpdf=new mPDF_('','A4','','',15,15,20,20,5,5); 
 
 $mpdf->StartProgressBarOutput(2);	// 2 => advanced mode
 

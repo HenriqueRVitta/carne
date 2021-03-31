@@ -265,7 +265,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>&nbsp;&nbsp
 
 		$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 		
-		$PAGE = new paging("PRINCIPAL");
+		$PAGE = new paging_("PRINCIPAL");
 		$PAGE->setRegPerPage($_SESSION['s_page_size']);
 		$search = "";
 		//$cellStyle = "cellpadding='5' cellspacing='0'";
@@ -385,7 +385,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>&nbsp;&nbsp
 
 		$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 		
-		$PAGE = new paging("PRINCIPAL");
+		$PAGE = new paging_("PRINCIPAL");
 		$PAGE->setRegPerPage($_SESSION['s_page_size']);
 		$search = "";
 		//$cellStyle = "cellpadding='5' cellspacing='0'";

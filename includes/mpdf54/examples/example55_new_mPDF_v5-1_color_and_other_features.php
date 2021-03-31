@@ -3,7 +3,7 @@
 
 include("../mpdf.php");
 
-$mpdf=new mPDF(''); 
+$mpdf=new mPDF_(''); 
 
 $mpdf->useKerning=true;
 
@@ -268,7 +268,7 @@ Changes include:</div>
 	<li>nested tables CAN have different directions</li>
 	</ul></li>
 <li>NOTE that block/table margins/paddings are NOT reversed by direction</li>
-<li>language (either CSS "lang", using Autofont, or through initial set-up e.g. $mpdf = new mPDF(\'ar\') )
+<li>language (either CSS "lang", using Autofont, or through initial set-up e.g. $mpdf = new mPDF_(\'ar\') )
 	no longer affects direction in any way.<br />
 	NB config_cp.php has been changed as a result; any values of "dir" set here are now ineffective</li>
 <li>default text-align is now as per CSS spec: "a nameless value which is dependent on direction"<br /> 

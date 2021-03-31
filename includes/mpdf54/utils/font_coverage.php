@@ -26,7 +26,7 @@ ini_set("memory_limit","256M");
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF('','A4-L','','',10,10,10,10); 
+$mpdf=new mPDF_('','A4-L','','',10,10,10,10); 
 $mpdf->SetDisplayMode('fullpage');
 $mpdf->useSubstitutions = true;
 $mpdf->debug = true;

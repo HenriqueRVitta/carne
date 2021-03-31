@@ -13,7 +13,7 @@ $border = 3;	// millimetres round final boxes (-1 for no border)
 $align = 'T';	// T(op) or M(iddle) for content of final output boxes
 
 // Only change the first parameter of the next line e.g. utf-8
-$mpdf = new mPDF('', array(($pw*(1/$minK)),($ph*(1/$minK))), '','', 0,($pw*(1/$minK))-$pw,0,($ph*(1/$minK))-$ph,0,0);
+$mpdf = new mPDF_('', array(($pw*(1/$minK)),($ph*(1/$minK))), '','', 0,($pw*(1/$minK))-$pw,0,($ph*(1/$minK))-$ph,0,0);
 
 $pph = array();
 
@@ -51,7 +51,7 @@ $mpdf->Output('test.pdf','F');
 
 // Now collate those pages using IMPORT - 4 pages to one page
 
-$mpdf=new mPDF(); 
+$mpdf=new mPDF_(); 
 $mpdf->SetImportUse();	
 $mpdf->SetDisplayMode('fullpage');
 

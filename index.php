@@ -1,6 +1,10 @@
 <?php 
 header("Content-Type: text/html; charset=ISO-8859-1",true);
 
+ini_set('display_errors',1);
+ini_set('display_startup_erros',1);
+error_reporting(E_ALL);
+
 /*
  * No Banco de Dados MYSQL execute
  * ALTER DATABASE `sua_base` CHARSET = Latin1 COLLATE = latin1_swedish_ci

@@ -100,7 +100,7 @@ $html = "
 	- nested tables CAN have different directions
 - NOTE that block/table margins/paddings are NOT reversed by direction
 	NB mPDF &lt;5.1 reversed the margins/paddings for blocks when RTL set.
-- language (either CSS \"lang\", using Autofont, or through initial set-up e.g. \$mpdf = new mPDF('ar') ) 
+- language (either CSS \"lang\", using Autofont, or through initial set-up e.g. \$mpdf = new mPDF_('ar') ) 
 	no longer affects direction in any way.
 	NB config_cp.php has been changed as a result; any values of \"dir\" set here are now ineffective
 - default text-align is now as per CSS spec: \"a nameless value which is dependent on direction\" 
@@ -285,7 +285,7 @@ text direction (RTL arabic characters) remains fully automatic and unconfigurabl
 include("../mpdf.php");
 
 
-$mpdf=new mPDF('ar','A4','','',32,25,27,25,16,13); 
+$mpdf=new mPDF_('ar','A4','','',32,25,27,25,16,13); 
 
 // From mPDF 5.1 onwards you must set:
 $mpdf->SetDirectionality('rtl');

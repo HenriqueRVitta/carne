@@ -10,11 +10,17 @@
 
 */
 
+/* Informa o nível dos erros que serão exibidos */
+error_reporting(E_ALL);
+ 
+/* Habilita a exibição de erros */
+ini_set("display_errors", 1);
+
 session_start();
+
 
 	// 1 - Siccob
 	// 2 - Bradesco
-	
 	$Banco = $_POST['banco'];
 	
        	
@@ -59,15 +65,15 @@ $_UP['extensoes'] = array('txt', 'ret');
 $_UP['renomeia'] = false;
 
 // Array com os tipos de erros de upload do PHP
-$_UP['erros'][0] = 'N�o houve erro';
-$_UP['erros'][1] = 'O arquivo no upload � maior do que o limite do PHP';
+$_UP['erros'][0] = 'Nao houve erro';
+$_UP['erros'][1] = 'O arquivo no upload e maior do que o limite do PHP';
 $_UP['erros'][2] = 'O arquivo ultrapassa o limite de tamanho especifiado no HTML';
 $_UP['erros'][3] = 'O upload do arquivo foi feito parcialmente';
-$_UP['erros'][4] = 'N�o foi feito o upload do arquivo';
+$_UP['erros'][4] = 'Nao foi feito o upload do arquivo';
 
 // Verifica se houve algum erro com o upload. Se sim, exibe a mensagem do erro
 if ($_FILES['arquivo']['error'] != 0) {
-  die("N�o foi poss�vel fazer o upload, erro:" . $_UP['erros'][$_FILES['arquivo']['error']]);
+  die("Nao foi possivel fazer o upload, erro:" . $_UP['erros'][$_FILES['arquivo']['error']]);
   exit; // Para a execu��o do script
 }
 
@@ -76,13 +82,13 @@ if ($_FILES['arquivo']['error'] != 0) {
 $extensao = strtolower(end(explode('.', $_FILES['arquivo']['name'])));
 
 if (array_search($extensao, $_UP['extensoes']) === false) {
-  echo "Por favor, envie arquivos com as seguintes extens�es: txt ou ret";
+  echo "Por favor, envie arquivos com as seguintes extensoes: txt ou ret";
   exit;
 }
 
 // Faz a verifica��o do tamanho do arquivo
 if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
-  echo "O arquivo enviado � muito grande, envie arquivos de at� 2Mb.";
+  echo "O arquivo enviado e muito grande, envie arquivos de ate 2Mb.";
   exit;
 }
 
@@ -158,16 +164,16 @@ if (!empty($_FILES['arquivo']))
 		    case 05:
 		        $processa = true;
 		        break;
-		    case 06: // Liquida��o normal (sem motivo)
+		    case 06: // Liquidacao normal (sem motivo)
 		        $processa = true;
 		        break;
-		    case 15: // Liquida��o em Cart�rio (sem motivo)
-		        $processa = true;
-		        break;
-	        case 09: // Baixado Automat. via Arquivo (verificar motivo posi��o 319 a 328)
-		        $processa = true;
-		        break;
-	        case 10: // Baixado conforme instru��es da Ag�ncia(verificar motivo pos.319 a 328)
+			case 9: // Baixado Automat. via Arquivo (verificar motivo posicao 319 a 328)
+				$processa = true;
+				break;
+			case 10: // Baixado conforme instru��es da Ag�ncia(verificar motivo pos.319 a 328)
+				$processa = true;
+				break;
+			case 15: // Liquidacao em Cartario (sem motivo)
 		        $processa = true;
 		        break;
 		}
@@ -397,11 +403,9 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
     $lcString.="</tr>
     </table>";
 	
-//$mpdf=new mPDF('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF('en-x','A4','','',12,12,40,45,1,5);
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-$mpdf->useSubstitutions = false;
+//$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
+//$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
+//$mpdf->useSubstitutions = false;
 
 $date = date("d/m/Y g:i a");
 
@@ -444,7 +448,7 @@ $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-a
 
 //echo $header.$lcString.$footer;
 
-
+/*
 $mpdf->StartProgressBarOutput();
 $mpdf->mirrorMargins = 1;
 $mpdf->SetDisplayMode('fullpage','two');
@@ -457,19 +461,9 @@ $mpdf->SetHTMLHeader($header);
 $mpdf->SetHTMLHeader($headerE,'E');
 $mpdf->SetHTMLFooter($footer);
 $mpdf->SetHTMLFooter($footerE,'E');
-
-/*
-$html = '
-<h1>mPDF</h1>
-<h2>Headers & Footers Method 2</h2>
-<h3>Odd / Right page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-<pagebreak />
-<h3>Even / Left page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-';
 */
 
+$mpdf=new mPDF_();
 $mpdf->WriteHTML($lcString);
 
 $mpdf->Output();

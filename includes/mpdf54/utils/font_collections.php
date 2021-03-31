@@ -24,7 +24,7 @@ ini_set("memory_limit","256M");
 define('_MPDF_PATH','../');
 
 include("../mpdf.php");
-$mpdf=new mPDF('');
+$mpdf=new mPDF_('');
 if ($checkdir) { 
 	$ttfdir = $checkdir;
 }

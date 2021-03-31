@@ -1857,7 +1857,7 @@ This is only recommended in non-HTML headers and footers. Although the text is a
 include("../mpdf.php");
 
 
-$mpdf=new mPDF('c','A4','','',15,15,20,20,5,5); 
+$mpdf=new mPDF_('c','A4','','',15,15,20,20,5,5); 
 
 //==============================================================
 

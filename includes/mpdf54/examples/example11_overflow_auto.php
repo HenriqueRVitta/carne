@@ -63,7 +63,7 @@ $html = '
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF('c'); 
+$mpdf=new mPDF_('c'); 
 
 $mpdf->SetDisplayMode('fullpage');
 

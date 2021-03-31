@@ -289,7 +289,7 @@ $this->fontdata = array(<br />
 &lt;/div&gt;
 </div>
 
-<p>NB You may also need to edit the value $this->useAdobeCJK=false in config.php or use new mPDF(\'-aCJK\'), and edit the config_cp.php configuration file.</p>
+<p>NB You may also need to edit the value $this->useAdobeCJK=false in config.php or use new mPDF_(\'-aCJK\'), and edit the config_cp.php configuration file.</p>
 
 
 <pagebreak />
@@ -418,7 +418,7 @@ if ($_REQUEST['source']) {
 
 include("../mpdf.php");
 
-$mpdf=new mPDF(); 
+$mpdf=new mPDF_(); 
 
 $mpdf->WriteHTML($html);
 

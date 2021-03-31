@@ -27,7 +27,7 @@ function GetLangOpts($llcc, $adobeCJK) {
 	  CASE "no":
 	  CASE "pt":
 	  CASE "sv":
-		// Edit this value to define how mPDF behaves when using new mPDF('-x')
+		// Edit this value to define how mPDF behaves when using new mPDF_('-x')
 		// If set to TRUE, mPDF will use Adobe core fonts only when it recognises the languages above
 		$coreSuitable = true;  break;
 

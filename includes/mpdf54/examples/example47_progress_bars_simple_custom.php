@@ -1581,7 +1581,7 @@ $mpdf->WriteHTML(\'<indexinsert cols="2" font="serif" div-font="sans-serif" link
 
 include("../mpdf.php");
 
-$mpdf=new mPDF('s','A4','','',25,15,21,22,10,10); 
+$mpdf=new mPDF_('s','A4','','',25,15,21,22,10,10); 
 $mpdf->progbar_altHTML = '<html><body>
 	<div style="margin-top: 5em; text-align: center; font-family: Verdana; font-size: 12px;"><img style="vertical-align: middle" src="loading.gif" /> Creating PDF file. Please wait...</div>';
 $mpdf->StartProgressBarOutput();

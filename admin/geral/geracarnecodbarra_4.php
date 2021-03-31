@@ -115,7 +115,7 @@ function CodigoBarra($numero){
 			$pcwhere.=" and t.id =".$titular;
 		}
 
-$mpdf = new mPDF(
+$mpdf = new mPDF_(
              '',    // mode - default ''
              '',    // format - A4, for example, default ''
              0,     // font size - default 0

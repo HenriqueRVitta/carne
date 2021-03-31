@@ -120,7 +120,7 @@ border-bottom-left-radius:  1em 3em;</span>
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF('s'); 
+$mpdf=new mPDF_('s'); 
 
 $mpdf->SetDisplayMode('fullpage');
 

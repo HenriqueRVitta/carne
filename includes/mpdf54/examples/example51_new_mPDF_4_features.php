@@ -596,7 +596,7 @@ Mauris ante pede, eros auctor ac, suscipit quis, malesuada sed, nulla. Integer s
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF('s'); 
+$mpdf=new mPDF_('s'); 
 
 $mpdf->SetDisplayMode('fullpage');
 

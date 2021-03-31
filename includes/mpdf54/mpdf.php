@@ -65,7 +65,7 @@ if (!defined('PHP_VERSION_ID')) {
 $test = pack("d", 134455.474557333333666);
 define("_DSIZE", strlen($test));
 
-class mPDF
+class mPDF_
 {
 
 
@@ -30896,7 +30896,6 @@ function SubstituteHiEntities($html) {
 	if (count($this->entsearch)) {
 		$html = str_replace($this->entsearch,$this->entsubstitute,$html);
 	}
-	return $html;
 }
 
 

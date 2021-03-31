@@ -131,7 +131,7 @@ ini_set('memory_limit', '-1');
 //break;
 
 /*
-$mpdf=new mPDF('s','A4','','',25,15,21,22,10,10); 
+$mpdf=new mPDF_('s','A4','','',25,15,21,22,10,10); 
 $mpdf->StartProgressBarOutput();
 $mpdf->mirrorMargins = 1;
 $mpdf->SetDisplayMode('fullpage','two');
@@ -143,8 +143,8 @@ $mpdf->debug  = true;
 		
 
 
-//$mpdf=new mPDF('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF('en-x','A4','','',12,12,40,45,1,5);
+//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
+$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
 
 $mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
 

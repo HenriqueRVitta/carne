@@ -49,7 +49,7 @@ $selectedAmbos = "selected";
 
 	print "<FORM name='titular' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return valida()\">";
 
-	$PAGE = new paging("PRINCIPAL");
+	$PAGE = new paging_("PRINCIPAL");
 	$PAGE->setRegPerPage($_SESSION['s_page_size']);
 	
 	

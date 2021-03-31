@@ -198,7 +198,7 @@
 	// Exibe os Dados de Pagamento do Carn� e Gera o Parcelamento
 	if(!empty($_POST['submit']) && $_POST['submit']=='PROCESSAR') {
 
-	$PAGE = new paging("PRINCIPAL");
+	$PAGE = new paging_("PRINCIPAL");
 	$PAGE->setRegPerPage($_SESSION['s_page_size']);
 
 		if (!isset($_GET['cellStyle'])) {

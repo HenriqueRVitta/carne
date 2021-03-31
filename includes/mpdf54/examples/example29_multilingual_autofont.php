@@ -379,7 +379,7 @@ Unicode Plane 0 (BMPU+0000 - U+FFFF):
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF(); 
+$mpdf=new mPDF_(); 
 
 $mpdf->useAdobeCJK = true;		// Default setting in config.php
 						// You can set this to false if you have defined other CJK fonts

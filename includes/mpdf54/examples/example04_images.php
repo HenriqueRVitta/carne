@@ -191,7 +191,7 @@ From mPDF v4.2, Image padding is supported as well as border and margin.
 //==============================================================
 include("../mpdf.php");
 
-$mpdf=new mPDF('c'); 
+$mpdf=new mPDF_('c'); 
 
 $mpdf->WriteHTML($html);
 

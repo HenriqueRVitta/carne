@@ -29,7 +29,7 @@ ini_set("memory_limit","256M");
 define('_MPDF_URI', '../');
 include("../mpdf.php");
 
-$mpdf=new mPDF(''); 
+$mpdf=new mPDF_(''); 
 $mpdf->StartProgressBarOutput(2);
 
 $mpdf->SetDisplayMode('fullpage');

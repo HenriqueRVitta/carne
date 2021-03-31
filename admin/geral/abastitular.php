@@ -611,7 +611,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 
 		$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 		
-		$PAGE = new paging("PRINCIPAL");
+		$PAGE = new paging_("PRINCIPAL");
 		$PAGE->setRegPerPage($_SESSION['s_page_size']);
 		$search = "";
 		$cellStyle = "cellpadding='5' cellspacing='1'";
@@ -1534,7 +1534,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 
 		$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 		
-		$PAGE = new paging("PRINCIPAL");
+		$PAGE = new paging_("PRINCIPAL");
 		$PAGE->setRegPerPage($_SESSION['s_page_size']);
 		$search = "";
 		$cellStyle = "cellpadding='5' cellspacing='1'";
@@ -1961,7 +1961,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 
 		$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 		
-		$PAGE = new paging("PRINCIPAL");
+		$PAGE = new paging_("PRINCIPAL");
 		$PAGE->setRegPerPage($_SESSION['s_page_size']);
 		$search = "";
 		$cellStyle = "cellpadding='5' cellspacing='1'";

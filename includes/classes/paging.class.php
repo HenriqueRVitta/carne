@@ -25,7 +25,7 @@
  */
 
 
-class paging
+class paging_
 {
 	////////////////////////////////////////////////
 	// PUBLIC VARIABLES
@@ -317,7 +317,7 @@ class paging
 	///////////////////////////////////////////////
 
 	/*include ("path/to/paging.class.php");
-	$PAGER = new paging;
+	$PAGER = new paging_;
 	$PAGER->setRegPerPage(10);
 
 	$query = "SELECT * FROM TABLE ORDER BY FIELD";

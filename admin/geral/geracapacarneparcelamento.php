@@ -32,8 +32,8 @@
 			$pcwhere.=" and t.nrocarne =".$nrocarne;
 		}
 		
-//$mpdf=new mPDF('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF('en-x','A4','','',12,12,10,30,5,5);
+//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
+$mpdf=new mPDF_('en-x','A4','','',12,12,10,30,5,5);
 
 $mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
 

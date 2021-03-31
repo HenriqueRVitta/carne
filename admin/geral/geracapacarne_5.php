@@ -42,8 +42,8 @@
 		*/
 		
 		
-//$mpdf=new mPDF('en-x','A4','','',12,12,10,30,5,5);
-$mpdf = new mPDF(
+//$mpdf=new mPDF_('en-x','A4','','',12,12,10,30,5,5);
+$mpdf = new mPDF_(
              'en-x',    // mode - default ''
              'A4',    // format - A4, for example, default ''
              0,     // font size - default 0
