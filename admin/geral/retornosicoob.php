@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 //ob_clean();
 //ob_start();
 
-//session_start();
+session_start();
 
 // 1 - Siccob
 // 2 - Bradesco
