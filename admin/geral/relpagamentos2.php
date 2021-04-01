@@ -4,7 +4,7 @@
 	$processado = false;
 
 	if($processado==false ){
-		// Impressão do Analitico Inadimplentes
+		// Impressï¿½o do Analitico Inadimplentes
 		if($_POST['tiporelatorio'] == 1 && $_POST['situacao'] == 2) {
 
 			$processado = true;			
@@ -28,7 +28,7 @@
 	}
 
 	if($processado==false ){
-		// Impressão do Analitico
+		// Impressao do Analitico
 		if(!empty($_POST['tiporelatorio']) && $_POST['tiporelatorio'] == 1) {
 			$processado = true;
 			
@@ -52,7 +52,7 @@
 	
 
 	if($processado==false ){
-		// Impressão do Sintetico	
+		// Impressï¿½o do Sintetico	
 		if(!empty($_POST['tiporelatorio']) && $_POST['tiporelatorio'] == 2) {
 			$processado = true;
 			// Redireciono com o metodo POST
@@ -62,7 +62,7 @@
 	
 
 	if($processado==false ){
-		// Impressão do Gráfico Pizza
+		// Impressï¿½o do Grï¿½fico Pizza
 		if($_POST['tiporelatorio'] == 3 && $_POST['grafico'] == 2) {
 			$processado = true;
 			// Redireciono com o metodo POST
@@ -72,7 +72,7 @@
 	
 
 	if($processado==false ){
-		// Impressão do Gráfico Barra
+		// Impressï¿½o do Grï¿½fico Barra
 		if($_POST['tiporelatorio'] == 3 && $_POST['grafico'] == 3) {
 			$processado = true;
 			// Redireciono com o metodo POST

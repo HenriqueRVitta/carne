@@ -1,50 +1,36 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
-        Desenvolvedor: Carlos Henrique R Vitta
-		Data: 27/11/2017 15:17 
-
-		* M�dulo Carn� *
-
-		Processa Retorno Bancario
-
-*/
-
-/* Informa o nível dos erros que serão exibidos */
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
- 
-/* Habilita a exibição de erros */
-ini_set("display_errors", 1);
 
-session_start();
+//ob_clean();
+//ob_start();
 
+//session_start();
 
-	// 1 - Siccob
-	// 2 - Bradesco
-	$Banco = $_POST['banco'];
-	
-       	
-// Defini��es da barra de progresso
-//==============================================================
-define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
-$JpgUseSVGFormat = true;
+// 1 - Siccob
+// 2 - Bradesco
+$Banco = $_POST['banco'];
+$lcString = '';
+$lcBorda = '';
 
-define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
-//==============================================================
+date_default_timezone_set('America/Sao_Paulo');
 
-include("../../includes/mpdf54/mpdf.php");	
-include ("../../includes/include_geral.inc.php");
-
-include ("../../includes/include_geral_II.inc.php");
+include ("../../includes/classes/conecta.class.php");
+include ("../../includes/classes/auth.class.php");
+include ("../../includes/classes/dateOpers.class.php");
+include ("../../includes/config.inc.php");
+include ("../../includes/functions/funcoes.inc");
 
 $conec = new conexao;
 $conec->conecta('MYSQL');
 
 $lcNomeArquivo = "";
 
-
 $query = "SELECT idretornobanco,localpagto FROM carne_bancos where id ='".$Banco."'";
-$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
+$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUCAO DA QUERY DE MAX ID!');
 // 1 = ID Retorno Codigo/carne_titular.ID
 // 2 = Nro Contrato carne_titular.nrocarne
 $retornobanco = mysqli_fetch_array($resultado);
@@ -55,13 +41,13 @@ $localpagto = $retornobanco['localpagto'];
 // Pasta onde o arquivo vai ser salvo
 $_UP['pasta'] = '../uploads/';
 
-// Tamanho m�ximo do arquivo (em Bytes)
+// Tamanho maximo do arquivo (em Bytes)
 $_UP['tamanho'] = 1024 * 1024 * 2; // 2Mb
 
-// Array com as extens�es permitidas
+// Array com as extensoes permitidas
 $_UP['extensoes'] = array('txt', 'ret');
 
-// Renomeia o arquivo? (Se true, o arquivo ser� salvo como .jpg e um nome �nico)
+// Renomeia o arquivo? (Se true, o arquivo sera salvo como .jpg e um nome unico)
 $_UP['renomeia'] = false;
 
 // Array com os tipos de erros de upload do PHP
@@ -74,12 +60,15 @@ $_UP['erros'][4] = 'Nao foi feito o upload do arquivo';
 // Verifica se houve algum erro com o upload. Se sim, exibe a mensagem do erro
 if ($_FILES['arquivo']['error'] != 0) {
   die("Nao foi possivel fazer o upload, erro:" . $_UP['erros'][$_FILES['arquivo']['error']]);
-  exit; // Para a execu��o do script
+  exit; // Para a execucao do script
 }
 
-// Caso script chegue a esse ponto, n�o houve erro com o upload e o PHP pode continuar
-// Faz a verifica��o da extens�o do arquivo
-$extensao = strtolower(end(explode('.', $_FILES['arquivo']['name'])));
+// Caso script chegue a esse ponto, nao houve erro com o upload e o PHP pode continuar
+// Faz a verificação da extensãoo do arquivo
+$cFile = $_FILES['arquivo']['name'];
+$tmp = explode('.', $cFile);
+$extensao = end($tmp);
+//$extensao = strtolower(end(explode('.', $_FILES['arquivo']['name'])));
 
 if (array_search($extensao, $_UP['extensoes']) === false) {
   echo "Por favor, envie arquivos com as seguintes extensoes: txt ou ret";
@@ -92,22 +81,19 @@ if ($_UP['tamanho'] < $_FILES['arquivo']['size']) {
   exit;
 }
 
-// O arquivo passou em todas as verifica��es, hora de tentar mov�-lo para a pasta
+// O arquivo passou em todas as verificacoess, hora de tentar move-lo para a pasta
 // Primeiro verifica se deve trocar o nome do arquivo
 if ($_UP['renomeia'] == true) {
-  // Cria um nome baseado no UNIX TIMESTAMP atual e com extens�o .txt
+  // Cria um nome baseado no UNIX TIMESTAMP atual e com extensao .txt
   $nome_final = md5(time()).'.txt';
 } else {
-  // Mant�m o nome original do arquivo
+  // Mantem o nome original do arquivo
   $nome_final = $_FILES['arquivo']['name'];
 }
   
-// Depois verifica se � poss�vel mover o arquivo para a pasta escolhida
+// Depois verifica se e possivel mover o arquivo para a pasta escolhida
 if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_final)) {
   // Upload efetuado com sucesso, exibe uma mensagem e um link para o arquivo
-
-  // echo "Upload efetuado com sucesso!";
-  // echo '<a href="' . $_UP['pasta'] . $nome_final . '">Clique aqui para acessar o arquivo</a>';
 
 
 if (!empty($_FILES['arquivo']))
@@ -138,27 +124,27 @@ if (!empty($_FILES['arquivo']))
             }
 			/* Codigo do Movimento bancario
 			Comando/Movimento:
-			02 = Confirma��o Entrada T�tulo;
-			05 = Liquida��o Sem Registro: Identifica a liquida��o de t�tulo da modalidade "SEM REGISTRO";
-			06 = Liquida��o Normal: Identificar a liquida��o de t�tulo de modalidade "REGISTRADA", com exce��o dos t�tulos que forem liquidados em cart�rio (C�d. de movimento 15=Liquida��o em Cart�rio);
-			09 = Baixa de Titulo: Identificar as baixas de t�tulos, com exce��o da baixa realizada com o c�d. de movimento 10 (Baixa - Pedido Benefici�rio);
-			10 = Baixa Solicitada (Baixa - Pedido Benefici�rio): Identificar as baixas de t�tulos comandadas a pedido do Benefici�rio;
-			11 = T�tulos em Ser: Identifica os t�tulos em carteira, que estiverem com a situa��o "em abarto" (vencidos e a vencer).
-			14 = Altera��o de Vencimento;
-			15 = Liquida��o em Cart�rio: Identifica as liquida��es dos t�tulos ocorridas em cart�rios de protesto;
-			23 = Encaminhado a Protesto: Identifica o recebimento da instru��o de protesto
-			27 = Confirma��o Altera��o Dados.
-			48 = Confirma��o de instru��o de transfer�ncia de carteira/modalidade de cobran�a
+			02 = Confirmacão Entrada Titulo;
+			05 = Liquidacao Sem Registro: Identifica a liquidacao de titulo da modalidade "SEM REGISTRO";
+			06 = Liquidacao Normal: Identificar a liquidacao de titulo de modalidade "REGISTRADA", com excecao dos titulos que forem liquidados em cartorio (Cod. de movimento 15=Liquidacao em Cartorio);
+			09 = Baixa de Titulo: Identificar as baixas de titulos, com excecao da baixa realizada com o cod. de movimento 10 (Baixa - Pedido Beneficiario);
+			10 = Baixa Solicitada (Baixa - Pedido Beneficiario): Identificar as baixas de titulos comandadas a pedido do Beneficiario;
+			11 = Titulos em Ser: Identifica os titulos em carteira, que estiverem com a situacao "em abarto" (vencidos e a vencer).
+			14 = Alteracao de Vencimento;
+			15 = Liquidacao em Cartorio: Identifica as liquidacaoes dos titulos ocorridas em cartorios de protesto;
+			23 = Encaminhado a Protesto: Identifica o recebimento da instrucao de protesto
+			27 = Confirmacao Alteracao Dados.
+			48 = Confirmacao de instrucao de transferencia de carteira/modalidade de cobranca
 			*/
             
             $codigomovimento = trim(substr($linha, 108, 2));
             $processa = false;
             
 	        switch ($codigomovimento) {
-		    case 02: // Entrada Confirmada (verificar motivo na posi��o 319 a 328 )
+		    case 02: // Entrada Confirmada (verificar motivo na posicao 319 a 328 )
 		        $processa = true;
 		        break;
-		    case 03: // Entrada Rejeitada ( verificar motivo na posi��o 319 a 328)
+		    case 03: // Entrada Rejeitada ( verificar motivo na posicao 319 a 328)
 		        $processa = true;
 		        break;
 		    case 05:
@@ -170,7 +156,7 @@ if (!empty($_FILES['arquivo']))
 			case 9: // Baixado Automat. via Arquivo (verificar motivo posicao 319 a 328)
 				$processa = true;
 				break;
-			case 10: // Baixado conforme instru��es da Ag�ncia(verificar motivo pos.319 a 328)
+			case 10: // Baixado conforme instrucoes da Agencia(verificar motivo pos.319 a 328)
 				$processa = true;
 				break;
 			case 15: // Liquidacao em Cartario (sem motivo)
@@ -269,14 +255,13 @@ if (!empty($_FILES['arquivo']))
             }
             
             $itens = array(trim(substr($linha, 0, 60)), trim(substr($linha, 60, 70)));
-            //Inserir($itens, $Pdo);
         }
     }
 
     
 } else {
-  // N�o foi poss�vel fazer o upload, provavelmente a pasta est� incorreta
-  echo "N�o foi poss�vel enviar o arquivo, tente novamente";
+  // Nao foi possivel fazer o upload, provavelmente a pasta esta incorreta
+  echo "Nao foi possivel enviar o arquivo, tente novamente";
   exit;
   
 }
@@ -285,7 +270,7 @@ if (!empty($_FILES['arquivo']))
 	
 	$Banco = $_POST['banco'];
 	
-	$ArquivRetono= $_POST['file1'];
+	$ArquivRetono = $_FILES['arquivo']['name']; 
 	
 	$tiporel = "Analitico"; 
 
@@ -318,8 +303,8 @@ if (!empty($_FILES['arquivo']))
 	// Fim Dados Cabecalho
 		
      
-	// Cabe�alho do regisrtos encontrados
-	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1' align='center'>
+	// Cabecalho do regisrtos encontrados
+	$lcString.= "<table width='100%' border='1' cellspacing='1' cellpadding='1' align='center'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
 	<th scope='col' align='center'>CPF/CNPJ</th>
@@ -343,10 +328,8 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
 	
 	while($row = mysqli_fetch_array($resultado)){
 		
-		$dtpagto = str_replace('/','',substr(converte_datacomhora($row['r.datapagto']),0,10));
+		$dtpagto = str_replace('/','',substr(converte_datacomhora($row['datapagto']),0,10));
 
-		//		<td align='left'>".retira_acentos_UTF8($row['descricao'])."</TD>
-		
 		$lcString.= "<tr>
 		<td align='left'>".retira_acentos_UTF8($row['nometitular'])."</TD>
 		<td align='center'>".$row['cpfcnpj']."</TD>
@@ -365,10 +348,10 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
 	
 	$lcString.= "</table>";
 	
-	//<p>&nbsp;</p>";
+	$lcString.="<p>&nbsp;</p>";
 	
 	// Resumo
-	$lcString.= "<table width='100%' border='0'>
+	$lcString.= "<table width='100%' border='0' cellspacing='1' cellpadding='1' align='center'>
   	<tr>
     <th align='center'>RESUMO</th>
     </tr>
@@ -380,14 +363,13 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
     <td align='left'>Total Registros listados</td>
     <td align='right'>".$i."</td>    
     </tr>
-	</table>
     </table>";
 
 	
 	$query = "select historico,count(*) as qtde,sum(valor) as total from retornobanco where datapagto = '".$datapagto."' group by historico";
     $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 
-    $lcString.= "<br><table width='100%' border='0'>
+    $lcString.= "<br><table width='100%' border='0' cellspacing='1' cellpadding='1' align='center'>
   	<tr>
     <th align='center'>QUANTITATIVO DO HIST&Oacute;RICO</th>
     </tr>
@@ -402,13 +384,10 @@ where r.datapagto = '".$datapagto."' order by historico,nometitular";
 	
     $lcString.="</tr>
     </table>";
+
+	$lcString.="<p>&nbsp;</p>";
 	
-//$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
-//$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-//$mpdf->useSubstitutions = false;
-
 $date = date("d/m/Y g:i a");
-
 
 $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
 <td width='33%'>".$date."</span></td>
@@ -446,28 +425,14 @@ $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-a
 </td>
 </table>";
 
-//echo $header.$lcString.$footer;
+$html = $header.$lcString.$footer;
 
-/*
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
+include("../../includes/mpdf/vendor/autoload.php");
 
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
-*/
-
-$mpdf=new mPDF_();
-$mpdf->WriteHTML($lcString);
-
+//$mpdf = new \Mpdf\Mpdf();
+$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
 exit;
-
-    
+   
 ?>

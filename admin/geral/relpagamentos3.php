@@ -1,30 +1,23 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
-        Desenvolvedor: Carlos Henrique R Vitta
-		Data: 03/02/2015 13:00
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+//error_reporting(0); 
+error_reporting(E_ALL);
 
-		* M�dulo Carn� *
+//ob_clean();
+//ob_start();
 
-		Relat�rio dos pagamentos registrados
+//session_start();
 
-*/
+date_default_timezone_set('America/Sao_Paulo');
 
-	session_start();
-
-	ini_set('memory_limit', '-1');
-		
-// Defini��es da barra de progresso
-//==============================================================
-define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
-$JpgUseSVGFormat = true;
-
-define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
-//==============================================================
-	
-
-	include("../../includes/mpdf54/mpdf.php");	
-	include ("../../includes/include_geral_III.php");
+include ("../../includes/classes/conecta.class.php");
+include ("../../includes/classes/auth.class.php");
+include ("../../includes/classes/dateOpers.class.php");
+include ("../../includes/config.inc.php");
+include ("../../includes/functions/funcoes.inc");
 
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
@@ -40,6 +33,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	
 	$pcwhere	= "";
 	$lcBorda = "";
+	$lcString = '';
+	
 
 		if($taxas<>-1){
 			$pcwhere.=" and k.idtaxas =".$taxas;
@@ -218,9 +213,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 
 	$lcgroup =  " group by k.databaixa,c.nometitular";
 	
-	if($_POST['separacao'] <> -1 ) {
-
-	
+	if(isset($_POST['separacao']) && $_POST['separacao'] <> -1 ) {
 	
 		switch ( $_POST['separacao'] ){
 		  case 1:
@@ -254,12 +247,8 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
        " left Join usuarios u on u.codigo = k.usuario ".
        " Where k.databaixa between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere." ".$lcgroup." ".$pcordem."";
 
-       //        " Where k.databaixa between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere." ".$pcordem." limit 4000";
-      //print_r($query);
-      //break;
-      
-	// Cabe�alho do regisrtos encontrados
-	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
+	// Cabecalho do regisrtos encontrados
+	$lcString.= "<table width='100%' border='1' cellspacing='1' cellpadding='1' align='center'>
 	<tr>
 	<th scope='col' align='center'>Nome do Cliente</th>
 	<th scope='col' align='center'>Taxa %</th>
@@ -288,7 +277,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		<td align='left'>".retira_acentos_UTF8($row['desclocal'])."</TD>
 		<td align='center'>".$row['nrocarne']."</TD>
 		<td align='center'>".invertecomp($row['mesano'],1)."</TD>
-		<td align='center'>".mask($dtpagto,'##/##/####')."</TD>
+		<td align='center'>".date('d/m/Y', strtotime($dtpagto))."</TD>
 		<td align='right'>".number_format($row['valor'],2,",",".")."</TD>
 		<td align='right'>".number_format($row['vlrpago'],2,",",".")."</TD>
 		<td align='center'>".retira_acentos_UTF8($row['nome'])."</TD>
@@ -302,10 +291,10 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	
 	$lcString.= "</table>";
 	
-	//<p>&nbsp;</p>";
+	$lcString.="<p>&nbsp;</p>";
 	
 	// Resumo
-	$lcString.= "<table width='100%' border='0'>
+	$lcString.= "<table width='100%' border='1' cellspacing='1' cellpadding='1'>
   	<tr>
     <th align='center'>RESUMO</th>
     </tr>
@@ -317,19 +306,9 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
     <td align='left'>Total Registros listados</td>
     <td align='right'>".$i."</td>    
     </tr>
-	</table>
     </table>";
 
-
-//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-$mpdf->useSubstitutions = false;
-
-date_default_timezone_set('America/Sao_Paulo');	
 $date = date("d/m/Y H:i");
-
 
 $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
 <td width='33%'>".$date."</span></td>
@@ -383,49 +362,21 @@ header('Cache-Control: max-age=0');
 // Se for o IE9, isso talvez seja necess�rio
 header('Cache-Control: max-age=1');
        
-// Envia o conte�do do arquivo  
+// Envia o conteudo do arquivo  
 echo $dadosXls;
 	
 
 } else {
 
-	
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
 
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
+$html = $header.$lcString.$footer;
 
+include("../../includes/mpdf/vendor/autoload.php");
 
-$html = '
-<h1>mPDF</h1>
-<h2>Headers & Footers Method 2</h2>
-<h3>Odd / Right page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-<pagebreak />
-<h3>Even / Left page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-';
-
-$mpdf->packTableData = true;	// required for cacheTables
-$mpdf->simpleTables = false;  // Cannot co-exist with cacheTables
-
-$mpdf->WriteHTML($lcString);
-
+//$mpdf = new \Mpdf\Mpdf();
+$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
-
 exit;
-	
 }
-
-
-
-    
 ?>

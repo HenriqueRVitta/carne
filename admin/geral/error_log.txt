@@ -1,0 +1,22 @@
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Notice:  Undefined variable: lcBorda in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 68
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Stack trace:
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP   1. {main}() D:\WebServer\carne\admin\geral\relpagamentos4.php:0
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Notice:  Undefined variable: lcString in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 222
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Stack trace:
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP   1. {main}() D:\WebServer\carne\admin\geral\relpagamentos4.php:0
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Notice:  Undefined index: databaixa in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 236
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP Stack trace:
+[31-Mar-2021 19:57:06 America/Sao_Paulo] PHP   1. {main}() D:\WebServer\carne\admin\geral\relpagamentos4.php:0
+[31-Mar-2021 19:57:07 America/Sao_Paulo] PHP Fatal error:  Uncaught Mpdf\MpdfException: Error detected. PDF file generation aborted: Undefined index: databaixa in D:\WebServer\carne\admin\geral\relpagamentos4.php:236
+Stack trace:
+#0 D:\WebServer\carne\admin\geral\relpagamentos4.php(343): Mpdf\Mpdf->Output()
+#1 {main}
+  thrown in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 236
+[31-Mar-2021 19:57:34 America/Sao_Paulo] PHP Notice:  Undefined index: databaixa in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 238
+[31-Mar-2021 19:57:34 America/Sao_Paulo] PHP Stack trace:
+[31-Mar-2021 19:57:34 America/Sao_Paulo] PHP   1. {main}() D:\WebServer\carne\admin\geral\relpagamentos4.php:0
+[31-Mar-2021 19:57:35 America/Sao_Paulo] PHP Fatal error:  Uncaught Mpdf\MpdfException: Error detected. PDF file generation aborted: Undefined index: databaixa in D:\WebServer\carne\admin\geral\relpagamentos4.php:238
+Stack trace:
+#0 D:\WebServer\carne\admin\geral\relpagamentos4.php(345): Mpdf\Mpdf->Output()
+#1 {main}
+  thrown in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 238
