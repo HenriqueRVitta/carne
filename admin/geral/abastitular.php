@@ -2146,7 +2146,11 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
        	$query = "SELECT * FROM carne_contratos  WHERE id = ".$_GET['cod']." ";
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
 		$row = mysqli_fetch_array($resultado);
-
+		
+		$nrocontrato = strzero($row['id'],6);
+		if(!empty($row['nrocontrato'])){
+			$nrocontrato = $row['nrocontrato'];
+		};
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o do Contrato"."</b></font><BR>";		
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."ID do Titular".":</TD>";
@@ -2158,7 +2162,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($row['id'],6)."' readonly='true' ></td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".$nrocontrato."' ></td>";
 		print "<INPUT type='text' name='titular' class='text4' id='idtitular' onkeyup=\"maskIt(this,event,'######')\" value='".$row['idtitular']."' hidden='true' >";
 		print "<INPUT type='text' name='contrato' class='text4' id='idcontrato' onkeyup=\"maskIt(this,event,'######')\" value='".$_GET['cod']."' hidden='true' >";		
 		print "</TR><TR>";		

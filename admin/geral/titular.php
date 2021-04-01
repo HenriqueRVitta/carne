@@ -1,17 +1,8 @@
 <?php
-/*      Copyright 2014 MCJ Assessoria Hospitalar e InformÃ¡tica LTDA
-
-        Desenvolvedor: Carlos Henrique R Vitta
-		Data: 27/03/2014 12:00
-
-		* MÃ³dulo CarnÃª *
-
-		Essa aplicaÃ§Ã£o tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem â€œcontribuiÃ§Ã£oâ€� mensal com a Unidade de SaÃºde (Hospital) para obter 
-		um desconto em realizaÃ§Ã£o de atendimentos â€œParticularâ€� ou atÃ© mesmo algum 
-		diferencial em caso de internaÃ§Ã£o SUS
-
-*/
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+error_reporting(E_ALL);
 
 	session_start();
 	
