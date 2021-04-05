@@ -20,3 +20,15 @@ Stack trace:
 #0 D:\WebServer\carne\admin\geral\relpagamentos4.php(345): Mpdf\Mpdf->Output()
 #1 {main}
   thrown in D:\WebServer\carne\admin\geral\relpagamentos4.php on line 238
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP Notice:  Undefined index: s_page_size in D:\WebServer\carne\admin\geral\titular.php on line 44
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP Stack trace:
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP Notice:  Undefined index: s_local in D:\WebServer\carne\admin\geral\titular.php on line 108
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP Stack trace:
+[05-Apr-2021 21:02:23 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP Notice:  Undefined index: s_page_size in D:\WebServer\carne\admin\geral\titular.php on line 44
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP Stack trace:
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP Notice:  Undefined index: s_local in D:\WebServer\carne\admin\geral\titular.php on line 108
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP Stack trace:
+[05-Apr-2021 21:11:34 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0

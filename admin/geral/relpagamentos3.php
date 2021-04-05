@@ -277,7 +277,7 @@ include ("../../includes/functions/funcoes.inc");
 		<td align='left'>".retira_acentos_UTF8($row['desclocal'])."</TD>
 		<td align='center'>".$row['nrocarne']."</TD>
 		<td align='center'>".invertecomp($row['mesano'],1)."</TD>
-		<td align='center'>".date('d/m/Y', strtotime($dtpagto))."</TD>
+		<td align='center'>".mask($dtpagto,'##/##/####')."</TD>
 		<td align='right'>".number_format($row['valor'],2,",",".")."</TD>
 		<td align='right'>".number_format($row['vlrpago'],2,",",".")."</TD>
 		<td align='center'>".retira_acentos_UTF8($row['nome'])."</TD>

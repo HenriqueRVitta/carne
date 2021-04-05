@@ -4,9 +4,9 @@
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 08/02/2015 09:32
 
-		* M�dulo Carn� *
+		* Modulo Carne *
 
-		Relat�rio dos Cadastros do Sistema
+		Relatorio dos Cadastros do Sistema
 */
 	session_start();
 	

@@ -1,31 +1,23 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
-        Desenvolvedor: Carlos Henrique R Vitta
-		Data: 08/02/2015 09:55
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+error_reporting(E_ALL);
 
-		* M�dulo Carn� *
+//session_start();
 
-		Relat�rio dos Anal�tico do Cadastro de Titular
+date_default_timezone_set('America/Sao_Paulo');
 
-*/
-
-	session_start();
-
-// Defini��es da barra de progresso
-//==============================================================
-define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
-$JpgUseSVGFormat = true;
-
-define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
-//==============================================================
+include ("../../includes/classes/conecta.class.php");
+include ("../../includes/classes/auth.class.php");
+include ("../../includes/classes/dateOpers.class.php");
+include ("../../includes/config.inc.php");
+include ("../../includes/functions/funcoes.inc");
 
 
 ini_set("memory_limit","64M");
 	
-
-	include("../../includes/mpdf54/mpdf.php");	
-	include ("../../includes/include_geral_III.php");
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
 	
@@ -34,6 +26,8 @@ ini_set("memory_limit","64M");
 	$dtinicial = '1900-01-01';	
 	$dtfinal = date('Y-m-d');
 	$situacao = 'ATIVOS/INATIVOS';
+	$lcBorda = "";
+	$lcString = '';
 
 	if(!empty($_POST['datapagto'])) {
 		$dtinicial = Fdate($_POST['datapagto']);
@@ -74,7 +68,7 @@ ini_set("memory_limit","64M");
 		
 	$pcordem	= " order by c.nometitular";
 
-	// Come�a aqui a listar os registros
+	// Comeca aqui a listar os registros
 	$query = "SELECT c.id, c.nometitular, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datanasc, 
 	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
 	d.compet_ini, d.compet_fim FROM carne_titular c
@@ -153,30 +147,8 @@ ini_set("memory_limit","64M");
     </tr>
     
     </table>";
-	
-//print_r($lcString);
-//break;
-
-/*
-$mpdf=new mPDF_('s','A4','','',25,15,21,22,10,10); 
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
-*/
-		
-
-
-//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
 
 $date = date("d/m/Y g:i a");
-
 
 $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
 <td width='33%'>".$date."</span></td>
@@ -214,22 +186,14 @@ $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-a
 </td>
 </table>";
 
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
+$html = $header.$lcString.$footer;
 
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
+include("../../includes/mpdf/vendor/autoload.php");
 
-$mpdf->WriteHTML($lcString);
-
+$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
 exit;
-    
+
+
 ?>
