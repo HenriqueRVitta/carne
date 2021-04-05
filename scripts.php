@@ -1,3 +1,5 @@
+ALTER TABLE carne_dependente ADD COLUMN cobrarnoboleto TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1-Sim 2-Nao'
+
 ALTER TABLE carne_remessaboleto ADD COLUMN idtitular INTEGER NOT NULL DEFAULT '0' AFTER inclusao,
  ADD COLUMN lote INTEGER NOT NULL DEFAULT '0'
  

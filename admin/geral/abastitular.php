@@ -4,12 +4,7 @@
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/04/2014 12:00
 
-		* M�dulo Carn� *
-
-		Essa aplica��o tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem �contribui��o� mensal com a Unidade de Sa�de (Hospital) para obter 
-		um desconto em realiza��o de atendimentos �Particular� ou at� mesmo algum 
-		diferencial em caso de interna��o SUS
+		* Modulo Carne *
 */
 
 	session_start();
@@ -1563,7 +1558,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				print "</TR><TR>";
 				print "<TR>";
 				print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."C&oacute;digo".":</TD>";
-				print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($maxid['id']+1,6)."' readonly='true' ></td>";
+				print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='' readonly='true' ></td>";
 				print "</TR><TR>";		
 				
 				print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome Dependente".":</TD>";
@@ -1618,6 +1613,14 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			print "</select>";
 			print "</TD></TR>";
 							
+			print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Cobrar no Boleto".":</TD>";
+			print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+			print "<select class='select2' name='cobrarnoboleto' id='idcobrarnoboleto'>";  
+			print "<option value='1'>Sim</option>";
+			print "<option value='2'>Não</option>";
+			print "</select>";
+			print "</TD></TR>";
+
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inativo".":</TD>";
 			print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtinativo' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='iddtinativo' onBlur='return doDateVenc(this.id,this.value, 4)' value=''></td>";
 			print "</TR><TR>";
@@ -1666,7 +1669,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 					print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 					print "</tr>";
 					//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-					print "<TR class='header'><td class='line' width='70%'>"."Nome Dependente"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>".
+					print "<TR class='header'><td class='line' width='70%'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar no Boleto"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>".
 						"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 					
 					$j=2;
@@ -1681,9 +1684,12 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 							$trClass = "lin_impar";
 						}
 						$j++;
+
+						if($row['cobrarnoboleto'] == 1) { $cobrarnoboleto = 'Sim';} else { $cobrarnoboleto = 'Não'; }
 		
 						print "<tr class=".$trClass." id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 						print "<td class='line'>".$row['nome']."</td>";
+						print "<td class='line'>".$cobrarnoboleto."</td>";
 						print "<td class='line'>".$row['id']."</td>";
 						print "<td class='line'>".$row['nrocarteira']."</td>";
 						$dtnasc = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
@@ -1792,6 +1798,20 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		print "</TD></TR>";
 		
 		print "<TR>";
+
+		if($row['cobrarnoboleto'] == 1) { $cobrarsim = " selected"; } else { $cobrarsim = ""; }
+		if($row['cobrarnoboleto'] == 2) { $cobrarnao = " selected"; } else { $cobrarnao = ""; }
+		
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Cobrar no Boleto".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='cobrarnoboleto' id='idcobrarnoboleto'>";  
+		print "<option value='1'".$cobrarsim.">Sim</option>";
+		print "<option value='2'".$cobrarnao.">Não</option>";
+		print "</select>";
+		print "</TD></TR>";
+		
+		print "<TR>";
+
 		
 		if($row['dtinativo']=='1900-01-01 00:00:00') {
 			$dtinativo = '';
@@ -1862,8 +1882,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				$lcnome = retira_acentos_ISO($_POST['nomedep']);
 				$lcnome = strtoupper($lcnome);
 				
-				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs)".
-						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."')";
+				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto)".
+						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].")";
 							
 				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				if ($resultado == 0)
@@ -1901,7 +1921,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$dtinativo = Fdate($_POST['dtinativo']);
 			$obs = $_POST['obs'];
 			
-			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."' WHERE id=".$_POST['codigo']." ";		
+			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto']." WHERE id=".$_POST['codigo']." ";
 			
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 	
@@ -2000,11 +2020,11 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 		print "</TR><TR>";
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($proximocontra,6)."' onBlur='VerContrato(this.value)'></td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='' onBlur='VerContrato(this.value)'></td>";
 		print "<INPUT type='text' name='titular' class='text4' id='idtitular' onkeyup=\"maskIt(this,event,'######')\" value='".$_GET['cod']."' hidden='true' >";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicio Contrato".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtcontrato' id='iddtcontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\"  onBlur='return doDateVenc(this.id,this.value, 4)' value='".$DataContrato."'></td>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='dtcontrato' id='iddtcontrato' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\"  onBlur='return doDateVenc(this.id,this.value, 4)' value=''></td>";
 		print "</TR><TR>";		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Plano".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
@@ -2020,7 +2040,7 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 				print "</select>";
 		print "</TR></TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Dia do Vencimento".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='diavencto' class='text4' id='iddiavencto' maxlength='2' OnKeyPress=\"javascript:formatarcampo('##', this)\" value='".$DiaVencto."'></td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='diavencto' class='text4' id='iddiavencto' maxlength='2' OnKeyPress=\"javascript:formatarcampo('##', this)\" value=''></td>";
 		print "</TR><TR>";
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Status".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";

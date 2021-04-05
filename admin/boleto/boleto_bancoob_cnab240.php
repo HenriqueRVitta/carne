@@ -129,7 +129,7 @@ foreach ($arr as &$value) {
 
 	// Qtde de Dependentes
 	
-   	$queryCliente = "SELECT count(*) as qtde_dep FROM carne_dependente where idtitular = '".$IdCliente."'";
+   	$queryCliente = "SELECT count(*) as qtde_dep FROM carne_dependente where idtitular = '".$IdCliente."' and cobrarnoboleto = 1";
 	$resulCliente = mysqli_query($conec->con,$queryCliente) or die('ERRO NA QUERY !'.$queryCliente);
 	$i=0;
 	while($rowQtde = mysqli_fetch_array($resulCliente)){
