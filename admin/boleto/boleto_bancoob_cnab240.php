@@ -147,7 +147,7 @@ foreach ($arr as &$value) {
 	}
 						
 	// Dados do Cliente
-   	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,b.datacontrato,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado FROM carne_titular a".
+   	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,b.datacontrato,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado, a.somenteresponsavel FROM carne_titular a".
    	" join carne_contratos b on b.idtitular = a.id".
    	" join carne_tipoplano c on c.id = b.plano".
    	" join carne_competenciaplano d on d.idplano = c.id".   	
@@ -156,14 +156,14 @@ foreach ($arr as &$value) {
 
     $DataVencimento = explode("-",substr($_POST['inicio'],0,10));
     $DataVencimento = $DataVencimento[2]."/".$DataVencimento[1]."/".$DataVencimento[0];
-
+    $somenteresponsavel = 0;
     $somames = 1;
     
     while($rowcliente = mysqli_fetch_array($resulCliente)) {
 
         $contador = 1;
         $qtdeInicio = $MesFim;
-        
+        $somenteresponsavel = $rowcliente['somenteresponsavel'];
         $diaVencto = $rowcliente['diavencto'];
         $diaDataInicio = date('d',strtotime($data_inicial));
         $venctoContribuinte = explode("-",substr($data_inicial,0,10));
@@ -210,7 +210,7 @@ foreach ($arr as &$value) {
 
             // Soma o valor dos dependentes com o Titular
             if($nQtdeDep > 0) {
-                $valor_cobrado = $rowcliente['valor'] + ($rowcliente['valor_dependente'] * $nQtdeDep);
+                $valor_cobrado = $rowcliente['valor'] + ($rowcliente['valor_dependente'] * ($nQtdeDep - $somenteresponsavel));
             }
 
             // Valor Negociado com o Cliente

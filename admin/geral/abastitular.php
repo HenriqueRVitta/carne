@@ -856,7 +856,9 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		
 		print "</TD></TR><TR>";
 			
-		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'></TD>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' value='1'>Titular somente repons&aacute;vel pelo pagamento</td>";
+		print "</TR><TR>";		
 		
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' class='button' value='".TRANS('BT_CAD')."' name='submit'></TD>";
 		print "<TD align='left' width='80%' bgcolor='".BODY_COLOR."'><INPUT type='reset' class='button' value='".TRANS('BT_CANCEL')."' name='cancelar' onClick=\"javascript:".$fecha."\"></TD>";
@@ -1130,7 +1132,6 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='obs' maxlength='200' id='idobs' value='".$row['obs']."'></td>";
 		print "</TR><TR>";		
 		
-
 		print "</TR></TD>";
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Vendedor".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
@@ -1152,6 +1153,13 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 			print "</select>";
 				
 		print "</TR><TR>";		
+
+		if($row['somenteresponsavel'] == 1) { $Checked = "checked='checked'";} else { $Checked = '';}
+
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'></TD>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' ".$Checked." value='1'>Titular somente repons&aacute;vel pelo pagamento</td>";
+		print "</TR><TR>";		
+
 
 		// Verifico se o Valor do plano e Negociado com o Cliente
 		// e permito digitar o valor
@@ -1283,9 +1291,14 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 
 					if(empty($_POST['ultimomescarne'])) { $ultimomescarne = ''; } else $ultimomescarne = substr($_POST['ultimomescarne'],3,4).substr($_POST['ultimomescarne'],0,2);
 					
+					$somenteresponsavel = 0;
+					if(isset($_POST['somenteresponsavel'])) { 
+						$somenteresponsavel = $_POST['somenteresponsavel'];
+					} 
+
 					
-					$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne) ".
-							" values ('".$lcnome."','".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."')";
+					$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne,somenteresponsavel) ".
+							" values ('".$lcnome."','".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."',".$somenteresponsavel.")";
 
 					$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					if ($resultado == 0)
@@ -1414,8 +1427,12 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 					$valorplano = $_POST['valorplano'];
 				} 
 				
-				
-				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$_POST['endereco']."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano." WHERE id=".$_POST['alteratitular']." ";		
+				$somenteresponsavel = 0;
+				if(isset($_POST['somenteresponsavel'])) { 
+					$somenteresponsavel = $_POST['somenteresponsavel'];
+				} 
+			
+				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$_POST['endereco']."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano.", somenteresponsavel = ".$somenteresponsavel." WHERE id=".$_POST['alteratitular']." ";
 				
 				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
@@ -1470,8 +1487,13 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				
 				$lcnome = retira_acentos_ISO($_POST['nometitular']);
 				$lcnome = strtoupper($lcnome);
+
+				$somenteresponsavel = 0;
+				if(isset($_POST['somenteresponsavel'])) { 
+					$somenteresponsavel = $_POST['somenteresponsavel'];
+				} 
 				
-				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$row['endereco']."', numero='".$row['numero']."', cep='".$cep."', bairro='".$row['bairro']."', cidade='".$row['cidade']."', codcidade='"."', uf='".$row['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', datanasc='".$nascimento."', qtdefilhos=".$row['qtdefilhos'].", escolaridade='".$row['escolaridade']."', localtrabalho='".$row['localtrabalho']."', profissao='".$row['profissao']."', identidade='".$row['identidade']."', cpf='".$row['cpf']."', estadocivil='".$row['estadocivil']."', sexo='".$row['sexo']."', nomemae='".$row['nomemae']."', nomepai='".$row['nomepai']."', email='".strtolower($row['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."' WHERE id=".$row['id']." ";
+				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$row['endereco']."', numero='".$row['numero']."', cep='".$cep."', bairro='".$row['bairro']."', cidade='".$row['cidade']."', codcidade='"."', uf='".$row['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', datanasc='".$nascimento."', qtdefilhos=".$row['qtdefilhos'].", escolaridade='".$row['escolaridade']."', localtrabalho='".$row['localtrabalho']."', profissao='".$row['profissao']."', identidade='".$row['identidade']."', cpf='".$row['cpf']."', estadocivil='".$row['estadocivil']."', sexo='".$row['sexo']."', nomemae='".$row['nomemae']."', nomepai='".$row['nomepai']."', email='".strtolower($row['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."', somenteresponsavel=".$somenteresponsavel." WHERE id=".$row['id']." ";
 				
 				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 		
