@@ -857,7 +857,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "</TD></TR><TR>";
 			
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'></TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' value='1'>Titular somente repons&aacute;vel pelo pagamento</td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' value='1'>Titular somente respons&aacute;vel pelo pagamento</td>";
 		print "</TR><TR>";		
 		
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' class='button' value='".TRANS('BT_CAD')."' name='submit'></TD>";
@@ -1157,7 +1157,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		if($row['somenteresponsavel'] == 1) { $Checked = "checked='checked'";} else { $Checked = '';}
 
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'></TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' ".$Checked." value='1'>Titular somente repons&aacute;vel pelo pagamento</td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><input type='checkbox' name='somenteresponsavel' ".$Checked." value='1'>Titular somente respons&aacute;vel pelo pagamento</td>";
 		print "</TR><TR>";		
 
 
