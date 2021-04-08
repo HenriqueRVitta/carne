@@ -44,3 +44,9 @@ Stack trace:
 [06-Apr-2021 21:47:02 Europe/Berlin] PHP Notice:  Undefined index: s_local in D:\WebServer\carne\admin\geral\titular.php on line 108
 [06-Apr-2021 21:47:02 Europe/Berlin] PHP Stack trace:
 [06-Apr-2021 21:47:02 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP Notice:  Undefined index: s_page_size in D:\WebServer\carne\admin\geral\titular.php on line 44
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP Stack trace:
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP Notice:  Undefined index: s_local in D:\WebServer\carne\admin\geral\titular.php on line 108
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP Stack trace:
+[08-Apr-2021 15:36:32 Europe/Berlin] PHP   1. {main}() D:\WebServer\carne\admin\geral\titular.php:0

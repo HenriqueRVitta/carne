@@ -145,10 +145,10 @@ if(isset($_POST['mesano'])) {
 
 	$mesano = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	
-	$pcWhere = " where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' order by a.nometitular";
+	$pcWhere = " where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' and a.situacao != 'INATIVO' order by a.nometitular";
 
 	if($_POST['filtro'] == 'Mes'){
-		$pcWhere = " where a.ultimomescarne ='".$mesano."' order by a.nometitular";
+		$pcWhere = " where a.ultimomescarne ='".$mesano."' and a.situacao != 'INATIVO' order by a.nometitular";
 	}
 
 	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
