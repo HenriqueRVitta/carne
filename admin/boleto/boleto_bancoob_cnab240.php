@@ -259,10 +259,12 @@ foreach ($arr as &$value) {
             $conta = $rowconfig['nroconta']; // Num da conta, sem digito
             $conta_dv = $rowconfig['digitoconta']; // Digito do nro da conta
             $convenio = $rowconfig['nrocontrato']; //Número do convênio indicado no frontend
-
             $NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
+            $contacomdigito = $conta.$conta_dv;
+
             $qtde_nosso_numero = strlen($NossoNumero);
-            $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
+            //$sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
+            $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$contacomdigito),10).formata_numdoc($NossoNumero,7);
             $cont=0;
             $calculoDv=0;
             for($num=0;$num<=strlen($sequencia);$num++)
@@ -294,9 +296,16 @@ foreach ($arr as &$value) {
             }
             $Resto = $calculoDv % 11;
             $Dv = 11 - $Resto;
-            if ($Dv == 0) $Dv = 0;
+            /*if ($Dv == 0) $Dv = 0;
             if ($Dv == 1) $Dv = 0;
             if ($Dv > 9) $Dv = 0;
+            */
+            if ($Resto == 0 || $Resto == 1) {
+                $Dv = 0;
+            } else {
+                $Dv = 11 - $Resto;
+            }
+
             $dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
             $dadosboleto["dac_nosso_numero"] = $Dv;
             $dadosboleto["nro_lote"] = $lotedaremessa;
