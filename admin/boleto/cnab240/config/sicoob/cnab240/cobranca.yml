@@ -376,7 +376,7 @@ remessa:
         picture: '9(8)'
       valor_titulo:
         pos: [86,100]
-        picture: '9(13)V9(2)'
+        picture: '9(15)'
       agencia_cobradora:
         pos: [101,105]
         picture: '9(5)'
