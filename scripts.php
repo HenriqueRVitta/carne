@@ -1,3 +1,6 @@
+ALTER TABLE configuracao ADD COLUMN codcedente VARCHAR(45) NOT NULL DEFAULT ''
+ALTER TABLE carne_bancos ADD COLUMN codcedente VARCHAR(45) NOT NULL DEFAULT ''
+
 ALTER TABLE carne_titular ADD COLUMN somenteresponsavel TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Somente resposanvel pelo pagfto do boleto' 
 
 ALTER TABLE carne_dependente ADD COLUMN cobrarnoboleto TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1-Sim 2-Nao'

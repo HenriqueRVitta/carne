@@ -82,7 +82,7 @@
 	$rowempresa = mysqli_fetch_array($exelocal);
 
 	// Dados do Banco
-   	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca, idretornobanco FROM carne_bancos where nome = '".$bancoEmissor."'";
+   	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca, idretornobanco, codcedente FROM carne_bancos where nome = '".$bancoEmissor."'";
 	$resulConfig = mysqli_query($conec->con,$queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
 	$rowconfig = mysqli_fetch_array($resulConfig);
 	
@@ -261,10 +261,10 @@ foreach ($arr as &$value) {
             $convenio = $rowconfig['nrocontrato']; //Número do convênio indicado no frontend
             $NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
             $contacomdigito = $conta.$conta_dv;
+            $codcedente = $rowconfig['codcedente'];
 
             $qtde_nosso_numero = strlen($NossoNumero);
-            //$sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
-            $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$contacomdigito),10).formata_numdoc($NossoNumero,7);
+            $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$codcedente),10).formata_numdoc($NossoNumero,7);
             $cont=0;
             $calculoDv=0;
             for($num=0;$num<=strlen($sequencia);$num++)
