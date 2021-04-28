@@ -262,6 +262,7 @@ foreach ($arr as &$value) {
             $NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
             $contacomdigito = $conta.$conta_dv;
             $codcedente = $rowconfig['codcedente'];
+            $convenio = $codcedente;
 
             $qtde_nosso_numero = strlen($NossoNumero);
             $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$codcedente),10).formata_numdoc($NossoNumero,7);
@@ -362,8 +363,8 @@ foreach ($arr as &$value) {
 
             // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
             // DADOS ESPECIFICOS DO SICOOB
-            $dadosboleto["modalidade_cobranca"] = "02"; // 02
-            $dadosboleto["numero_parcela"] = "901";
+            $dadosboleto["modalidade_cobranca"] = "01"; // 02
+            $dadosboleto["numero_parcela"] = "001"; // 901
 
 
             // DADOS DA SUA CONTA - BANCO SICOOB

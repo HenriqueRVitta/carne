@@ -18,7 +18,7 @@
     
 $banco = $_POST["banco"];
 
-$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM carne_bancos where nome = '".$banco."'";
+$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM carne_bancos where nome = '".$banco."'";
 $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 
 $row = mysqli_fetch_array($resultado);
@@ -47,6 +47,10 @@ if($linha > 0) {
         
 		echo "<script language='javascript' type='text/javascript'>";
         echo "document.getElementById('idnrocontrato').value = '".$row['nrocontrato']."'";
+        echo "</script>";
+
+		echo "<script language='javascript' type='text/javascript'>";
+        echo "document.getElementById('idcodcedente').value = '".$row['codcedente']."'";
         echo "</script>";
 
         echo "<script language='javascript' type='text/javascript'>";

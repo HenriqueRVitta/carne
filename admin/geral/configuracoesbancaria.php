@@ -6,12 +6,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 27/03/2014 12:00
 
-		* M�dulo Carn� *
-
-		Essa aplica��o tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem �contribui��o� mensal com a Unidade de Sa�de (Hospital) para obter 
-		um desconto em realiza��o de atendimentos �Particular� ou at� mesmo algum 
-		diferencial em caso de interna��o SUS
+		* Modulo Carne *
 
 */
 	session_start();
@@ -57,10 +52,10 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECU��O DA QUERY DE MAX ID!');
        	$style = mysqli_fetch_array($resultado);
 
-       	$query = "SELECT bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM config";
+       	$query = "SELECT bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM config";
 
 		if (isset($_POST['bancoemissor']) && !empty($_POST['bancoemissor'])) {
-       		$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto FROM carne_bancos where nome = '".$_POST['bancoemissor']."'";
+       		$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM carne_bancos where nome = '".$_POST['bancoemissor']."'";
 		}
        	
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
@@ -101,6 +96,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocontrato' maxlength='7' class='text4' id='idnrocontrato' value='".$config['nrocontrato']."'></td>";
 		
 		print "</TR><TR>";
+
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Codigo Cedente".":</TD>";
+		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codcedente' maxlength='10' class='text4' id='idcodcedente' value='".$config['codcedente']."'></td>";
+		
+		print "</TR><TR>";
+
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Pasta dos Arquivos de Remessa Banc&aacute;rio".":</TD>";
 		print "<TD width='40%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='dirarquivoremessa' maxlength='250' id='iddirarquivoremessa' value='".$config['dirarquivoremessa']."'></td>";
 		
@@ -208,12 +209,12 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		if ($linha == 0)
 		{
 
-			$queryinsert = "insert into carne_bancos (nome,bancoemissor,nroagencia,digitoagencia,nroconta,digitoconta,nrocontrato,infocliente1,infocliente2,infocliente3,instrucaocaixa1,instrucaocaixa2,instrucaocaixa3,dirarquivoretorno,dirarquivoremessa,carteiracobranca,idretornobanco,localpagto)".
+			$queryinsert = "insert into carne_bancos (nome,bancoemissor,nroagencia,digitoagencia,nroconta,digitoconta,nrocontrato,infocliente1,infocliente2,infocliente3,instrucaocaixa1,instrucaocaixa2,instrucaocaixa3,dirarquivoretorno,dirarquivoremessa,carteiracobranca,idretornobanco,localpagto,codcedente)".
 			" values ("."'".$_POST['bancoemissor']."','".$_POST['bancoemissor']."','".$_POST['nroagencia']."','".$_POST['digitoagencia']."','".$_POST['nroconta']."','".
 			$_POST['digitoconta']."','".$_POST['nrocontrato']."','".
 			$_POST['infocliente1']."','".$_POST['infocliente2']."','".$_POST['infocliente3']."','".
 			$_POST['instrucaocaixa1']."','".$_POST['instrucaocaixa2']."','".$_POST['instrucaocaixa3']."','".
-			$_POST['dirarquivoretorno']."','".$dirarquivoremessa."','".$carteira."',".$_POST['retornobanco'].",".$_POST['localpagto'].")";
+			$_POST['dirarquivoretorno']."','".$dirarquivoremessa."','".$carteira."',".$_POST['retornobanco'].",".$_POST['localpagto'].",'".$_POST['codcedente']."')";
 			
 			$resultadoinsert = mysqli_query($conec->con,$queryinsert) or die('Erro na query: '.$queryinsert);
 			
@@ -229,7 +230,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 
 		} else {
 
-			$query2 = "UPDATE carne_bancos SET nome = '".$_POST['bancoemissor']."', bancoemissor='".$_POST['bancoemissor']."', nroagencia='".$_POST['nroagencia']."', digitoagencia='".$_POST['digitoagencia']."', nroconta='".$_POST['nroconta']."', digitoconta='".$_POST['digitoconta']."', nrocontrato='".$_POST['nrocontrato']."', infocliente1='".$_POST['infocliente1']."', infocliente2='".$_POST['infocliente2']."', infocliente3='".$_POST['infocliente3']."', instrucaocaixa1='".$_POST['instrucaocaixa1']."', instrucaocaixa2='".$_POST['instrucaocaixa2']."', instrucaocaixa3='".$_POST['instrucaocaixa3']."', dirarquivoretorno='".$_POST['dirarquivoretorno']."', dirarquivoremessa='".$dirarquivoremessa."', carteiracobranca='".$carteira."', idretornobanco = ".$_POST['retornobanco'].", localpagto = ".$_POST['localpagto']." Where nome = '".$_POST['bancoemissor']."'";
+			$query2 = "UPDATE carne_bancos SET nome = '".$_POST['bancoemissor']."', bancoemissor='".$_POST['bancoemissor']."', nroagencia='".$_POST['nroagencia']."', digitoagencia='".$_POST['digitoagencia']."', nroconta='".$_POST['nroconta']."', digitoconta='".$_POST['digitoconta']."', nrocontrato='".$_POST['nrocontrato']."', infocliente1='".$_POST['infocliente1']."', infocliente2='".$_POST['infocliente2']."', infocliente3='".$_POST['infocliente3']."', instrucaocaixa1='".$_POST['instrucaocaixa1']."', instrucaocaixa2='".$_POST['instrucaocaixa2']."', instrucaocaixa3='".$_POST['instrucaocaixa3']."', dirarquivoretorno='".$_POST['dirarquivoretorno']."', dirarquivoremessa='".$dirarquivoremessa."', carteiracobranca='".$carteira."', idretornobanco = ".$_POST['retornobanco'].", localpagto = ".$_POST['localpagto'].", codcedente = '".$_POST['codcedente']."' Where nome = '".$_POST['bancoemissor']."'";
 			
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
@@ -285,6 +286,8 @@ $(document).ready(function() {
                 	$("#iddigitoconta").html(data);
 
                 	$("#idnrocontrato").html(data);
+
+                	$("#idcodcedente").html(data);
 
 	               	$("#iddirarquivoremessa").html(data);
 

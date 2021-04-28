@@ -151,11 +151,13 @@ if(isset($_POST['mesano'])) {
 		$pcWhere = " where a.ultimomescarne ='".$mesano."' and a.situacao != 'INATIVO' order by a.nometitular";
 	}
 
-	$sqlQuery = "select a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
-				c.descricao, d.valor, d.valor_dependente, b.datacontrato
+	$dataDia = date('Y-m-d');
+	$sqlQuery = "select distinct a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
+				c.descricao, d.valor, d.valor_dependente, b.datacontrato, date(e.inclusao) as inclusao
 				from carne_titular a
 				left Join carne_contratos b on b.idtitular = a.id
 				left Join carne_tipoplano c on c.id = b.plano
+				left join carne_remessaboleto e on e.idtitular = a.id and date(e.inclusao) = '".$dataDia."'
 				left Join carne_competenciaplano d on d.idplano = b.plano".$pcWhere;
 
 
@@ -203,12 +205,10 @@ if(isset($_POST['mesano'])) {
 			{
 				$trClass = "lin_impar";
 			}
+
 			$j++;
 			$nContador++;
 			$nTotalGeral+=$row['valor']+$row['valor_dependente'];
-			
-			//$datapagto = date('d/m/Y', strtotime($row['datapagto']));
-			//$dataRps = date('d-m-Y', strtotime($row['dtemissao']));
 			
 			$Checked = "checked='checked'";
 			if(empty($row['cpf'])) {
@@ -218,6 +218,12 @@ if(isset($_POST['mesano'])) {
 			$plano = $row['descricao'];
 			if(empty($row['descricao'])){
 				$plano = "FALTA INFORMAR PLANO NO CADASTRO";
+				$Checked='';
+			}
+
+			if(!is_null($row['inclusao']) && $row['inclusao'] == $dataDia){
+				$trClass = "";
+				$plano = " ** BOLETO JÁ FOI GERADO HOJE **";
 				$Checked='';
 			}
 
