@@ -56,6 +56,14 @@
 		$CheckedCon = ' selected';
 	}
 
+	$grupo = "";
+	$wheregurupo = "";
+	if(isset($_POST['grupo']) && $_POST['grupo'] <> "-1"){
+		$grupo = $_POST['grupo'];
+		$wheregurupo = " and a.grupo = ".$_POST['grupo'];
+	}
+
+
 	if(isset($_POST['datainicio'])) {
 
 		$dtinicial = $_POST['datainicio'];
@@ -88,6 +96,22 @@
 		print "<option value='Mes' ".$ChechedMes.">M&ecirc;s/Ano de Vencto</option>";  
 		print "<option value='Contrato' ".$CheckedCon.">Inicio/Fim Contrato</option>";  
 		print "</select>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Grupo".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='grupo' id='grupo'>";  
+				print "<option value=-1>"."Selecione o Grupo"."</option>";
+					$sql="Select id,descricao from carne_grupo where unidade = ".$_SESSION['s_local'];
+					$commit = mysqli_query($conec->con,$sql);
+					$i=0;
+					while($row = mysqli_fetch_array($commit)){
+						$selectedGrupo = "";
+						if($grupo == $row['id']){
+							$selectedGrupo = " selected";
+						}
+						print "<option value=".$row['id'].$selectedGrupo.">".$row['descricao']."</option>";
+						$i++;
+					}
+				print "</select>";
 		print "</TR><TR>";		
 		print "<TD width='10%' align='left' bgcolor='".TD_COLOR."'>"."M&ecirc;s/Ano de Vencto".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='mesano' class='text4' onkeyup=\"maskIt(this,event,'##/####')\" id='idmesano' value='".$mesano."'></td>";
@@ -145,10 +169,10 @@ if(isset($_POST['mesano'])) {
 
 	$mesano = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
 	
-	$pcWhere = " where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' and a.situacao != 'INATIVO' order by a.nometitular";
+	$pcWhere = " where b.datacontrato between '".$iniciocontrato."' and '".$fimcontrato."' and a.situacao != 'INATIVO' ".$wheregurupo." order by a.nometitular";
 
 	if($_POST['filtro'] == 'Mes'){
-		$pcWhere = " where a.ultimomescarne ='".$mesano."' and a.situacao != 'INATIVO' order by a.nometitular";
+		$pcWhere = " where a.ultimomescarne ='".$mesano."' and a.situacao != 'INATIVO' ".$wheregurupo." order by a.nometitular";
 	}
 
 	$dataDia = date('Y-m-d');
