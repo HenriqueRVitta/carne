@@ -56,6 +56,7 @@
             
 	$dtinicial = Fdate($_POST['inicio']);
 	$dtfinal = Fdate($_POST['fim']);
+    
 	$bancoEmissor = $_POST['bancoemissor'];
 
     $data_inicial = fdate($_POST['inicio']);

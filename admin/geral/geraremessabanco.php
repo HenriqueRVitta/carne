@@ -206,12 +206,14 @@ if(isset($_POST['mesano'])) {
 		$Print.= "Boleto<input type='checkbox' name='boleto' checked='checked' value='1'>";
 		$Print.= "</td><td>";
 		$Print.= "Remessa<input type='checkbox' name='remessa' checked='checked' value='2'>";
-		$Print.= "</td></tr></table>";
+		$Print.= "</td></tr>";
+		$Print.= "<tr><td><input type='checkbox' name='tudo' onclick='verificaStatus(this)' checked/>Marcar/Desmarcar Todos</td>";
+		$Print.= "</tr></table>";		
 
 		$Print.= "<table id='pagtos' name='pagtos' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='#87CEFA' style='font-size:12'>";
 
 		
-		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mês/Vencto"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD></tr>";
+		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mês/Vencto"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD>"."<td class='line' width='10%'>"."Editar"."</TD></tr>";
 		
 		$j=2;
 		$nContador = 0;
@@ -264,6 +266,8 @@ if(isset($_POST['mesano'])) {
 			$Print.="<td class='line' width='30%'>".$plano."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor']."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor_dependente']."</td>";
+			$Print.="<td class='line'><a target='_blank' href='abastitular.php?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
+
 			$Print.="</tr>";
 		
 		}
@@ -298,6 +302,41 @@ print "</form>";
 
 <script language="JavaScript">
 /* Formata��o para qualquer mascara */
+
+
+function verificaStatus(nome){
+
+	if(nome.form.tudo.checked == 1)
+	{
+	nome.form.tudo.checked = 1;
+	marcarTodos(nome);
+	}
+	else
+	{
+	nome.form.tudo.checked = 0;
+	desmarcarTodos(nome);
+	}
+
+}
+ 
+function marcarTodos(nome) {
+   for (i=0;i<nome.form.elements.length;i++)
+		if(nome.form.elements[i].type == "checkbox")
+		 nome.form.elements[i].checked=1
+
+}
+
+function desmarcarTodos(nome){
+   for (i=0;i<nome.form.elements.length;i++)
+	  if(nome.form.elements[i].type == "checkbox")
+		 nome.form.elements[i].checked=0
+
+		 nome.form.boleto.checked = 1;
+		 nome.form.remessa.checked = 1;
+
+}
+
+
 
 // Verifica se marcou algum CheckBox
 function verificaChecks() {
@@ -392,6 +431,9 @@ return false;
 		var ok = validaForm('calendario3','','Inicio Contrato',1);
 		var ok = validaForm('calendario4','','Fim Contrato',1);
 		var ok = validaForm('idmesano','','Mes e Ano',1);
+
+		document.getElementById('inicio').value = document.getElementById("datainicio").value
+		document.getElementById('fim').value = document.getElementById("datafim").value
 
 		var bancoemissor = document.getElementById("bancoemissor").value;
 		if(bancoemissor == ''){
