@@ -47,6 +47,12 @@
 		print "<option value='2'>"."Bradesco"."</option>";
 		print "</select></TD>";
 
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."LayOut do Retorno".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='layout' id='layout'>";  
+		print "<option value='CNAB400'>CNAB-400</option>";
+		print "<option value='CNAB240'>CNAB-240</option>";
+		print "</select></TD></TR><TR>";
 				
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Local do Arquivo".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><input type='file' name='arquivo' id='arquivo' required>";
