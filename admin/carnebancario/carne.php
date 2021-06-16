@@ -9,9 +9,14 @@
     <meta name="Robots" content="all">
     <meta name="Rating" content="general">
     <meta name="author" content="Gabriel Masson">
+    <style type="text/css">
+    .quebrapagina {
+      page-break-before: always;
+    }
+    </style>
     <title>Carn&ecirc; para pagto Banco</title>
     <link href="../../includes/icons/favicon.ico" rel="shortcut icon" type="image/x-icon">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="../../admin/carnebancario/css/style.css" rel="stylesheet" type="text/css">
   </head>
   <body>
 <?php
@@ -21,7 +26,7 @@ echo "<!-- PARCELA -->
     <div class=\"grid\">
       <div class=\"col4\">
         <div class=\"destaca\">
-          <table width=\"20%\">
+          <table width=\"10%\">
             <tr>
               <td>
 		<img src=\"imagens/logosicoob.png\" alt=\"Banco Sicoob\" width=\"150\" height=\"40\" title=\"Siccob\" />
@@ -94,8 +99,8 @@ echo "<!-- PARCELA -->
             </tr>
             <tr>
               <td>
-                <small style=\"font-size:15px\">Refer&ecirc;ncia do Cliente</small>
-                <br> {$dadosboleto["cpf"]}
+                <small style=\"font-size:15px\">Nosso n&uacute;mero</small>
+                <br> {$dadosboleto["nosso_numero"]}
               </td>
               <td>
                 <small style=\"font-size:15px\">Nro Doc.</small>
@@ -114,7 +119,7 @@ echo "<!-- PARCELA -->
         </div>
       </div>
       <div class=\"col8\">
-        <table width=\"100%\">
+        <table width=\"90%\">
           <tr>
               <td>
 		<img src=\"imagens/logosicoob.png\" alt=\"Banco Sicoob\" width=\"150\" height=\"40\" title=\"Siccob\" />
@@ -124,7 +129,7 @@ echo "<!-- PARCELA -->
 		{$dadosboleto["codigo_banco_com_dv"]}
             </td>
 	    <td></td>
-            <td colspan=\"3\" style=\"text-align:right;font-size:22px\">
+            <td colspan=\"3\" style=\"text-align:right;font-size:19px\">
 			{$dadosboleto["linha_digitavel"]}
             </td>
 	</tr>
@@ -162,8 +167,8 @@ echo "<!-- PARCELA -->
               <br>{$dadosboleto["data_processamento"]}
             </td>
             <td>
-              <small style=\"font-size:15px\">Refer&ecirc;ncia do Cliente</small>
-              <br>{$dadosboleto["cpf"]}
+              <small style=\"font-size:15px\">Nosso n&uacute;mero</small>
+              <br>{$dadosboleto["nosso_numero"]}
             </td>
           </tr>
 
@@ -195,7 +200,7 @@ echo "<!-- PARCELA -->
           </tr>
           <tr>
             <td colspan=\"5\">
-              <small style=\"font-size:15px\">Instru&ccedil;&otilde;es (texto de responsabilidade do Cedente)</small>
+              <small style=\"font-size:16px\"><b>Termo de Responsabilidade do Beneficiario</b></small>
             </td>
             <td>
               <small style=\"font-size:15px\">(-) Desconto/Abatimento</small>
@@ -204,7 +209,9 @@ echo "<!-- PARCELA -->
 	  </tr>
 	  <tr>
             <td colspan=\"5\" style=\"border:none;\">
-                <br>{$dadosboleto["instrucoes1"]}
+                {$dadosboleto["demonstrativo1"]}
+                <br>{$dadosboleto["demonstrativo2"]}
+                <br>{$dadosboleto["demonstrativo3"]}
             </td>
             <td>
               <small style=\"font-size:15px\">(-) Outras Dedu&ccedil;&otilde;es</small>
@@ -213,7 +220,8 @@ echo "<!-- PARCELA -->
           </tr>
 	  <tr>
             <td colspan=\"5\" style=\"border:none;\">
-            	<br>{$dadosboleto["instrucoes2"]}
+            	{$dadosboleto["instrucoes1"]}
+              <br>{$dadosboleto["instrucoes2"]}
             </td>
             <td>
               <small style=\"font-size:15px\">(+) Mora/Multa</small>
@@ -222,7 +230,7 @@ echo "<!-- PARCELA -->
           </tr>
 	  <tr>
             <td colspan=\"5\" style=\"border:none;\">
-            <br>{$dadosboleto["instrucoes3"]}
+            {$dadosboleto["instrucoes3"]}
             </td>
             <td>
               <small style=\"font-size:15px\">(+) Outros Acr&eacute;scimos</small>
@@ -239,8 +247,9 @@ echo "<!-- PARCELA -->
             </td>
       </tr>
 	  <tr>
-            <td colspan=\"7\" vAlign=\"bottom\" align=\"center\" height=\"75\" width=\"90.66%\">
+            <td colspan=\"7\" vAlign=\"bottom\" align=\"left\" height=\"80\" width=\"90.66%\">
 					";?><?php fbarcode($dadosboleto["codigo_barras"]); ?><?php echo "
+          <br>Autentica&ccedil;&atilde;o mec&acirc;nica - Ficha de compensa&ccedil;&atilde;o
             </td>
        </tr>
       
@@ -248,6 +257,11 @@ echo "<!-- PARCELA -->
       </div>
       </div>		      
 </div>";
+
+if($contadorpaginascarne == 3){
+  echo "<p class='quebrapagina'></p>";
+  $contadorpaginascarne == 1;
+}
 			
 ?>
 

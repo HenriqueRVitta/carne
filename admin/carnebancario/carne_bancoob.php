@@ -82,7 +82,7 @@
 	// Dados do Banco
    	$queryConfig = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoremessa, carteiracobranca FROM carne_bancos where nome = '".$bancoEmissor."'";
 	$resulConfig = mysqli_query($conec->con,$queryConfig) or die('ERRO NA QUERY !'.$queryConfig);
-	$rowconfig = mysqli_fetch_array($conec->con,$resulConfig);
+	$rowconfig = mysqli_fetch_array($resulConfig);
 	
 	$dirarquivoremessa = $rowconfig['dirarquivoremessa'];
 
@@ -164,25 +164,6 @@ if($rowcliente['vlrfixonegociado'] == 2 && $rowcliente['valorplano'] > 0){
 $valor_cobrado = str_replace(",", ".",$valor_cobrado);
 $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-//$dadosboleto["nosso_numero"] = "08123456";  // Até 8 digitos, sendo os 2 primeiros o ano atual (Ex.: 08 se for 2008)
-
-
-/*************************************************************************
- * +++
- *************************************************************************/
-
-// http://www.bancoob.com.br/atendimentocobranca/CAS/2_Implanta%C3%A7%C3%A3o_do_Servi%C3%A7o/Sistema_Proprio/DigitoVerificador.htm
-// http://blog.inhosting.com.br/calculo-do-nosso-numero-no-boleto-bancoob-sicoob-do-boletophp/
-// http://www.samuca.eti.br
-// 
-// http://www.bancoob.com.br/atendimentocobranca/CAS/2_Implanta%C3%A7%C3%A3o_do_Servi%C3%A7o/Sistema_Proprio/LinhaDigitavelCodicodeBarras.htm
-
-// Contribuição de script por:
-// 
-// Samuel de L. Hantschel
-// Site: www.samuca.eti.br
-// 
-
 if(!function_exists('formata_numdoc'))
 {
 	function formata_numdoc($num,$tamanho)
@@ -206,7 +187,7 @@ $NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
 $qtde_nosso_numero = strlen($NossoNumero);
 $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
 $cont=0;
-$calculoDv = '';
+$calculoDv = 0;
 	for($num=0;$num<=strlen($sequencia);$num++)
 	{
 		$cont++;
@@ -228,14 +209,26 @@ $calculoDv = '';
 			$constante = 7;
 			$cont = 0;
 		}
-		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+
+		$somando = intval(substr($sequencia,$num,1));
+
+		//$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+		$calculoDv = $calculoDv + ($somando * $constante);
+
 	}
-$Resto = $calculoDv % 11;
-$Dv = 11 - $Resto;
-if ($Dv == 0) $Dv = 0;
-if ($Dv == 1) $Dv = 0;
-if ($Dv > 9) $Dv = 0;
-$dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
+
+	$Resto = $calculoDv % 11;
+	$Dv = 11 - $Resto;
+	/*if ($Dv == 0) $Dv = 0;
+	if ($Dv == 1) $Dv = 0;
+	if ($Dv > 9) $Dv = 0;
+	*/
+	if ($Resto == 0 || $Resto == 1) {
+		$Dv = 0;
+	} else {
+		$Dv = 11 - $Resto;
+	}
+	$dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
 
 /*************************************************************************
  * +++
@@ -263,7 +256,8 @@ $dadosboleto["uf"] = $rowcliente['uf'];
 
 
 // INFORMACOES PARA O CLIENTE
-$dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
+//$dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
+$dadosboleto["demonstrativo1"] = $rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
 $dadosboleto["demonstrativo2"] = $rowconfig['infocliente2']; //"Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
 $dadosboleto["demonstrativo3"] = $rowconfig['infocliente3']; //"BoletoPhp - http://www.boletophp.com.br";
 
@@ -278,7 +272,7 @@ $dadosboleto["quantidade"] = ""; //01";
 $dadosboleto["valor_unitario"] = ""; //10";
 $dadosboleto["aceite"] = "N";		
 $dadosboleto["especie"] = "R$";
-$dadosboleto["especie_doc"] = "DM";
+$dadosboleto["especie_doc"] = "DS"; // Duplicata Serviços
 
 
 // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //

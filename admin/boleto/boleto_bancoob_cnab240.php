@@ -39,10 +39,10 @@
     // API Open Source
     // https://api.boletosimples.com.br/bank_contracts/sicoob/
 
+	session_start();
+
     // DEFINE O FUSO HORARIO COMO O HORARIO DE BRASILIA
     date_default_timezone_set('America/Sao_Paulo');
-
-	session_start();
 
 	include ("../../includes/include_geral_III.php");
 	include ("../../includes/classes/paging.class.php");
@@ -58,6 +58,7 @@
 	$dtfinal = Fdate($_POST['fim']);
     
 	$bancoEmissor = $_POST['bancoemissor'];
+    $layoutimpressao = $_POST['layoutimpressao'];
 
     $data_inicial = fdate($_POST['inicio']);
 
@@ -77,7 +78,14 @@
 		$outroano = true;
 	}
 
-	// Dados da Empresa
+	//$TotalParcelas = date( 'm', strtotime($dtfinal)) - date( 'm', strtotime($dtinicial));
+    $date = new DateTime($dtinicial); // Data de Nascimento
+    $TotalPar = $date->diff(new DateTime($dtfinal)); // Data do Acompanhamento
+    $TotalPar_mostra_anos = $TotalPar->format('%Y')*12;
+    $TotalPar_mostra_meses = $TotalPar->format('%m');
+    $TotalParcelas = $TotalPar_mostra_anos+$TotalPar_mostra_meses + 1;
+
+    // Dados da Empresa
 	$qrylocal = "SELECT * from cadastro_unidades where codigo=".$_SESSION['s_local']."";
 	$exelocal = mysqli_query($conec->con,$qrylocal) or die('Erro na query: ' .$qrylocal. mysqli_error($conec->con));
 	$rowempresa = mysqli_fetch_array($exelocal);
@@ -178,6 +186,7 @@ foreach ($arr as &$value) {
         $proxmes = date('m', strtotime($dtfinal));
         $venctoContrato = $proxano.'-'.$proxmes.'-'.$diaVencto.' 00:00:00';
         $ultimomescarne = $proxano.$proxmes;
+        $contadorpaginascarne = 1;
 
         For ($x=$MesIni; $x<=$MesFim; $x++) {
 
@@ -223,24 +232,6 @@ foreach ($arr as &$value) {
             $valor_cobrado = str_replace(",", ".",$valor_cobrado);
             $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
-            //$dadosboleto["nosso_numero"] = "08123456";  // Até 8 digitos, sendo os 2 primeiros o ano atual (Ex.: 08 se for 2008)
-
-
-            /*************************************************************************
-             * +++
-             *************************************************************************/
-
-            // http://www.bancoob.com.br/atendimentocobranca/CAS/2_Implanta%C3%A7%C3%A3o_do_Servi%C3%A7o/Sistema_Proprio/DigitoVerificador.htm
-            // http://blog.inhosting.com.br/calculo-do-nosso-numero-no-boleto-bancoob-sicoob-do-boletophp/
-            // http://www.samuca.eti.br
-            // 
-            // http://www.bancoob.com.br/atendimentocobranca/CAS/2_Implanta%C3%A7%C3%A3o_do_Servi%C3%A7o/Sistema_Proprio/LinhaDigitavelCodicodeBarras.htm
-
-            // Contribuição de script por:
-            // 
-            // Samuel de L. Hantschel
-            // Site: www.samuca.eti.br
-            // 
 
             if(!function_exists('formata_numdoc'))
             {
@@ -344,7 +335,7 @@ foreach ($arr as &$value) {
             }
 
             // INFORMACOES PARA O CLIENTE
-            $dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
+            $dadosboleto["demonstrativo1"] = $rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
             $dadosboleto["demonstrativo2"] = $rowconfig['infocliente2']; //"Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
             $dadosboleto["demonstrativo3"] = $rowconfig['infocliente3']; //"BoletoPhp - http://www.boletophp.com.br";
 
@@ -359,7 +350,7 @@ foreach ($arr as &$value) {
             $dadosboleto["valor_unitario"] = ""; //10";
             $dadosboleto["aceite"] = "N";		
             $dadosboleto["especie"] = "R$";
-            $dadosboleto["especie_doc"] = "DM";
+            $dadosboleto["especie_doc"] = "DS"; // Duplicata Servicos
 
 
             // ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
@@ -397,15 +388,25 @@ foreach ($arr as &$value) {
             $dadosboleto["cidade_uf"] = "";
             $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 
+            //layoutimpressao
+
             if($bancoEmissor=='Sicoob') {
             
                     // NÃO ALTERAR!
                     if($x==$MesIni && $controleheader == 0) {
                         include("include/funcoes_bancoob.php");
-                        header ('Content-type: text/html; charset=ISO-8859-1');
+                        if($layoutimpressao == 'Boleto') {
+                            header ('Content-type: text/html; charset=ISO-8859-1');
+                        }
+                    }
+
+                    if($layoutimpressao == 'Carne') {
+                        include("../carnebancario/carne.php");
+                        $contadorpaginascarne++;
+                    } else {
+                        include("include/layout_bancoob.php");
                     }
                     
-                    include("include/layout_bancoob.php");
             }
 
             $contador++;

@@ -4,9 +4,9 @@
         Desenvolvedor: Carlos Henrique R Vitta
 		Data: 04/02/2015 14:13
 
-		* M�dulo Carn� *
+		* Modulo Carne *
 
-		Op��o de gera��o de Carn�/Boleto de cobran�a
+		Opcao de geracaoo de Carne/Boleto de cobranca
 
 */
 	session_start();

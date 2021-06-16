@@ -56,6 +56,14 @@
 		$CheckedCon = ' selected';
 	}
 
+	$ChechedCar = ' selected';
+	$CheckedBol = '';
+	if(isset($_POST['layoutimpressao_']) && $_POST['layoutimpressao_'] == 'Boleto'){
+		$ChechedCar = '';
+		$CheckedBol = ' selected';
+	}
+
+
 	$grupo = "";
 	$wheregurupo = "";
 	if(isset($_POST['grupo']) && $_POST['grupo'] <> "-1"){
@@ -133,6 +141,15 @@
 		print "<option value='Sicoob' selected>Sicoob</option>";  
 		print "<option value='Bradesco'>Bradesco</option>";  
 		print "</select>";
+	
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."LayOut Impress&atilde;o".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='layoutimpressao_' id='layoutimpressao_'>";
+		print "<option value=''></option>";  
+		print "<option value='Carne' ".$ChechedCar." >Carn&ecirc; Banc&aacute;rio</option>";
+		print "<option value='Boleto' ".$CheckedBol." >Boleto Banc&aacute;rio</option>";
+		print "</select>";
+
 		print "</TR><TR>";		
 
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' value='BUSCAR CONTRIBUINTES' name='submit' id='buscarpagamentos'>";
@@ -161,6 +178,10 @@ if(isset($_POST['mesano'])) {
 
 	print "<select class='select2' name='bancoemissor' id='bancoemissor' hidden='hidden'>";
 	print "<option value='".$_POST['bancoemissor_']."'>".$_POST['bancoemissor_']."</option>";  
+	print "</select>";
+
+	print "<select class='select2' name='layoutimpressao' id='layoutimpressao' hidden='hidden'>";
+	print "<option value='".$_POST['layoutimpressao_']."'>".$_POST['layoutimpressao_']."</option>"; 
 	print "</select>";
 
 	print "<select class='select2' name='filtro_' id='filtro_' hidden='hidden'>";
@@ -301,8 +322,7 @@ print "</form>";
 ?>
 
 <script language="JavaScript">
-/* Formata��o para qualquer mascara */
-
+/* Formatacao para qualquer mascara */
 
 function verificaStatus(nome){
 
@@ -432,8 +452,9 @@ return false;
 		var ok = validaForm('calendario4','','Fim Contrato',1);
 		var ok = validaForm('idmesano','','Mes e Ano',1);
 
-		document.getElementById('inicio').value = document.getElementById("datainicio").value
-		document.getElementById('fim').value = document.getElementById("datafim").value
+		document.getElementById('inicio').value = document.getElementById("datainicio").value;
+		document.getElementById('fim').value = document.getElementById("datafim").value;
+		document.getElementById("layoutimpressao").val = document.getElementById("layoutimpressao_").val;
 
 		var bancoemissor = document.getElementById("bancoemissor").value;
 		if(bancoemissor == ''){
