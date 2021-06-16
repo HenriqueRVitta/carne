@@ -450,6 +450,18 @@ foreach ($arr as &$value) {
 
 foreach($dadosRemessa as $dadosboleto){
     include("include/sqlbancoob.php"); 
+
+    $Valorcarne = number_format($dadosboleto["valor_boleto"],2,'.','');
+
+			// Henrique 24/10/2019 13:23 GLPI 16571
+			// Inserindo na Tabela carne_carnesgerados
+			// Os Carnes que estao sendo gerados para o Contribuinte
+            if($layoutimpressao == 'Carne') {
+			$query = "INSERT INTO carne_carnesgerados (idtitular,datainicio,datafim,usuario,datagerou,valor)".
+					" values ('".$dadosboleto["numero_documento"]."','".$dtinicial."','".$dtfinal."',".$_SESSION['s_uid'].",'".$datageracao."',".$Valorcarne.")";
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
+			}
+
 }
 
 

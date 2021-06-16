@@ -3,6 +3,8 @@
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+ini_set('memory_limit','64M'); // set memory to prevent fatal errors
+set_time_limit(500); 
 error_reporting(E_ALL);
 
 //ob_clean();
@@ -10,9 +12,14 @@ error_reporting(E_ALL);
 
 session_start();
 
-// 1 - Siccob
+// 1 - Sicoob
 // 2 - Bradesco
+$banco_origem = 'Sicoob';
 $Banco = $_POST['banco'];
+if($Banco == 2){
+	$banco_origem = 'Bradesco';
+}
+
 $lcString = '';
 $lcBorda = '';
 
@@ -225,8 +232,8 @@ if (!empty($_FILES['arquivo']))
 							
 							$historico = 'PAGTO REGISTRADO';
 							
-							$insert = "insert into carne_pagamentos (idcliente,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,nrotitulobanco) ".
-							"values (".$idcliente.",'".$mesano."','".$datapagto."',".$localpagto.",".$valor.",".$valor.",".$multa.",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",'".$nrotitulobanco."')";
+							$insert = "insert into carne_pagamentos (idcliente,mesano,databaixa,localpagto,vlrcalculado,vlrpago,taxa,unidade,usuario,nrotitulobanco,retornobanco) ".
+							"values (".$idcliente.",'".$mesano."','".$datapagto."',".$localpagto.",".$valor.",".$valor.",".$multa.",".$_SESSION['s_local'].",".$_SESSION['s_uid'].",'".$nrotitulobanco."',1)";
 							$registrapagtos = mysqli_query($conec->con,$insert) or die('Erro na Query :'.$insert);
 							
 							$nfse = 0;
@@ -235,7 +242,7 @@ if (!empty($_FILES['arquivo']))
 							}
 							
 							// Gravo no arquivo de Retorno do Banco
-							$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco,nfse) "." values (".$idcliente.",'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."',".$nfse.")";
+							$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco,nfse,banco_origem) "." values (".$idcliente.",'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."',".$nfse.",'".$banco_origem."')";
 							$registrapagtos = mysqli_query($conec->con,$insertretorno) or die('Erro na Query :'.$insertretorno);
 							
 						}
@@ -246,8 +253,8 @@ if (!empty($_FILES['arquivo']))
 				} else {
 					
 					// Quando nao localiza o CPF ou CNPJ informado no arquivo retorno
-					$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco) ".
-					"values (0,'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."')";
+					$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco,nfse,banco_origem) ".
+					"values (0,'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."',".$nfse.",'".$banco_origem."')";
 					$registrapagtos = mysqli_query($conec->con,$insertretorno) or die('Erro na Query :'.$insertretorno);
 					
 				}
@@ -426,13 +433,16 @@ $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-a
 </table>";
 
 $html = $header.$lcString.$footer;
-
+/*
 include("../../includes/mpdf/vendor/autoload.php");
 
 //$mpdf = new \Mpdf\Mpdf();
 $mpdf = new \Mpdf\Mpdf(['debug' => true]);
 $mpdf->WriteHTML($html);
 $mpdf->Output();
+*/
+echo $html;
+
 exit;
    
 ?>

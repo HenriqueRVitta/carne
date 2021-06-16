@@ -220,7 +220,7 @@ if(isset($_POST['mesano'])) {
 			$cellStyle = "cellpadding='5' cellspacing='1'";
 
 		$Print = "<table width='100%'><tr><td>";
-		$Print.= "<input type='submit' style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center;' value='Gerar Boleto com Arquivo Remessa' name='submit' id='idsubmit'>";
+		$Print.= "<input type='submit' style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center;' value='Gerar Arquivo de Remessa' name='submit' id='idsubmit'>";
 		//$Print.= "</td></tr>";
 		$Print.= "</td>";
 		$Print.= "<td>";
