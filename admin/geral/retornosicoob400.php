@@ -252,6 +252,7 @@ if (!empty($_FILES['arquivo']))
 
 				} else {
 					
+					$nfse = 0;
 					// Quando nao localiza o CPF ou CNPJ informado no arquivo retorno
 					$insertretorno = "insert into retornobanco (idcliente,cpfcnpj,datapagto,valor,multa,desconto,historico,dataprocessamento,usuario,nrotitulobanco,nfse,banco_origem) ".
 					"values (0,'".$cpfcnpj."','".$datapagto."',".$valor.",0,0,'".$historico."','".date('Y-m-d H:i:s')."',".$_SESSION['s_uid'].",'".$nrotitulobanco."',".$nfse.",'".$banco_origem."')";
