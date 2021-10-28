@@ -18,8 +18,11 @@
 	}
 
 
-	include("../../includes/mpdf54/mpdf.php");	
-	include ("../../includes/include_geral_III.php");
+	include ("../../includes/classes/conecta.class.php");
+	include ("../../includes/classes/auth.class.php");
+	include ("../../includes/classes/dateOpers.class.php");
+	include ("../../includes/config.inc.php");
+	include ("../../includes/functions/funcoes.inc");
 
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
@@ -29,7 +32,13 @@
 	$titular = $_POST['titular'];
 	$nrocarne = $_POST['nrocarne'];
     $pcwhere = "";
-    
+    $codigoinicio = $_POST['codigoinicio'];
+	$codigofim = $_POST['codigofim'];
+
+	if(isset($_POST['codigoinicio']) && (!empty($_POST['codigoinicio']) && !empty($codigofim))){
+		$pcwhere.=" and t.id between '".$codigoinicio."' and '".$codigofim."'";
+	}
+
 		if($titular<> -1 ) {
 			$pcwhere.=" and t.id =".$titular;
 		}
@@ -38,11 +47,6 @@
 			$pcwhere.=" and t.nrocarne =".$nrocarne;
 		}
 		
-//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF_('en-x','A4','','',12,12,10,30,5,5);
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-
 $date = date("d/m/Y g:i a");
 
 $header = '
@@ -67,12 +71,6 @@ $header = "";
 $headerE = "";
 $footer = "";
 $footerE = "";
-
-
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
 
 	// Come�a aqui a listar os registros
     $query = "select nome_hosp from configuracao limit 1";
@@ -203,10 +201,12 @@ $mpdf->SetHTMLFooter($footerE,'E');
 		
 	$lcString.= "</table>
 	</tr></td></table>	";
-	
-$mpdf->WriteHTML($lcString);
 
-$mpdf->Output();
-exit;
+	include("../../includes/mpdf/vendor/autoload.php");
+
+	$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+	$mpdf->WriteHTML($html);
+	$mpdf->Output();
+	exit;
 
 ?>

@@ -9,11 +9,7 @@
 		Impressao Carne com codigo de barras
 
 */
-	
-	// Impress�o do Capa
-	if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
- 	     echo "<script>redirect('geracapacarne.php');</script>";		
-	}
+
 
 $codBarra1 = "";
 $codBarra2 = "";
@@ -95,8 +91,11 @@ function CodigoBarra($numero){
 	
 	session_start();
 
-	include("../../includes/mpdf54/mpdf.php");	
-	include ("../../includes/include_geral_III.php");
+	include ("../../includes/classes/conecta.class.php");
+	include ("../../includes/classes/auth.class.php");
+	include ("../../includes/classes/dateOpers.class.php");
+	include ("../../includes/config.inc.php");
+	include ("../../includes/functions/funcoes.inc");
 
 	$conec = new conexao;
 	$conec->conecta('MYSQL');
@@ -107,31 +106,22 @@ function CodigoBarra($numero){
 	$dtfinal = Fdate($_POST['datafim']);
 	$titular = $_POST['titular'];
 	$datageracao = date('Y-m-d H:i:s');
-	
-	//$nrocarne = $_POST['nrocarne'];
 	$pcwhere = "";
-	
-		if($titular<> -1 ) {
-			$pcwhere.=" and t.id =".$titular;
-		}
 
-$mpdf = new mPDF_(
-             '',    // mode - default ''
-             '',    // format - A4, for example, default ''
-             0,     // font size - default 0
-             '',    // default font family
-             5,    // margin_left
-             5,    // margin right
-             5,     // margin top
-             0,    // margin bottom
-             6,     // margin header
-             0,     // margin footer
-             'L');  // L - landscape, P - portrait
+	$codigoinicio = $_POST['codigoinicio'];
+	$codigofim = $_POST['codigofim'];
 
-//$mpdf->SetDisplayMode('fullpage');
+	if($titular<> -1 ) {
+		$pcwhere.=" and t.id =".$titular;
+		$codigoinicio = "";
+		$codigofim = "";
+	}
 
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-             
+	if(isset($_POST['codigoinicio']) && (!empty($_POST['codigoinicio']) && !empty($codigofim))){
+		$pcwhere.=" and t.id between '".$codigoinicio."' and '".$codigofim."'";
+	}
+
+            
 $date = date("d/m/Y g:i a");
 
 
@@ -145,11 +135,6 @@ $header = "";
 $headerE = "";
 $footer = "";
 $footerE = "";
-
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
 
 $lcString  = '
 <h1>mPDF</h1>
@@ -206,7 +191,11 @@ $lcString  = '
 	
 	$VlrBaseCarne=$_SESSION['vlrbasecarne'];
 	
-	while($row = mysqli_fetch_array($resultado)){
+	$lcString = "";
+
+	while($row = mysqli_fetch_array($resultado)) {
+
+	$lcString.= "<table style='width: 680px; height: 340px;' border='1' >";
 
 	// Obtenho a quandidade de dependentes
     $querydependente = "select count(*) as qtdedependente from carne_dependente where situacao = 'ATIVO' and idtitular = '".$row['id']."'";
@@ -310,7 +299,7 @@ $lcString  = '
 		<tr>
 		<td colspan='1'></td>
 		</tr>";
-				
+		
 		if($AnoIni <> $AnoFim && $x==12) {
 			$x = 0;
 			$MesIni = 1;
@@ -318,7 +307,14 @@ $lcString  = '
 			$AnoIni = $AnoFim;
 		}
 	}
-		
+
+	
+		$lcString.= "</table>";
+		if(!empty($codigoinicio)) {
+			$lcString.="<p style='page-break-before:always'></p>";
+		}
+
+
 		$i++;
 		$registros+=$i;
 		
@@ -327,9 +323,11 @@ $lcString  = '
 	
 		if($registros == 0) {
 
-		$lcString.= "</tr><tr>
-		<td height='42' style='vertical-align: top; text-align: center; font-family: serif; font-size: 22pt; color: #000000;'>Nenhum registro encontrado<br>Verifique se esta ATIVO.</TD>
-		</tr><tr>";
+			$lcString.= "<table style='width: 680px; height: 340px;' border='1' >";
+			$lcString.= "</tr><tr>
+			<td height='42' style='vertical-align: top; text-align: center; font-family: serif; font-size: 22pt; color: #000000;'>Nenhum registro encontrado<br>Verifique se esta ATIVO.</TD>
+			</tr><tr>";
+			$lcString.= "</table>";
 		
 		} else {
 
@@ -347,13 +345,12 @@ $lcString  = '
 	
 		}
 	
-	$lcString.= "</table>";
+	include("../../includes/mpdf/vendor/autoload.php");
 
-		
-$mpdf->ignore_invalid_utf8 = true;	
-$mpdf->WriteHTML($lcString);
+	$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+	$mpdf->WriteHTML($lcString);
+	$mpdf->Output();
 
-$mpdf->Output();
 exit;
 
 ?>

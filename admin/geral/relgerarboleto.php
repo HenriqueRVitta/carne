@@ -25,6 +25,7 @@
 	
 	print "<BR><B><font size=4>"."Gerar Carn&ecirc; de Cobran&ccedil;a"."</font></B><BR>";
 
+	//print "<FORM name='relgerarboleto' method='POST' action='geracapacarne_4.php' target='_blank' onSubmit=\"return valida()\">";	
 	print "<FORM name='relgerarboleto' method='POST' action='geraboletocarne.php' target='_blank' onSubmit=\"return valida()\">";	
 			
 		if (!isset($_GET['cellStyle'])) {
@@ -77,11 +78,17 @@
 		print "<option value=1>"."Percentual"."</option>";
 		print "<option value=2 selected>"."Valor"."</option>";
 		print "</select>";
+		print "</TR><TR>";
+
+		print "<TD></TD>";
+		print "<TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Codigo Inicial".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='number' name='codigoinicio' class='text4'></td>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Codigo Final".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='number' name='codigofim' class='text4'></td>";
 		
+		print "</TR><TR>";		
 		
-		
-		print "</TR>";
-				
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' value='PROCESSAR' name='submit'>";
 
 		print "</TR></TR>";
