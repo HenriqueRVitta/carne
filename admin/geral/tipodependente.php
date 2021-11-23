@@ -268,9 +268,12 @@
 			
 			$lcnome = retira_acentos_UTF8($_POST['nome']);
 			$lcnome = strtoupper($lcnome);
+
+			if(empty($_POST['idademaxima'])) { $idademaxima = 0; } else { $idademaxima = $_POST['idademaxima'];}
+
 			
 			$query = "INSERT INTO carne_tipodependente (descricao,unidade,registro,idademaxima)".
-					" values ('".$lcnome."',".$_SESSION['s_local'].",'".$registro."','".$_POST['idademaxima']."')";
+					" values ('".$lcnome."',".$_SESSION['s_local'].",'".$registro."','".$idademaxima."')";
 						
 			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
