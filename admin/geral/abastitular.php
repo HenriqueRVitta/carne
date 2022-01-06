@@ -1417,6 +1417,24 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				$lcnome = retira_acentos_ISO($_POST['nometitular']);
 				$lcnome = strtoupper($lcnome);
 
+				$lcEndereco = retira_acentos_ISO($_POST['endereco']);
+				$lcEndereco = strtoupper($lcEndereco);
+
+				$lcBairro = retira_acentos_ISO($_POST['bairro']);
+				$lcBairro = strtoupper($lcBairro);
+
+				$lclocaltrab = retira_acentos_ISO($_POST['localtrab']);
+				$lclocaltrab = strtoupper($lclocaltrab);
+
+				$lcprofissao = retira_acentos_ISO($_POST['profissao']);
+				$lcprofissao = strtoupper($lcprofissao);
+
+				$lcnomemae = retira_acentos_ISO($_POST['nomemae']);
+				$lcnomemae = strtoupper($lcnomemae);
+
+				$lcnomepai = retira_acentos_ISO($_POST['nomepai']);
+				$lcnomepai = strtoupper($lcnomepai);
+
 				if(empty($_POST['dtinativo'])) { $dtinativo = '1900-01-01 00:00:00'; } else $dtinativo = FDate($_POST['dtinativo']);
 				$obs = $_POST['obs'];
 
@@ -1432,7 +1450,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 					$somenteresponsavel = $_POST['somenteresponsavel'];
 				} 
 			
-				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$_POST['endereco']."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$_POST['bairro']."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$_POST['localtrab']."', profissao='".$_POST['profissao']."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$_POST['nomemae']."', nomepai='".$_POST['nomepai']."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano.", somenteresponsavel = ".$somenteresponsavel." WHERE id=".$_POST['alteratitular']." ";
+				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$lcEndereco."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$lcBairro."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$lclocaltrab."', profissao='".$lcprofissao."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$lcnomemae."', nomepai='".$lcnomepai."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano.", somenteresponsavel = ".$somenteresponsavel." WHERE id=".$_POST['alteratitular']." ";
 				
 				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
