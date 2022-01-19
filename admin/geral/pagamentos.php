@@ -436,7 +436,7 @@
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
 			print "<TR class='header'><td class='line' width='30%'>"."Cliente"."</TD>"."<td class='line' width='10%' >"."Taxa %"."</TD>"."<td class='line' width='15%' >"."Vlr Calculado"."</TD>"."<td class='line' width='15%' >"."Valor Pago"."</TD>"."<td class='line' width='10%'>"."Parcelado"."<td class='line' width='10%'>"."Data Pagto"."</TD>"."<td class='line' width='10%'>"."Compet&ecirc;ncia"."</TD>"."<td class='line' width='20%'>"."Local Pagamento"."</td>".
-				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
+			"<td class='line'>Recibo<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 
 			$lcLibera1 = liberamenu('Alterar Pagamento Carne');
 			$lcLibera2 = liberamenu('Excluir Pagamento Carne');
@@ -473,21 +473,24 @@
 				// Se ja foi exportado para o Financeiro nao deixar alterar
 				if(!empty($row['docfinanceiro'])) {
 					
+					print "<td class='line' align='center'><a onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."print.ico' title='Imprimir Recibo Pagto'></a></td>";
 					print "<td class='line'>Exportado</td>";
 					print "<td class='line'>Financeiro</TD>";
 					
 				} else {
 					
+					print "<td class='line' align='center'><a href=\"recibos/recibomodelo01.php?cod=".$row['id']."&cellStyle=true'\" target='_blank'><img height='16' width='16' src='".ICONS_PATH."print.ico' title='Imprimir Recibo Pagto'></a></td>";
+
 					if($lcLibera1=="N") {
-				    	print "<td disabled='disabled' class='line'><a onClick=''><img height='16' width='16' src='".ICONS_PATH."proibido.jpg' title='Altera&ccedil;&atilde;o n&atilde;o permitida'></a></TD>";
+				    	print "<td disabled='disabled' class='line' align='center'><a onClick=''><img height='16' width='16' src='".ICONS_PATH."proibido.jpg' title='Altera&ccedil;&atilde;o n&atilde;o permitida'></a></TD>";
 			       } else {
-						print "<td class='line'><a onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
+						print "<td class='line' align='center'><a onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
 			       }
 					
 				    if($lcLibera2=="N") {
-				    	print "<td disabled='disabled' class='line'><a onClick=''><img height='16' width='16' src='".ICONS_PATH."proibido.jpg' title='Exclus&atilde;o n&atilde;o permitida'></a></TD>";
+				    	print "<td disabled='disabled' class='line' align='center'><a onClick=''><img height='16' width='16' src='".ICONS_PATH."proibido.jpg' title='Exclus&atilde;o n&atilde;o permitida'></a></TD>";
 			       } else {
-						print "<td class='line'><a onClick=\"confirmaAcao('".TRANS('MSG_DEL_REG')."','".$_SERVER['PHP_SELF']."', 'action=excluir&cod=".$row['id']."&idcliente=".$row['idcliente']."')\"><img height='16' width='16' src='".ICONS_PATH."drop.png' title='".TRANS('HNT_DEL')."'></a></TD>";
+						print "<td class='line' align='center'><a onClick=\"confirmaAcao('".TRANS('MSG_DEL_REG')."','".$_SERVER['PHP_SELF']."', 'action=excluir&cod=".$row['id']."&idcliente=".$row['idcliente']."')\"><img height='16' width='16' src='".ICONS_PATH."drop.png' title='".TRANS('HNT_DEL')."'></a></TD>";
 			       }
 						
 		       
