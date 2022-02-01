@@ -64,6 +64,9 @@
 	$AnoFim = date( 'Y', strtotime($dtfinal));
 	$DiaIni = date( 'd', strtotime($dtfinal));
 	$TotalParcelas = 12;
+	$totaltaxasparcitular = 0;
+	$nomeNoBoleto = '';
+
 	
 	$outroano = false;
 	
@@ -104,7 +107,18 @@
 		
 		$nQtdeDep = 0;
 	}
-						
+
+
+	// Pego total das taxas do Titular se houver
+	$queryTaxas = "SELECT sum(aeromedico+comissao+coopart+taxabanco+apene) as totaltaxas, nomeboleto FROM carne_taxastitular where idtitular = '".$_POST['titular']."'";
+	$resulTaxas = mysqli_query($conec->con,$queryTaxas) or die('ERRO NA QUERY !'.$queryTaxas);
+	if (mysqli_num_rows($resulTaxas) > 0) {
+		$rowtaxas = mysqli_fetch_array($resulTaxas);
+		$totaltaxasparcitular = $rowtaxas['totaltaxas'];
+		$nomeNoBoleto = $rowtaxas['nomeboleto'];
+	}
+
+
 	// Dados do Cliente
    	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado FROM carne_titular a".
    	" join carne_contratos b on b.idtitular = a.id".
@@ -127,7 +141,7 @@ while($rowcliente = mysqli_fetch_array($resulCliente)){
 
 $contador = 1;
 $qtdeInicio = $MesFim;
-
+$contadorpaginascarne = 1;
 For ($x=$MesIni; $x<=$MesFim; $x++) {
 
 	$qtdeFim = $x;
@@ -253,6 +267,14 @@ $dadosboleto["cep"] = $rowcliente['cep'];
 $dadosboleto["cidade"] = $rowcliente['cidade'];
 $dadosboleto["uf"] = $rowcliente['uf'];
 
+
+if($totaltaxasparcitular > 0) {
+	$valor_boleto = str_replace(",", ".",$valor_boleto);
+	$dadosboleto["valor_boleto"] = number_format($valor_boleto + $totaltaxasparcitular, 2, ',', '');
+}
+if(!empty($nomeNoBoleto)) {
+	$dadosboleto["sacado"] = substr($nomeNoBoleto,0,40);
+}
 
 
 // INFORMACOES PARA O CLIENTE

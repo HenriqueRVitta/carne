@@ -29,7 +29,7 @@ include ('../../../includes/classes/dateOpers.class.php');
 include ('../../../includes/config.inc.php');
 include ('../../../includes/functions/funcoes.inc');
 
-ob_clean();
+//ob_clean();
 ob_start();
 
 $conec = new conexao;

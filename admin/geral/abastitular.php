@@ -311,7 +311,8 @@ function validarCNPJ(cnpj) {
 
 	// Validando campos do Contrato
 	function validacon(){
-		var ok = validaForm('iddtcontrato','','Data do Controato',1);
+		///return true;
+		var ok = validaForm('iddtcontrato','','Data do Controto',1);
 		if (ok) var ok = validaForm('iddiavencto','','Dia de Vencimento',1);
 		return ok;
 	}
@@ -405,6 +406,7 @@ var arAbas = new Array();
  arAbas[0] = new stAba('td_cadastro','div_cadastro'); 
  arAbas[1] = new stAba('td_consulta','div_consulta'); 
  arAbas[2] = new stAba('td_manutencao','div_contrato'); 
+ arAbas[3] = new stAba('td_taxas','div_taxas'); 
 
 function AlternarAbas(menu,conteudo) 
  { 
@@ -543,6 +545,11 @@ print "  <td height='20' width='200' class='menu' id='td_manutencao' align='cent
   onClick=\"AlternarAbas('td_manutencao','div_contrato')\"> 
    Plano e/ou Contrato 
   </td>"; 
+  print "  <td height='20' width='200' class='menu' id='td_taxas' align='center'
+  onClick=\"AlternarAbas('td_taxas','div_taxas')\"> 
+   Taxas
+  </td>"; 
+
 print "<td width='460' style='border-bottom: 1px solid #000000'> 
    &nbsp; 
   <td>"; 
@@ -650,8 +657,9 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 	       	
 		}
 			
-		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato;".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocarne' maxlength='9' class='text4' onkeyup=\"maskIt(this,event,'#######')\" id='idnrocarne' value='".$proximocarne."'".$ready2."></td>";
+		print "<TD class='line'><a href='titular.php'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD>";
 		print "</TR></TD>";
 
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro da Carteira".":</TD>";
@@ -897,6 +905,7 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Contrato".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocarne' maxlength='9' class='text4' onkeyup=\"maskIt(this,event,'#######')\" id='idnrocarne' value='".$row['nrocarne']."'></td>";
+		print "<TD class='line'><a href='titular.php'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD>";
 		print "</TR></TD>";
 		
 
@@ -1201,7 +1210,6 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 	}
 	
 		print "</table>";		
-		//print "</form>";
 		
 		// Vari�veis convertidas
 		if(isset($_POST['codigo']) && $_POST['submit'] <> 'Salvar Contrato') {
@@ -2366,7 +2374,120 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 	}
 	
 print "</div>";
- 
+
+
+/* Inicio Aba Taxas */
+print "<div id='div_taxas' class='conteudo' style='display: none'>"; 
+
+		
+		$search = "";
+		$cellStyle = "cellpadding='5' cellspacing='1'";
+		
+		print "<TABLE style='font-size:15px;' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='".BODY_COLOR."'>";
+		
+	// Dados de Taxas
+	print "</form>";
+	print "<FORM name='abastitular' method='POST' action='".$_SERVER['PHP_SELF']."'>";
+		
+	    if(liberamenu('Alterar Contrato')=="N"){
+	    	$disabled = " disabled='disabled'";
+	    	$clasbutton = " class='buttonDisabled'";
+	    }
+
+		$codTitular = 0;
+		if(isset($_GET['cod'])) {
+			$codTitular = $_GET['cod'];
+		} else {
+
+			if(isset($_POST['idtitular'])) {
+				$codTitular = $_POST['idtitular'];
+			}
+
+		}
+
+       	$query = "SELECT * FROM carne_taxastitular  WHERE idtitular = ".$codTitular." ";
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
+		$row = mysqli_fetch_array($resultado);
+				
+		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o de Taxas"."</b></font><BR>";		
+		print "<TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."ID do Titular".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='idtitular' class='text4' id='idtitular' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($codTitular,6)."' readonly='true' ></td>";
+		
+		print "</TR><TR>";
+		
+		print "<TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['aeromedico']."' ></td>";
+		print "</TR><TR>";		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['comissao']."'></td>";
+		print "</TR><TR>";		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['coopart']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['taxabanco']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['apene']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$row['nomeboleto']."'></td>";
+		print "</TR><TR>";
+		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' $clasbutton value='Salvar Taxas' name='submit' $disabled>";
+		print "<input type='hidden' name='cod' value='".$codTitular."'>";
+			print "</TD>";
+		print "<TD align='left' width='35%' bgcolor='".BODY_COLOR."'><INPUT type='reset' class='button' value='".TRANS('BT_CANCEL')."' name='cancelar' onClick='javascript:history.back();'></TD>";
+
+		print "</TR>";		
+		
+		print "</table>";		
+		print "</form>";
+		
+	// Incluindo Contratos com INSERT
+	if ((isset($_POST['submit'])  && ($_POST['submit'] == 'Salvar Taxas'))) {	
+
+		$query2 = "DELETE FROM carne_taxastitular WHERE idtitular='".$codTitular."'";
+		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
+       	
+		if(empty($_POST['aeromedico'])) { $aeromedico = 0.00; } else { $aeromedico = $_POST['aeromedico']; }
+		if(empty($_POST['comissao'])) { $comissao = 0.00; } else { $comissao = $_POST['comissao']; }
+		if(empty($_POST['coopart'])) { $coopart = 0.00; } else { $coopart = $_POST['coopart']; }		
+		if(empty($_POST['taxabanco'])) { $taxabanco = 0.00; } else { $taxabanco = $_POST['taxabanco']; }				
+		if(empty($_POST['apene'])) { $apene = 0.00; } else { $apene = $_POST['apene']; }				
+		if(empty($_POST['nomeboleto'])) { $nomeboleto = ''; } else { $nomeboleto = retira_acentos_ISO($_POST['nomeboleto']); }				
+		$nomeboleto = strtoupper($nomeboleto);
+
+		$query = "INSERT INTO carne_taxastitular (idtitular,aeromedico,comissao,coopart,taxabanco,apene,nomeboleto)".
+				" values ('".$codTitular."','".$aeromedico."','".$comissao."','".$coopart."','".$taxabanco."','".$apene."','".$nomeboleto."')";
+					
+		$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert carne_taxastitular'.$query);
+		if ($resultado == 0)
+		{
+			$aviso = TRANS('ERR_INSERT');
+		}
+		else
+		{
+			$aviso = TRANS('OK_INSERT');
+						
+		}
+		
+
+		if($aviso != TRANS('OK_INSERT')) {
+			echo "<script>mensagem('".$aviso."');</script>";
+		} 
+		
+		echo "<script>redirect('abastitular.php?action=alter&cod=".$codTitular."&cellStyle=true');</script>";
+
+	}
+		
+	
+print "</div>";
+/* Fim Aba Taxas */
+
+
+
 print "</td>"; 
 print "</tr>"; 
 print "</table>";

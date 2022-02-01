@@ -1,8 +1,0 @@
-[14-Jan-2022 16:17:50 Europe/Berlin] PHP Notice:  Undefined index: vlpago in D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php on line 67
-[14-Jan-2022 16:17:50 Europe/Berlin] PHP Notice:  Undefined index: vlpago in D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php on line 67
-[14-Jan-2022 16:17:50 Europe/Berlin] PHP Notice:  Undefined index: vlpago in D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php on line 67
-[14-Jan-2022 16:17:50 Europe/Berlin] PHP Fatal error:  Uncaught Mpdf\MpdfException: Error detected. PDF file generation aborted: Undefined index: vlpago in D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php:67
-Stack trace:
-#0 D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php(130): Mpdf\Mpdf->Output()
-#1 {main}
-  thrown in D:\WebServer\carne\admin\geral\recibos\recibomodelo01.php on line 67

@@ -198,8 +198,10 @@ if(isset($_POST['mesano'])) {
 
 	$dataDia = date('Y-m-d');
 	$sqlQuery = "select distinct a.id, a.cpf, a.nometitular, concat(substr(a.ultimomescarne,5,2),'/',substr(a.ultimomescarne,1,4)) as mesano, b.diavencto,
-				c.descricao, d.valor, d.valor_dependente, b.datacontrato, date(e.inclusao) as inclusao
+				c.descricao, d.valor, d.valor_dependente, b.datacontrato, date(e.inclusao) as inclusao,
+				t.aeromedico, t.comissao, t.coopart, t.taxabanco, t.apene
 				from carne_titular a
+				left Join carne_taxastitular t on t.idtitular = a.id
 				left Join carne_contratos b on b.idtitular = a.id
 				left Join carne_tipoplano c on c.id = b.plano
 				left join carne_remessaboleto e on e.idtitular = a.id and date(e.inclusao) = '".$dataDia."'
@@ -234,7 +236,7 @@ if(isset($_POST['mesano'])) {
 		$Print.= "<table id='pagtos' name='pagtos' border='0' align='left' ".$cellStyle."  width='100%' bgcolor='#87CEFA' style='font-size:12'>";
 
 		
-		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mês/Vencto"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD>"."<td class='line' width='10%'>"."Editar"."</TD></tr>";
+		$Print.="<TR class='header'><td class='line'>"."Sel."."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Contribuinte"."</TD>"."<td class='line' width='10%'>"."Mês/Vencto"."</TD>"."<td class='line' width='10%'>"."Dia Vencto"."<td class='line' width='10%'>"."Data Contrato"."</TD>"."<td class='line' width='10%'>"."Plano"."</TD>"."<td class='line' width='10%'>"."Vlr Titular"."</TD>"."<td class='line' width='10%'>"."Vlr Dep."."</TD>"."<td class='line' width='10%'>"."Taxas."."</TD>"."<td class='line' width='10%'>"."TOTAL."."</TD>"."<td class='line' width='10%'>"."Editar"."</TD></tr>";
 		
 		$j=2;
 		$nContador = 0;
@@ -255,7 +257,8 @@ if(isset($_POST['mesano'])) {
 
 			$j++;
 			$nContador++;
-			$nTotalGeral+=$row['valor']+$row['valor_dependente'];
+			$totalTaxas = $row['aeromedico']+$row['comissao']+$row['coopart']+$row['taxabanco']+$row['apene'];
+			$nTotalGeral+=$row['valor']+$row['valor_dependente']+$totalTaxas;
 			
 			$Checked = "checked='checked'";
 			if(empty($row['cpf'])) {
@@ -275,9 +278,9 @@ if(isset($_POST['mesano'])) {
 			}
 
 			$datacontrato = date('d-m-Y', strtotime($row['datacontrato']));
-
+			$totalGeral = number_format($row['valor']+$row['valor_dependente']+$totalTaxas, 2, ',', '');
+			
 			$Print.="<tr class='".$trClass."' id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
-			//$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['idretorno']."' id='selecionado'> </td>";
 			$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['id']."' </td>";
 			$Print.="<td class='line' width='10%'>".$row['cpf']."</td>";
 			$Print.="<td class='line' width='30%'>".$row['nometitular']."</td>";
@@ -287,6 +290,8 @@ if(isset($_POST['mesano'])) {
 			$Print.="<td class='line' width='30%'>".$plano."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor']."</td>";			
 			$Print.="<td class='line' width='10%'>".$row['valor_dependente']."</td>";
+			$Print.="<td class='line' width='10%'>".number_format($totalTaxas, 2, ',', '')."</td>";
+			$Print.="<td class='line' width='10%'>".$totalGeral."</td>";
 			$Print.="<td class='line'><a target='_blank' href='abastitular.php?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
 
 			$Print.="</tr>";
@@ -302,8 +307,10 @@ if(isset($_POST['mesano'])) {
 		$Print.="<td></td>";
 		$Print.="<td></td>";
 		$Print.="<td></td>";
-		$Print.="<td>".$nTotalGeral."</td>";
 		$Print.="<td></td>";
+		$Print.="<td></td>";
+		$Print.="<td></td>";
+		$Print.="<td>".number_format($nTotalGeral, 2, ',', '')."</td>";				
 		$Print.="</tr>";
 		$Print.="</tfoot>";
   		

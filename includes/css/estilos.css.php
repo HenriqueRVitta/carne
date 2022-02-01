@@ -53,7 +53,7 @@ print "body
 print "body.menu ".
 "{";
 	if ($row['tm_color_menu'] == "IMG_DEFAULT") {
-		print "background-image:url('../../mcj.png');";
+		print "background-image:url('../../mtd.png');";
 		print "background-repeat: no-repeat ;";
 	} else {
 		print "background-color:".$row['tm_color_menu'].";";

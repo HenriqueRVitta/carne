@@ -72,6 +72,8 @@
     $MesIni_ = $MesIni;
 
 	$outroano = false;
+    $totaltaxasparcitular = 0;
+    $nomeNoBoleto = '';
 
     if($AnoIni <> $AnoFim && $MesFim <= $MesIni) {
 		$MesFim = 12;
@@ -154,7 +156,17 @@ foreach ($arr as &$value) {
 		
 		$nQtdeDep = 0;
 	}
-						
+
+	// Pego total das taxas do Titular se houver
+	$queryTaxas = "SELECT sum(aeromedico+comissao+coopart+taxabanco+apene) as totaltaxas, nomeboleto FROM carne_taxastitular where idtitular = '".$IdCliente."'";
+	$resulTaxas = mysqli_query($conec->con,$queryTaxas) or die('ERRO NA QUERY !'.$queryTaxas);
+	if (mysqli_num_rows($resulTaxas) > 0) {
+		$rowtaxas = mysqli_fetch_array($resulTaxas);
+		$totaltaxasparcitular = $rowtaxas['totaltaxas'];
+		$nomeNoBoleto = $rowtaxas['nomeboleto'];
+	}
+
+    
 	// Dados do Cliente
    	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,b.datacontrato,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado, a.somenteresponsavel FROM carne_titular a".
    	" join carne_contratos b on b.idtitular = a.id".
@@ -322,6 +334,14 @@ foreach ($arr as &$value) {
             $dadosboleto["cpf"] = str_replace('-', '', $dadosboleto["cpf"]);
             $dadosboleto["cpf"] = trim($dadosboleto["cpf"]);
 
+            if($totaltaxasparcitular > 0) {
+                $valor_boleto = str_replace(",", ".",$valor_boleto);
+                $dadosboleto["valor_boleto"] = number_format($valor_boleto + $totaltaxasparcitular, 2, ',', '');
+            }
+            if(!empty($nomeNoBoleto)) {
+                $dadosboleto["sacado"] = substr($nomeNoBoleto,0,40);
+            }
+                        
             $dadosboleto["endremessa"] = retira_acentos_ISO($rowcliente['endereco'])." ".$rowcliente['numero'];
             $dadosboleto["bairemessa"] = retira_acentos_ISO($rowcliente['bairro']);
             $dadosboleto["cidremessa"] = retira_acentos_ISO($rowcliente['cidade']);

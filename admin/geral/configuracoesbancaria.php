@@ -53,6 +53,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
        	$style = mysqli_fetch_array($resultado);
 
        	$query = "SELECT bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM config";
+		$query_2 = "SELECT bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM config";		   
 
 		if (isset($_POST['bancoemissor']) && !empty($_POST['bancoemissor'])) {
        		$query = "SELECT id, nome, bancoemissor, nroagencia, digitoagencia, nroconta, digitoconta, nrocontrato, infocliente1, infocliente2, infocliente3, instrucaocaixa1, instrucaocaixa2, instrucaocaixa3, dirarquivoretorno, dirarquivoremessa, carteiracobranca, idretornobanco, localpagto, codcedente FROM carne_bancos where nome = '".$_POST['bancoemissor']."'";
@@ -60,6 +61,30 @@ header ('Content-type: text/html; charset=ISO-8859-1');
        	
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 		$config = mysqli_fetch_array($resultado);
+
+		if (mysqli_num_rows($resultado) == 0) {
+
+			$resultado = mysqli_query($conec->con,$query_2) or die('ERRO NA QUERY !'.$query);
+			$config = mysqli_fetch_array($resultado);
+			
+			if($_POST['carteiracobranca']=='1'){ $carteira = "Com Registro"; } else { $carteira = "Sem Registro"; }
+			$dirarquivoremessa = str_replace("\\", "/",$_POST['dirarquivoremessa']);
+	
+			$queryinsert = "insert into carne_bancos (nome,bancoemissor,nroagencia,digitoagencia,nroconta,digitoconta,nrocontrato,infocliente1,infocliente2,infocliente3,instrucaocaixa1,instrucaocaixa2,instrucaocaixa3,dirarquivoretorno,dirarquivoremessa,carteiracobranca,idretornobanco,localpagto,codcedente)".
+			" values ("."'".$_POST['bancoemissor']."','".$_POST['bancoemissor']."','".$_POST['nroagencia']."','".$_POST['digitoagencia']."','".$_POST['nroconta']."','".
+			$_POST['digitoconta']."','".$_POST['nrocontrato']."','".
+			$_POST['infocliente1']."','".$_POST['infocliente2']."','".$_POST['infocliente3']."','".
+			$_POST['instrucaocaixa1']."','".$_POST['instrucaocaixa2']."','".$_POST['instrucaocaixa3']."','".
+			$_POST['dirarquivoretorno']."','".$dirarquivoremessa."','".$carteira."',".$_POST['retornobanco'].",".$_POST['localpagto'].",'".$_POST['codcedente']."')";
+			
+			$resultadoinsert = mysqli_query($conec->con,$queryinsert) or die('Erro na query: '.$queryinsert);
+
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+			$config = mysqli_fetch_array($resultado);
+
+			
+		}
+
 		
 		$localpagto = $config['localpagto'];
 		

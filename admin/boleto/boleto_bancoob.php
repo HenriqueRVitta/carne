@@ -57,6 +57,8 @@
 	$DiaIni = date( 'd', strtotime($dtfinal));
 	
 	$outroano = false;
+	$totaltaxasparcitular = 0;
+	$nomeNoBoleto = '';
 	
 	if($AnoIni <> $AnoFim && $MesFim <= $MesIni) {
 		$MesFim = 12;
@@ -93,7 +95,17 @@
 		
 		$nQtdeDep = 0;
 	}
-						
+
+	// Pego total das taxas do Titular se houver
+	$queryTaxas = "SELECT sum(aeromedico+comissao+coopart+taxabanco+apene) as totaltaxas, nomeboleto FROM carne_taxastitular where idtitular = '".$_POST['titular']."'";
+	$resulTaxas = mysqli_query($conec->con,$queryTaxas) or die('ERRO NA QUERY !'.$queryTaxas);
+	if (mysqli_num_rows($resulTaxas) > 0) {
+		$rowtaxas = mysqli_fetch_array($resulTaxas);
+		$totaltaxasparcitular = $rowtaxas['totaltaxas'];
+		$nomeNoBoleto = $rowtaxas['nomeboleto'];
+	}
+
+	
 	// Dados do Cliente
    	$queryCliente = "SELECT a.id,a.nometitular,a.endereco,a.numero,a.cep,a.bairro,a.cidade,a.uf,a.cpf,b.nrocontrato,b.diavencto,c.descricao,d.valor,d.valor_dependente,a.valorplano, d.vlrfixonegociado FROM carne_titular a".
    	" join carne_contratos b on b.idtitular = a.id".
@@ -194,7 +206,7 @@ $NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
 $qtde_nosso_numero = strlen($NossoNumero);
 $sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
 $cont=0;
-$calculoDv = '';
+$calculoDv = 0;
 	for($num=0;$num<=strlen($sequencia);$num++)
 	{
 		$cont++;
@@ -216,14 +228,21 @@ $calculoDv = '';
 			$constante = 7;
 			$cont = 0;
 		}
-		$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+
+		$somando = intval(substr($sequencia,$num,1));
+
+		//$calculoDv = $calculoDv + (substr($sequencia,$num,1) * $constante);
+		$calculoDv = $calculoDv + ($somando * $constante);
+
 	}
+	
 $Resto = $calculoDv % 11;
 $Dv = 11 - $Resto;
 if ($Dv == 0) $Dv = 0;
 if ($Dv == 1) $Dv = 0;
 if ($Dv > 9) $Dv = 0;
 $dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
+$dadosboleto["nro_lote"] = 0;
 
 /*************************************************************************
  * +++
@@ -243,6 +262,15 @@ $dadosboleto["endereco2"] = $rowcliente['cidade']."-".$rowcliente['uf']." Cep:".
 $dadosboleto["cpf"] = str_replace('.', '', $rowcliente['cpf']);
 $dadosboleto["cpf"] = str_replace('-', '', $dadosboleto["cpf"]);
 $dadosboleto["cpf"] = trim($dadosboleto["cpf"]);
+
+
+if($totaltaxasparcitular > 0) {
+	$valor_boleto = str_replace(",", ".",$valor_boleto);
+	$dadosboleto["valor_boleto"] = number_format($valor_boleto + $totaltaxasparcitular, 2, ',', '');
+}
+if(!empty($nomeNoBoleto)) {
+	$dadosboleto["sacado"] = substr($nomeNoBoleto,0,40);
+}
 
 
 // INFORMACOES PARA O CLIENTE

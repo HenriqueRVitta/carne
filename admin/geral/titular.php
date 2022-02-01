@@ -495,9 +495,15 @@ $selectedAmbos = "selected";
 			{
 					$aviso = TRANS('OK_DEL');
 
+			$query2 = "DELETE FROM carne_dependente WHERE idtitular='".$_GET['cod']."'";
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
+		
 			$query2 = "DELETE FROM carne_contratos WHERE idtitular='".$_GET['cod']."'";
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
-					
+
+			$query2 = "DELETE FROM carne_taxastitular WHERE idtitular='".$_GET['cod']."'";
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na exclusÃ£o '.$query2);
+			
 			}
 			
 			if($aviso != TRANS('OK_DEL')) {

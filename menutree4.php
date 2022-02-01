@@ -198,7 +198,7 @@ error_reporting(E_ALL);
 </style>
 	
 </head>
-<body style="background-image:url('mcj.png');">
+<body style="background-image:url('mtd.png');">
 <div id='cssmenu'>
 <ul>
    <li class='active'><a href='#'><span><h3>Op&ccedil;&otilde;es de Menu</h3></span></a></li>
