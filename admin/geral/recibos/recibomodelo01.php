@@ -138,7 +138,7 @@ exit;
 // Referência
 // https://github.com/mpdf/mpdf/issues/615
 
-$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [80, 130],
+$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [70, 110],
 'default_font_size' => 0, // font size - default 0
 'default_font' => '', // default font family
 'margin_left' => 1,
