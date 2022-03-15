@@ -732,11 +732,26 @@
 			$AnoFim = substr($_POST['mesanofinal'],3,4);
 			$outroano = false;
 			
-			
+			// Canculando o Total de Meses
+			$data_ini = $AnoIni.'-'.$MesIni.'-01';
+			$data_calculo = $AnoFim.'-'.$MesFim.'-01';
+			$date = new DateTime($data_ini); // Data de Inicio
+			$dt_calculo = $date->diff(new DateTime($data_calculo)); // Data Final Calculo
+			$dt_calculo_mostra_anos = $dt_calculo->format('%Y')*12;
+			$dt_mostra_meses = $dt_calculo->format('%m');
+			$total_meses = $dt_calculo_mostra_anos+$dt_mostra_meses;
+			if($total_meses <= 0){
+				$total_meses = 1;
+			}
+			// Fim Canculando o Total de Meses
+
 			if($AnoIni <> $AnoFim && $MesFim <= $MesIni) {
 				$MesFim = 12;
 				$outroano = true;
+				$total_meses++;
 			}
+
+			$value2 = str_replace(',','',$_POST['vlrpago'] / $total_meses);
 			
 			For ($x=$MesIni; $x<=$MesFim; $x++) {
 				
@@ -755,7 +770,7 @@
 				}
 				
 				// Grava em vlrpago somente no primeiro registro
-				$value2 = 0.00;
+				//$value2 = 0.00;
 				
 			}
 		

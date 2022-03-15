@@ -48,27 +48,31 @@ $ddd2_hosp= $rowConfg['ddd2_hosp'];
 $fax_hosp = $rowConfg['fax_hosp'];
 $linhacab = $rowConfg['linhacab'];
 
-$query = 'SELECT a.idcliente, a.databaixa, a.vlrpago, a.mesano, b.nometitular FROM carne_pagamentos a join carne_titular b on b.id = a.idcliente where a.id = '.$_GET['cod'];
+$query = 'SELECT a.idcliente, a.databaixa, a.vlrpago, a.mesano, b.nometitular, b.nrocarne FROM carne_pagamentos a join carne_titular b on b.id = a.idcliente where a.id = '.$_GET['cod'];
 $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 $rowPaciente = mysqli_fetch_array($resultado);
 $idcliente = $rowPaciente['idcliente'];
+$matricula = $rowPaciente['nrocarne'];
 $databaixa = $rowPaciente['databaixa'];
 $vlrpago   = $rowPaciente['vlrpago'];
 $nometitular= $rowPaciente['nometitular'];
 $mesano = $rowPaciente['mesano'];
 $mesesReferente = substr($mesano,4,2).'/'.substr($mesano,0,4);
 
-$query = "SELECT sum(vlrpago) as vlrpago, mesano FROM carne_pagamentos where idcliente = ".$idcliente." group by databaixa,mesano order by mesano";
+$query = "SELECT sum(vlrpago) as vlrpago, mesano FROM carne_pagamentos where idcliente = ".$idcliente." and databaixa = '".$databaixa."' group by databaixa,mesano order by mesano";
 $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 $mesesAnteriores = '';
 $valorTotalMeses = 0.00;
 while($rowMeses = mysqli_fetch_array($resultado)){
     $mesesAnteriores.=substr($rowMeses['mesano'],4,2).'/'.substr($rowMeses['mesano'],0,4).' ';
     if($rowMeses['vlrpago'] > 0){
-        $valorTotalMeses=$rowMeses['vlrpago'];
+        $valorTotalMeses+=$rowMeses['vlrpago'];
     }
     
 }
+
+$valorTotalMeses = number_format($valorTotalMeses,2,'.','');
+
 if(!empty($mesesAnteriores)) {
     $mesesReferente = $mesesAnteriores;
     $vlrpago = $valorTotalMeses;
@@ -95,13 +99,16 @@ $lcString = "
     <td class='tg-0pky'>CNPJ.:".mask($cgc_hosp,'##.###.###/####-##')."</td>
   </tr>
   <tr>
-    <td class='tg-0pky'>MATRÍCULA: ".$idcliente."</td>
+    <td class='tg-0pky'>MATRÍCULA: ".$matricula."</td>
   </tr>
   <tr>
     <td class='tg-0pky' style='font-weight:bold;font-size:12px'>NOME: ".$nometitular."</td>
   </tr>
   <tr>
     <td class='tg-0pky'>DATA: ".date( 'd/m/Y', strtotime($databaixa))."</td>
+  </tr>
+  <tr>
+    <td class='tg-0pky'>MES PAGTO: ".substr(date( 'd/m/Y', strtotime($databaixa)),3,10)."</td>
   </tr>
   <tr>
     <td class='tg-0pky'>MES REF.: ".$mesesReferente."</td>

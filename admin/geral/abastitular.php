@@ -1560,6 +1560,9 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$query2 = "delete from carne_dependente where id =".$_GET['iddependente']."";
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
 			
+			$query2 = "delete from carne_taxasdependente where iddependente =".$_GET['iddependente']."";
+			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro ... '.$query2);
+
 			if ($resultado2 == 0)
 			{
 					$aviso = TRANS('ERR_DEL');
@@ -1676,8 +1679,26 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."OBS".":</TD>";
 			print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='obs' maxlength='200' id='idobs' value=''></td>";
 			print "</TR><TR>";		
-				
-		
+
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['aeromedico']."' ></td>";
+			print "</TR><TR>";		
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['comissao']."'></td>";
+			print "</TR><TR>";		
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['coopart']."'></td>";
+			print "</TR><TR>";
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['taxabanco']."'></td>";
+			print "</TR><TR>";
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['apene']."'></td>";
+			print "</TR><TR>";
+			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$row['nomeboleto']."'></td>";
+			print "</TR>";
+
 				print "<TR> <TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' class='button' value='Incluir Dependente' name='submit'>";
 				print "<TD align='left' width='80%' bgcolor='".BODY_COLOR."'><INPUT type='reset' class='button' value='".TRANS('BT_CANCEL')."' name='cancelar' onClick=\"javascript:".$fecha."\"></TD>";
 		
@@ -1874,7 +1895,43 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."OBS".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='obs' maxlength='200' id='idobs' value='".$row['obs']."'></td>";
 		print "</TR><TR>";		
+
+		$codDep = 0;
+		if(isset($_GET['cod'])) {
+			$codDep = $_GET['cod'];
+		} else {
+
+			if(isset($_POST['idtitular'])) {
+				$codTitular = $_POST['idtitular'];
+			}
+
+		}
+
+       	$query = "SELECT * FROM carne_taxasdependente  WHERE iddependente = ".$_GET['cod']." ";
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 5021!');
+		$rowDep = mysqli_fetch_array($resultado);
+
 		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['aeromedico']."' ></td>";
+		print "</TR><TR>";		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['comissao']."'></td>";
+		print "</TR><TR>";		
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['coopart']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['taxabanco']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['apene']."'></td>";
+		print "</TR><TR>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$rowDep['nomeboleto']."'></td>";
+		print "</TR>";
+
+
 		
 	    if(liberamenu('Alterar Dependentes')=="N"){
 	    	$disabled = " disabled='disabled'";
@@ -1948,6 +2005,27 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				echo "<script>mensagem('".$aviso."');</script>";
 			} 
 			
+
+			$query = "SELECT max(id) as idDep FROM carne_dependente  WHERE idtitular = ".$_POST['idtitular']." ";
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 101!');
+			$row = mysqli_fetch_array($resultado);
+
+			
+			$codDep = $row['idDep'];
+
+			if(empty($_POST['aeromedico'])) { $aeromedico = 0.00; } else { $aeromedico = $_POST['aeromedico']; }
+			if(empty($_POST['comissao'])) { $comissao = 0.00; } else { $comissao = $_POST['comissao']; }
+			if(empty($_POST['coopart'])) { $coopart = 0.00; } else { $coopart = $_POST['coopart']; }		
+			if(empty($_POST['taxabanco'])) { $taxabanco = 0.00; } else { $taxabanco = $_POST['taxabanco']; }				
+			if(empty($_POST['apene'])) { $apene = 0.00; } else { $apene = $_POST['apene']; }				
+			if(empty($_POST['nomeboleto'])) { $nomeboleto = ''; } else { $nomeboleto = retira_acentos_ISO($_POST['nomeboleto']); }				
+			$nomeboleto = strtoupper($nomeboleto);
+	
+			$query = "INSERT INTO carne_taxasdependente (iddependente,aeromedico,comissao,coopart,taxabanco,apene,nomeboleto)".
+					" values ('".$codDep."','".$aeromedico."','".$comissao."','".$coopart."','".$taxabanco."','".$apene."','".$nomeboleto."')";
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
+
+					
 	       	 $Log1 = liberamenu('Incluir Dependente');
 	    	 $Log2 = $_POST['idtitular'];
 	    	 $log3 = strtoupper($_POST['nomedep']);
@@ -1982,6 +2060,27 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				$aviso =  TRANS('OK_EDIT');
 			}
 	
+
+			$query = "delete from carne_taxasdependente  WHERE iddependente =".$_POST['codigo']." ";
+			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 101!');
+			$row = mysqli_fetch_array($resultado);
+			
+			$codDep = $_POST['codigo'];
+
+			if(empty($_POST['aeromedico'])) { $aeromedico = 0.00; } else { $aeromedico = $_POST['aeromedico']; }
+			if(empty($_POST['comissao'])) { $comissao = 0.00; } else { $comissao = $_POST['comissao']; }
+			if(empty($_POST['coopart'])) { $coopart = 0.00; } else { $coopart = $_POST['coopart']; }		
+			if(empty($_POST['taxabanco'])) { $taxabanco = 0.00; } else { $taxabanco = $_POST['taxabanco']; }				
+			if(empty($_POST['apene'])) { $apene = 0.00; } else { $apene = $_POST['apene']; }				
+			if(empty($_POST['nomeboleto'])) { $nomeboleto = ''; } else { $nomeboleto = retira_acentos_ISO($_POST['nomeboleto']); }				
+			$nomeboleto = strtoupper($nomeboleto);
+	
+			$query = "INSERT INTO carne_taxasdependente (iddependente,aeromedico,comissao,coopart,taxabanco,apene,nomeboleto)".
+					" values ('".$codDep."','".$aeromedico."','".$comissao."','".$coopart."','".$taxabanco."','".$apene."','".$nomeboleto."')";
+			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
+
+
+
 				if($aviso !=  TRANS('OK_EDIT')) {
 					echo "<script>mensagem('".$aviso."');</script>";
 					
