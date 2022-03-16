@@ -740,7 +740,8 @@
 			$dt_calculo_mostra_anos = $dt_calculo->format('%Y')*12;
 			$dt_mostra_meses = $dt_calculo->format('%m');
 			$total_meses = $dt_calculo_mostra_anos+$dt_mostra_meses;
-			if($total_meses <= 0){
+
+			if($total_meses <= 0) {
 				$total_meses = 1;
 			}
 			// Fim Canculando o Total de Meses
@@ -750,6 +751,11 @@
 				$outroano = true;
 				$total_meses++;
 			}
+
+			if($AnoIni == $AnoFim && $MesFim > $MesIni) {
+				$total_meses++;
+			}
+
 
 			$value2 = str_replace(',','',$_POST['vlrpago'] / $total_meses);
 			
