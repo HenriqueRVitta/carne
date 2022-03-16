@@ -244,7 +244,7 @@ ob_start();
        " k.id as idpagto, k.nrocarne, k.mesano, k.databaixa, l.descricao as desclocal, k.localpagto, sum(k.vlrpago) as vlrpago, u.nome FROM carne_titular c ".
        " left Join carne_contratos p on p.idtitular = c.id ".
        " left Join carne_tipoplano q on q.id = p.plano ".
-       " left Join carne_competenciaplano d on d.idplano = p.plano ".
+       " Join carne_competenciaplano d on d.idplano = p.plano ".
        " Join carne_pagamentos k on k.idcliente = c.id ".
        " Left Join carne_localpagto l on l.id = k.localpagto ".
        " left Join usuarios u on u.codigo = k.usuario ".

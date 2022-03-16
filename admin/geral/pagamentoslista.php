@@ -56,7 +56,7 @@
        	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
-       	$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, space(25) as nome, p.docfinanceiro FROM carne_titular c Join carne_pagamentos p on p.idcliente=c.id ";
+       	$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, space(25) as nome, p.docfinanceiro FROM carne_titular c left Join carne_pagamentos p on p.idcliente=c.id ";
 		if (isset($_GET['cod'])) {
 			
 			$query.= " WHERE c.id = ".$_GET['cod']." ";
@@ -146,7 +146,7 @@
 				}
 				
 			} else {
-				$query.= " where lower(c.nometitular) like lower(('%".$_POST['search']."%'))";				
+				$query.= " where lower(c.nometitular) like lower(('%".$_POST['search']."%')) and c.situacao = 'ATIVO'";				
 			}
 			$cond=2;
 
