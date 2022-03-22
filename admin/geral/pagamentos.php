@@ -733,6 +733,7 @@
 			$outroano = false;
 			
 			// Canculando o Total de Meses
+			/*
 			$data_ini = $AnoIni.'-'.$MesIni.'-01';
 			$data_calculo = $AnoFim.'-'.$MesFim.'-01';
 			$date = new DateTime($data_ini); // Data de Inicio
@@ -740,6 +741,15 @@
 			$dt_calculo_mostra_anos = $dt_calculo->format('%Y')*12;
 			$dt_mostra_meses = $dt_calculo->format('%m');
 			$total_meses = $dt_calculo_mostra_anos+$dt_mostra_meses;
+			*/
+
+			$firstDate = $AnoIni.'-'.$MesIni.'-01';
+			$secondDate = $AnoFim.'-'.$MesFim.'-01';
+
+			$DataInicial = getdate(strtotime($firstDate));
+			$DataFinal = getdate(strtotime($secondDate));
+			$Dif = ($DataFinal[0] - $DataInicial[0]) / 86400;
+			$total_meses = round($Dif/30);
 
 			if($total_meses <= 0) {
 				$total_meses = 1;

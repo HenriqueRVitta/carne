@@ -108,9 +108,6 @@ $lcString = "
     <td class='tg-0pky'>DATA: ".date( 'd/m/Y', strtotime($databaixa))."</td>
   </tr>
   <tr>
-    <td class='tg-0pky'>MES PAGTO: ".substr(date( 'd/m/Y', strtotime($databaixa)),3,10)."</td>
-  </tr>
-  <tr>
     <td class='tg-0pky'>MES REF.: ".$mesesReferente."</td>
   </tr>
   <tr>
