@@ -376,7 +376,6 @@ $html = $header.$lcString.$footer;
 
 include("../../includes/mpdf/vendor/autoload.php");
 
-//$mpdf = new \Mpdf\Mpdf();
 $mpdf = new \Mpdf\Mpdf(['debug' => true]);
 $mpdf->WriteHTML($html);
 $mpdf->Output();

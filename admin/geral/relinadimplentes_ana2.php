@@ -13,13 +13,8 @@
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
-//error_reporting(0); 
 error_reporting(E_ALL);
 
-//ob_clean();
-//ob_start();
-
-//session_start();
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -103,7 +98,8 @@ ob_start();
 		$lcBorda.= "<td align='right'>Relat&oacute;rio:</TD>
 		<td align='left'>".$tiporel."</TD>";
 
-	$lcBorda.= "</tr></table>";	
+	$lcBorda.= "</tr>
+	</table>";	
 	// Fim Dados Cabecalho
 		
 
@@ -184,7 +180,7 @@ ob_start();
 		from carne_titular a Join carne_pagamentos b on b.idcliente = a.id
 		join carne_contratos c on c.idtitular = a.id
 		join carne_competenciaplano d on d.idplano = c.plano
-		and a.situacao = 'ATIVO'".$pcwhere." group by a.nometitular,b.idcliente";
+		and a.situacao = 'ATIVO' ".$pcwhere."  group by a.nometitular,b.idcliente";
 
       
 	// Cabe�alho do regisrtos encontrados
@@ -207,6 +203,7 @@ ob_start();
 		while($row = mysqli_fetch_array($resultado)){
 				
     	$dtregistro = str_replace('/','',substr(converte_datacomhora($row['Data_Inicio']),0,10));
+
 
     	if($row['MesesInadimplente'] > 0 && $row['MesesInadimplente'] >= $_POST['nromeses']) {
 
@@ -255,21 +252,19 @@ ob_start();
     <td align='left'>Total de Inadimplentes listados</th>
     <td align='right'>".$qtdeIna."</th>    
     </tr>
-	</table>
-    </table>";
+	</table>";
 
 
-date_default_timezone_set('America/Sao_Paulo');	
 $date = date("d/m/Y H:i");
 
-$header = "<table width='800' align='center' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
+$header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
 <td width='33%'>".$date."</span></td>
 <td width='33%' align='center'><img src='../../logo.png' width='126px' /></td>
-<td width='33%' style='text-align: right;'><span style='font-weight: bold;'><span style='font-size:11pt;'></span></td>
+<td width='33%' style='text-align: right;'><span style='font-weight: bold;'>Pag. <span style='font-size:11pt;'>{PAGENO}</span></td>
 </tr>
 </table>
 <table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 14pt; color: #000000;'><tr>
-<td width='33%' align='center'>Relat&oacute;rio de Inadimplentes no Carn&ecirc;</td>
+<td width='33%' align='center'>Relat&oacute;rio Recebimentos de Carn&ecirc;</td>
 </tr>
 </table>".$lcBorda."";
 
@@ -285,7 +280,7 @@ $headerE = "<table width='100%' style='border-bottom: 1px solid #000000; vertica
 </table>".$lcBorda."";
 
 
-$footer = "<table width='800' align='center' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
+$footer = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
 <div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
 </td>
@@ -297,6 +292,7 @@ $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-a
 <div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
 </td>
 </table>";
+
 
 
 
@@ -345,13 +341,23 @@ $html = '
 <p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
 ';
 
+$html = $header.$lcString.$footer;
+
+$file = 'D:/html.php';
+// Abre o arquivo para obter o conteúdo existente
+$current = file_get_contents($file);
+// Acrescenta a nova pessoa no arquivo
+$current .= $html;
+// Escreve o conteúdo de volta no arquivo
+file_put_contents($file, $current);
+
 include("../../includes/mpdf/vendor/autoload.php");
 
 
-//$mpdf = new \Mpdf\Mpdf();
 $mpdf = new \Mpdf\Mpdf(['debug' => true]);
-$mpdf->WriteHTML($lcString);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
+
 exit;
 	
 }
