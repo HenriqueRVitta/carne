@@ -343,14 +343,6 @@ $html = '
 
 $html = $header.$lcString.$footer;
 
-$file = 'D:/html.php';
-// Abre o arquivo para obter o conteúdo existente
-$current = file_get_contents($file);
-// Acrescenta a nova pessoa no arquivo
-$current .= $html;
-// Escreve o conteúdo de volta no arquivo
-file_put_contents($file, $current);
-
 include("../../includes/mpdf/vendor/autoload.php");
 
 
