@@ -237,6 +237,14 @@
                     <li><a href='admin/geral/arquivoretorno.php' target="centro"><span>Arquivo Retorno</span></a></li>
                 </ul>
 			</li>
+
+			<li class='has-sub'><a href='#'><span>UNIMED</span></a>
+                  <ul>
+                    <li class='last'><a href='admin/geral/pagamentoslistaunimed.php' target="centro"><span>Registro de Pagamentos</span></a></li>
+                    <li class='last'><a href='admin/geral/relpagamentosunimed.php' target="centro"><span>Relat&oacute;rios de Pagamentos</span></a></li>
+                  </ul>
+            </li>
+
 		</ul>
 
 	</li>

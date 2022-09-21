@@ -224,7 +224,7 @@ if ($_SESSION['s_logado']) {
 
 print "<br><div class='banner'>
 <font size='5' face='Sans-Serif'".$copyright2."><b>"."M&oacute;dulo Carn&ecirc;"."</b></font><br><br>
-<font size='2' face='Sans-Serif' color='#1E90FF'".$copyright2."><b>"."Vers&atilde;o 2.22.02"."</b></font><br>
+<font size='2' face='Sans-Serif' color='#1E90FF'".$copyright2."><b>"."Vers&atilde;o 2.22.09"."</b></font><br>
 <font size='1' face='Sans-Serif' color='#1E90FF'".$copyright1."><b><br>"."&copy; copyright - MCJ Assessoria Hospitalar e Inform�tica LTDA Todos os Direitos Reservados"."</b></font>
 </div>";
 print "</td></tr>";	

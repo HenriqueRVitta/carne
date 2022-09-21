@@ -21,7 +21,7 @@
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
-	print "<BODY onLoad='document.pagamentoslista.idSearch.focus();'bgcolor='".BODY_COLOR."'>";
+	print "<BODY onLoad='document.pagamentoslistaunimed.idSearch.focus();'bgcolor='".BODY_COLOR."'>";
 
 
 	$fecha = "";
@@ -37,9 +37,8 @@
 		$search = "";
 	
 
-	print "<BR><B><font size=4>"."Administra&ccedil;&atilde;o de Pagamentos"."</font></B><BR>";
-
-	print "<FORM name='pagamentoslista' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return valida()\">";
+	print "<BR><B><font size=4>"."Administra&ccedil;&atilde;o de Pagamentos - UNIMED"."</font></B><BR>";
+	print "<FORM name='pagamentoslistaunimed' method='POST' action='".$_SERVER['PHP_SELF']."' onSubmit=\"return valida()\">";
 
 	$PAGE = new paging_("PRINCIPAL");
 	$PAGE->setRegPerPage($_SESSION['s_page_size']);
@@ -56,7 +55,11 @@
        	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
-       	$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, space(25) as nome, p.docfinanceiro FROM carne_titular c left Join carne_pagamentos p on p.idcliente=c.id ";
+       	$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrunimed, p.vlrcontribuicao, p.taxa, p.mesano, space(25) as nome, p.docfinanceiro ".
+		" FROM carne_titular c left Join carne_pagamentos p on p.idcliente=c.id ".
+		" left join carne_contratos t on t.idtitular = c.id".
+		" left join carne_tipoplano tp on tp.id = t.plano";
+
 		if (isset($_GET['cod'])) {
 			
 			$query.= " WHERE c.id = ".$_GET['cod']." ";
@@ -110,7 +113,6 @@
 					
 				} else {
 					
-					//$query.= " where c.id = ".trim(substr($_POST['search'],0,8))."";	
 					$nPos = 4;
 					
 					if(strlen($_POST['search'])==9) {
@@ -177,12 +179,9 @@
 		}
 
 		if($cond==0) {
-			$query.=" Where c.unidade =".$_SESSION['s_local']." ORDER BY p.id desc limit 50";
+			$query.=" Where c.unidade =".$_SESSION['s_local']." and tp.descricao like '%Unime%' ORDER BY p.id desc limit 50";
 		} else {
-			
-			//$query.=" and c.unidade =".$_SESSION['s_local']." ORDER BY p.id desc limit 50";
-			$query.=" and c.unidade =".$_SESSION['s_local']." ORDER BY p.mesano desc limit 50";
-			
+			$query.=" and c.unidade =".$_SESSION['s_local']." and tp.descricao like '%Unime%' ORDER BY p.mesano desc limit 50";
 		}
 
 		$querylista = $query;
@@ -229,7 +228,7 @@
 		// Se nada encontrado fa�o a pesquisa em carne_dependente
 		if ($registros == 0) {
 
-			$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrpago, p.taxa, p.mesano, d.nome, p.docfinanceiro FROM carne_titular c Join carne_dependente d on d.idtitular = c.id ".
+			$query = "SELECT c.*, p.parcelamento, p.databaixa, p.vlrunimed, p.vlrcontribuicao, p.taxa, p.mesano, d.nome, p.docfinanceiro FROM carne_titular c Join carne_dependente d on d.idtitular = c.id ".
 		    " Join carne_pagamentos p on p.idcliente=c.id Where d.nome like '%".trim($search)."%' limit 1000";
 			$querylista = $query;
 			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1! '.$query);		
@@ -243,10 +242,7 @@
 
 			
 			echo "<tr><td colspan='4'>".mensagem('Nenhum registro encontrado...')."</td></tr>";
-			
-			//echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
-	 	    //echo "<script>redirect('pagamentos.php?cod=".$carne.$mesano."&action=incluir&cellStyle=true');</script>";
-	 	    
+				 	    
 	 	    exit;
 			
 		}
@@ -329,8 +325,8 @@
 			}
 			
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line'>"."Cliente"."</TD>"."<td class='line' width='10%'>"."C&oacute;digo"."</TD>"."<td class='line' width='10%'>"."Nro Carn&ecirc;"."</TD>"."<td class='line'>"."Data Pagto"."</TD>"."<td class='line'>"."Compet&ecirc;ncia"."</TD>"."<td class='line'>"."Vlr Pago"."</TD>".			
-			"<td class='line'>"."Parcelado"."</TD>"."<td class='line' align='center'>"."PAGAR/CONSULTAR"."</TD></tr>";
+			print "<TR class='header'><td class='line'>"."Cliente"."</TD>"."</TD>"."<td class='line'>"."Data Pagto"."</TD>"."<td class='line'>"."Compet&ecirc;ncia"."</TD>"."<td class='line'>"."Vlr Unimed"."</TD>".			
+			"<td class='line'>"."Contribui&ccedil;&atilde;o"."</TD>"."<td class='line' align='center'>"."PAGAR/CONSULTAR"."</TD></tr>";
 			
 			$j=2;
 			$id = "";
@@ -373,8 +369,6 @@
 				} else {
 					print "<td class='line'>".$row['nometitular']."</td>";
 				}
-				print "<td class='line'>".$row['id']."</td>";
-				print "<td class='line'>".$row['nrocarne']."</td>";
 				
 				$dtbaixa = str_replace('/','',substr(converte_datacomhora($row['databaixa']),0,10));
 				
@@ -382,21 +376,20 @@
 					print "<td class='line'>INADIMPLENTE</td>";
 					print "<td class='line'>INADIMPLENTE</td>";
 					print "<td class='line'>INADIMPLENTE</td>";
+					print "<td class='line'>INADIMPLENTE</td>";
 				} else {
 					print "<td class='line'>".mask($dtbaixa,'##/##/####')."</td>";
 					print "<td class='line'>".invertecomp($row['mesano'],1)."</td>";
-					print "<td class='line'>".$row['vlrpago']."</td>";
+					print "<td class='line'>".$row['vlrunimed']."</td>";
+					print "<td class='line'>".$row['vlrcontribuicao']."</td>";
 				}
 				
-
-				if($row['parcelamento']==1) { $Parcela = "SIM"; } else { $Parcela = "NAO"; }
-				print "<td class='line' align='center'>".$Parcela."</td>";
 				
 				// Se j� foi Exportado para o Financeiro
 				if(!empty($row['docfinanceiro'])){
 					print "<td class='line' align='center'>Exportado Financeiro</td>";					
 				} else {
-					print "<td class='line' align='center'><a onClick=\"redirect('pagamentos.php?cod=".$row['id'].$mesano."&action=incluir&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."table-money-icon.png' title='Registrar/Consultar Pagtos'></a></td>";				
+					print "<td class='line' align='center'><a onClick=\"redirect('pagamentosunimed.php?cod=".$row['id'].$mesano."&action=incluir&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."table-money-icon.png' title='Registrar/Consultar Pagtos'></a></td>";				
 				}
 											
 				print "</TR>";

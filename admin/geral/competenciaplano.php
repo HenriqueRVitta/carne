@@ -1,3 +1,4 @@
+
 <?php
 /*      Copyright 2014 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
@@ -271,13 +272,13 @@
 		if($rowPlano['status']=='1'){ $selected2 = " selected"; } else { $selected2 = "";}
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Status".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
-		print "<select class='select2' name='status' id='idstatus' onBlur='javascript:proximofocus(this.value,document.plano);' disabled='true'>";  
+		print "<select class='select2' name='status' id='idstatus' onBlur='javascript:proximofocus(this.value,document.plano);'>";  
 		print "<option value='0'".$selected1.">Ativo</option>";  
 		print "<option value='1'".$selected2.">Inativo</option>";  
 		print "</select>";  
 		print "</TR></TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inativo".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainativo' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='iddatainativo' onBlur='return doDateVenc(this.id,this.value, 4)' value='".databranco($rowPlano['inativo'])."' disabled='true'></td>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainativo' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='iddatainativo' onBlur='return doDateVenc(this.id,this.value, 4)' value='".databranco($rowPlano['inativo'])."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Compet&ecirc;ncia Inicial".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='compet_ini' maxlength='7' id='idcompet_ini' onkeyup=\"maskIt(this,event,'##/####')\" value='".invertecomp($rowcomp['compet_ini'],1)."'</td>";
@@ -393,9 +394,20 @@
 	// Alterando o registro com UPDATE
 	if ((isset($_POST['submit'])  && ($_POST['submit'] == TRANS('BT_ALTER')))) {	
 
+			if(isset($_POST['status'])){
+				if(empty($_POST['datainativo'])){
+					$inativo = '1900-01-01 00:00:00';
+				} else {
+					$inativo = str_replace("/", "-", $_POST['datainativo']);
+					$inativo = date('Y-m-d H:m:s', strtotime($inativo));
+				}
+
+				$query2 = "UPDATE carne_tipoplano SET status='".$_POST['status']."', inativo='".$inativo."' WHERE id=".$_POST['idplano']." ";
+				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
+			}
 		
 		$query2 = "UPDATE carne_competenciaplano SET idplano='".$_POST['idplano']."', compet_ini='".$compet_ini."', compet_fim='".$compet_fim."', valor=".$_POST['valor'].", valor_dependente=".$_POST['valor_dependente'].", unidade=".$_SESSION['s_local']." WHERE id=".$_POST['idplanocomp']." ";		
-		
+
 		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 		
 		if ($resultado2 == 0)

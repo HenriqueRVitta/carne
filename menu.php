@@ -108,9 +108,9 @@
 	    }
 
 	    if(liberamenu('Relatorio Cadastros Carne')=="S") {
-		    // Menu Relatório dos Cadastros
+		    // Menu Relatï¿½rio dos Cadastros
 	   	    $menuRelCad  = "..|"."Relat&oacute;rios do Cadastro"."|"."|"."Gerenciar Relatorios do cadastro"."|".$iconsPath."reports.png|centro";
-	   	    // Menu Relatório dos Cadastros Titular
+	   	    // Menu Relatï¿½rio dos Cadastros Titular
 	   	    $menuRelCad2  = "...|"."Titular e Dependentes"."|".$admDirPath."relcadastros.php|"."Relatorios de Cadastros"."|".$iconsPath."reports.png|centro";
 	   	    // Relatorio do Cadastro para emissao do cartao do Contribuinte
 			$menuRelCad3  = "...|"."Cart&atilde;o do Contribuinte"."|".$admDirPath."relcartaocontribuinte.php|"."Relatorios de Cadastros"."|".$iconsPath."reports.png|centro";	   	    
@@ -189,7 +189,22 @@
 		    if(liberamenu('Gerar Boleto Cobranca')=="S") {
 			    $menuNFSe  = "...|"."Gerar NFSe"."|".$admDirPath."nfsegerar.php|"."Gera NFSe conforme recebimento do Banco"."|".$iconsPath."orcamento.png|centro";
 		    } else 	$menuNFSe ="...|";
+
+
+		    if(liberamenu('Registro de Pagamentos')=="S") {
+				$menuUnimed  = "..|"."Unimed"."|"."|"."Gerenciar  Cobran&ccedil;a Unimed"."|".$iconsPath."comprar.png|centro";
+		    } else $menuUnimed=".|";
+	    	
 		    
+		    if(liberamenu('Registro de Pagamentos')=="S") {
+			    $menuUnimed1  = "...|"."Registro de Pagamentos"."|".$admDirPath."pagamentoslistaunimed.php|"."Gerenciar Pagamentos Unimed"."|".$iconsPath."money_add.png|centro";
+		    } else 	$menuUnimed1 ="...|";
+
+		    if(liberamenu('Registro de Pagamentos')=="S") {
+			    $menuUnimed2  = "...|"."Relat&oacute;rios de Pagamentos"."|".$admDirPath."relpagamentosunimed.php|"."Relatorio de Pagamentos Unimed"."|".$iconsPath."reports.png|centro";
+		    } else 	$menuUnimed2 ="...|";
+
+
 		    
 	    } else {
 	    	
@@ -210,6 +225,9 @@
 			$menuCobRemessa=".|";
 			$menuArqRetorno=".|";
 			$menuNFSe=".|";
+			$menuUnimed=".|";
+			$menuUnimed1=".|";
+			$menuUnimed2=".|";			
 			$menuConfi=".|";
 			$menuConfi1=".|";
 			$menuConfi2=".|";
@@ -275,6 +293,9 @@ $menuHome= ".|"."Cadastros"."|"."|"."Gerenciar Cadastros do Sistema"."|".$iconsP
 ".$menuCobRemessa."
 ".$menuArqRetorno."
 ".$menuNFSe."
+".$menuUnimed."
+".$menuUnimed1."
+".$menuUnimed2."
 ".$menuConfi."
 ".$menuConfi1."
 ".$menuConfi2."
@@ -288,7 +309,7 @@ $menuHome= ".|"."Cadastros"."|"."|"."Gerenciar Cadastros do Sistema"."|".$iconsP
 
 
 print "<html>";
-print "<title>Carnê</title>";
+print "<title>Carnï¿½</title>";
 print "<link rel=stylesheet type='text/css' href='includes/css/estilos.css.php'>";
 print "</head><body class='menu'>";
 
