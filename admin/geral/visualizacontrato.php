@@ -51,7 +51,8 @@ $resultado = mysqli_query($conec->con,$query) or die("ERRO na Query ".$query);
 $row = mysqli_fetch_array($resultado);
 
 $dtcontrato = str_replace('/','',substr(converte_datacomhora($row['datacontrato']),0,10));
-				
+$nrocontrato = $row['nrocontrato'];
+
 if(substr($row['formapagto'],0,3)=='CAR') {
 $formapagto = "CARNÊ";
 } else {
@@ -68,7 +69,7 @@ $endereco = "";
 <table width="800" border="0" cellspacing="0" cellpadding="0" BGCOLOR="#FFFFFF">
   <tr>
     <th scope="col"><img src="../../logo.png" width="335" height="100" alt="agenda" align="left"/></th>
-	<th width="379" scope="col" align="left"><h2>CONTRATO DE ADESÃO</h2></th>
+	<th width="379" scope="col" align="left"><h2>CONTRATO DE ADESÃO - <?php echo $nrocontrato; ?></h2></th>
   </tr>
 </table>
 <table width="800" border="0" cellspacing="0" cellpadding="0">

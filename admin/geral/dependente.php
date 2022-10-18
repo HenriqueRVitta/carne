@@ -140,7 +140,7 @@
 			print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line' width='40%'>"."Nome Dependente"."</TD>"."<td class='line' width='30%'>"."TITULAR"."<td class='line' width='10%'>"."Cobrar no Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Data Nasc"."</TD>".
+			print "<TR class='header'><td class='line' width='40%'>"."Nome Dependente"."</TD>"."<td class='line' width='30%'>"."TITULAR"."<td class='line' width='10%'>"."Cobrar no Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
@@ -165,6 +165,7 @@
 				print "<td class='line'>".$row['id']."</td>";
 				$dtnasc = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
 				print "<td class='line'>".mask($dtnasc,'##/##/####')."</td>";
+				print "<td class='line'>".$row['situacao']."</td>";
 				print "<td class='line'><a onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
 
 				if(liberamenu('Excluir Dependentes')=="N"){

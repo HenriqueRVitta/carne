@@ -170,7 +170,7 @@ body {
     <th scope="col">Data de Nascimento</th>
   </tr>
 <?php 
-		$query = "SELECT d.id,d.nome,d.datanasc,p.descricao as parentesco from carne_dependente d Left Join carne_tipodependente p on p.id = d.parentesco where d.idtitular=".$_GET['cod']." order by d.nome desc";
+		$query = "SELECT d.id,d.nome,d.datanasc,p.descricao as parentesco from carne_dependente d Left Join carne_tipodependente p on p.id = d.parentesco where d.idtitular=".$_GET['cod']." and d.situacao = 'ATIVO' order by d.nome desc";
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 			while ($rowb = mysqli_fetch_array($resultado))
 			{

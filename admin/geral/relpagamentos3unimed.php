@@ -152,7 +152,7 @@ ob_start();
 
         // k.vlrunimed, k.vlrcontribuicao, k.vlrmensal, k.apene, k.tarifa, k.juros, k.utilizacao, k.outros
 
-        $totalPago = ($row['vlrunimed']+$row['vlrcontribuicao']+$row['apene']+$row['tarifa']+$row['juros']+$row['utilizacao']);
+        $totalPago = ($row['vlrunimed']+$row['vlrmensal']+$row['vlrcontribuicao']+$row['apene']+$row['tarifa']+$row['juros']+$row['utilizacao']);
 
 		$lcString.= "<tr>
 		<td align='left'>".mask($dtpagto,'##/##/####')."</TD>

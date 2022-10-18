@@ -1738,7 +1738,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 					print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 					print "</tr>";
 					//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-					print "<TR class='header'><td class='line' width='70%'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar no Boleto"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>".
+					print "<TR class='header'><td class='line' width='70%'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar no Boleto"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
 						"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 					
 					$j=2;
@@ -1763,6 +1763,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 						print "<td class='line'>".$row['nrocarteira']."</td>";
 						$dtnasc = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
 						print "<td class='line'>".mask($dtnasc,'##/##/####')."</td>";
+						print "<td class='line'>".$row['situacao']."</td>";
 						print "<td class='line'><a onClick=\"redirect('abastitular.php?action=editar&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
 		
 						if(liberamenu('Excluir Dependentes')=="N"){
