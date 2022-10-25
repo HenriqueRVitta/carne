@@ -291,14 +291,14 @@
 		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='apene' maxlength='20' id='idvlrApene' value='".$valor."' onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 		print "</TR><TR>";
 		print "<TD width='10%' lign='left' bgcolor='".TD_COLOR."'>Tarifa:</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='tarifa' maxlength='20' id='idtarifa' value='".$valor."' onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='tarifa' maxlength='20' id='idtarifa' value='".$valor."' onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
         print "<TD width='10%' bgcolor='".TD_COLOR."'>Juros:</TD>";
-		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='juros' maxlength='20' id='idjuros' value='".$valor."' onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='juros' maxlength='20' id='idjuros' value='".$valor."' onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 		print "</TR><TR>";
 		print "<TD width='10%' lign='left' bgcolor='".TD_COLOR."'>utilizaçao:</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='utilizacao' maxlength='20' id='idutilizacao' value='".$valor."' onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='utilizacao' maxlength='20' id='idutilizacao' value='".$valor."' onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
         print "<TD width='10%' bgcolor='".TD_COLOR."'>Outros:</TD>";
-		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='outros' maxlength='20' id='idoutros' value='".$valor."' onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='outros' maxlength='20' id='idoutros' value='".$valor."' onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 
         print "</TR>";
 				
@@ -412,7 +412,7 @@
 				print "<td class='line'>".$row['juros']."</td>";
 				print "<td class='line'>".$row['utilizacao']."</td>";
 
-                $totalPago = ($row['vlrunimed']+$row['vlrcontribuicao']+$row['vlrmensal']+$row['apene']+$row['tarifa']+$row['juros']+$row['utilizacao']);
+                $totalPago = ($row['vlrunimed']+$row['vlrcontribuicao']+$row['apene']+$row['tarifa']+$row['juros']+$row['utilizacao']+$row['outros']);
 
                 print "<td class='line'>".$totalPago."</td>";
 
@@ -543,14 +543,14 @@
 		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='apene' maxlength='20' id='idvlrApene' value=".$rowA['apene']." onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 		print "</TR><TR>";
 		print "<TD width='10%' lign='left' bgcolor='".TD_COLOR."'>Tarifa:</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='tarifa' maxlength='20' id='idtarifa' value=".$rowA['tarifa']." onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='tarifa' maxlength='20' id='idtarifa' value=".$rowA['tarifa']." onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
         print "<TD width='10%' bgcolor='".TD_COLOR."'>Juros:</TD>";
-		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='juros' maxlength='20' id='idjuros' value=".$rowA['juros']." onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='juros' maxlength='20' id='idjuros' value=".$rowA['juros']." onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 		print "</TR><TR>";
 		print "<TD width='10%' lign='left' bgcolor='".TD_COLOR."'>utilizaçao:</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='utilizacao' maxlength='20' id='idutilizacao' value=".$rowA['utilizacao']." onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='utilizacao' maxlength='20' id='idutilizacao' value=".$rowA['utilizacao']." onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
         print "<TD width='10%' bgcolor='".TD_COLOR."'>Outros:</TD>";
-		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='outros' maxlength='20' id='idoutros' value=".$rowA['outros']." onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
+		print "<TD width='30%' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text4' name='outros' maxlength='20' id='idoutros' value=".$rowA['outros']." onblur=\"valormensal(this);\" onkeypress=\"return formatar_moeda(this,',','.',event);\"</TD>";
 
 		print "</TR><TR>";
 
@@ -642,7 +642,7 @@
 		$utilizacao = str_replace(',','',$_POST['utilizacao']);
 		$outros = str_replace(',','',$_POST['outros']);
 
-		$totalPago = ($vlrunimed+$vlrcontribuicao+$vlrmensal+$apene+$tarifa+$juros+$utilizacao);
+		$totalPago = ($vlrunimed+$vlrcontribuicao+$outros+$apene+$tarifa+$juros+$utilizacao);
 		$totalPago = str_replace(',','',$totalPago);
 
 		$_SESSION['localpagto'] = $_POST['localpagto'];
@@ -736,11 +736,22 @@
 /* Formata��o para qualquer mascara */
 
 function valormensal(nVal){
+
+	/*
 	var nUnimed = document.getElementById('idvlrunimed').value;
 	var nContribuicao = document.getElementById('idvlrcontribuicao').value;
 	var nApene = document.getElementById('idvlrApene').value;
-	var nTotal = parseFloat(nUnimed) + parseFloat(nContribuicao) + parseFloat(nApene);
+	*/
+	var idtarifa = $('#idtarifa').val().replace(",","");;
+	var idjuros = $('#idjuros').val().replace(",","");;
+	var idutilizacao = $('#idutilizacao').val().replace(",","");;
+	var idoutros = $('#idoutros').val().replace(",","");;
+	var nUnimed = $('#idvlrunimed').val().replace(",","");
+	var nContribuicao = $('#idvlrcontribuicao').val().replace(",","");
+	var nApene = $('#idvlrApene').val().replace(",","");
+	var nTotal = parseFloat(nUnimed) + parseFloat(nContribuicao) + parseFloat(nApene) + parseFloat(idtarifa) + parseFloat(idjuros) + parseFloat(idutilizacao) + parseFloat(idoutros);
 	document.getElementById('idvlrmensal').value = nTotal.toFixed(2);
+
 }
 
 
