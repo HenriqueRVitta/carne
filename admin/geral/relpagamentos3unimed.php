@@ -145,7 +145,15 @@ ob_start();
     $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 	$i=0;
 	$lntotalpg = 0.00;
-	
+	$Totalvlrunimed = 0.00;
+	$Totalvlrcontribuicao = 0.00;
+	$Totalapene = 0.00;
+	$Totaltarifa = 0.00;
+	$Totaljuros = 0.00;
+	$Totalutilizacao = 0.00;
+	$Totaloutros = 0.0;
+	$Totalvlrmensal = 0.00;
+
 	while($row = mysqli_fetch_array($resultado)){
 		
 		$dtpagto = str_replace('/','',substr(converte_datacomhora($row['databaixa']),0,10));
@@ -173,10 +181,46 @@ ob_start();
 		
 		$lntotalpg+=$totalPago;
 		
+		$Totalvlrunimed+=$row['vlrunimed'];
+		$Totalvlrcontribuicao+=$row['vlrcontribuicao'];
+		$Totalapene+=$row['apene'];
+		$Totaltarifa+=$row['tarifa'];
+		$Totaljuros+=$row['juros'];
+		$Totalutilizacao+=$row['utilizacao'];
+		$Totaloutros+=$row['outros'];
+		$Totalvlrmensal+=$row['vlrmensal'];
+	
 		$i++;
 		
 	}
-	
+
+
+	$Totalvlrunimed+=$row['vlrunimed'];
+	$Totalvlrcontribuicao+=$row['vlrcontribuicao'];
+	$Totalapene+=$row['apene'];
+	$Totaltarifa+=$row['tarifa'];
+	$Totaljuros+=$row['juros'];
+	$Totalutilizacao+=$row['utilizacao'];
+	$Totaloutros+=$row['outros'];
+	$Totalvlrmensal+=$row['vlrmensal'];
+
+	// Total das Colunas
+	$lcString.= "<tr>
+	<td></TD>
+	<td></TD>
+	<td align='right'>".number_format($Totalvlrunimed,2,",",".")."</TD>
+	<td align='right'>".number_format($Totalvlrcontribuicao,2,",",".")."</TD>
+	<td align='right'>".number_format($Totalvlrmensal,2,",",".")."</TD>
+	<td align='right'>".number_format($Totalapene,2,",",".")."</TD>
+	<td align='right'>".number_format($lntotalpg,2,",",".")."</TD>
+	<td align='right'>".number_format($Totaltarifa,2,",",".")."</TD>
+	<td align='right'>".number_format($Totaljuros,2,",",".")."</TD>
+	<td align='right'>".number_format($Totalutilizacao,2,",",".")."</TD>
+	<td></TD>
+	<td align='right'>".number_format($Totaloutros,2,",",".")."</TD>
+	</tr>";
+
+
 	$lcString.= "</table>";
 	
 	$lcString.="<p>&nbsp;</p>";
@@ -186,16 +230,48 @@ ob_start();
   	<tr>
     <th align='center'>RESUMO</th>
     </tr>
-  	<tr>
+	<tr>
+    <td align='left'>Total Unimed</td>
+    <td align='right'>".number_format($Totalvlrunimed,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Contrib</td>
+    <td align='right'>".number_format($Totalvlrcontribuicao,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Vlr Mensal</td>
+    <td align='right'>".number_format($Totalvlrmensal,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Apene</td>
+    <td align='right'>".number_format($Totalapene,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Tarifa</td>
+    <td align='right'>".number_format($Totaltarifa,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Juros</td>
+    <td align='right'>".number_format($Totaljuros,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Utiliz</td>
+    <td align='right'>".number_format($Totalutilizacao,2,",",".")."</td>    
+    </tr>
+	<tr>
+    <td align='left'>Total Outros</td>
+    <td align='right'>".number_format($Totaloutros,2,",",".")."</td>    
+    </tr>
+	<tr>
     <td align='left'>Total Pago</td>
     <td align='right'>".number_format($lntotalpg,2,",",".")."</td>    
     </tr>
-  	<tr>
+	<tr>
     <td align='left'>Total Registros listados</td>
     <td align='right'>".$i."</td>    
     </tr>
     </table>";
-
+	// FIM Resumo
 $date = date("d/m/Y H:i");
 
 $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
