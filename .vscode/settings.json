@@ -8,8 +8,8 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MariaDB",
-            "name": "Carnê",
-            "database": "sagwindb",
+            "name": "Regulação",
+            "database": "regulacao",
             "username": "root",
             "password": "vitta"
         }

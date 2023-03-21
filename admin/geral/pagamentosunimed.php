@@ -698,7 +698,7 @@
 		$utilizacao = str_replace(',','',$_POST['utilizacao']);
 		$outros = str_replace(',','',$_POST['outros']);
 
-		$totalPago = ($vlrunimed+$vlrmensal+$vlrcontribuicao+$apene+$tarifa+$juros+$utilizacao);
+		$totalPago = ($vlrunimed+$vlrcontribuicao+$apene+$tarifa+$juros+$utilizacao);
 		$totalPago = str_replace(',','',$totalPago);
 
 		// k.vlrunimed, k.vlrcontribuicao, k.vlrmensal, k.apene, k.tarifa, k.juros, k.utilizacao, k.outros

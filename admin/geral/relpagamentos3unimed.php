@@ -110,7 +110,7 @@ ob_start();
 	// Fim Dados Cabecalho
 		
 	$pcordem	= " order by c.nometitular,k.databaixa";
-    $lcgroup =  " group by k.databaixa,c.nometitular";
+    $lcgroup =  " group by k.databaixa,k.mesano,c.nometitular";
 
 	
 	// Come�a aqui a listar os registros

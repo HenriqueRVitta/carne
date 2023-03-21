@@ -9,25 +9,49 @@
 		Relat�rio dos Anal�tico do Cadastro de Titular
 
 */
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+error_reporting(E_ALL);
 
-	session_start();
+
+date_default_timezone_set('America/Sao_Paulo');
+
+include ("../../includes/classes/conecta.class.php");
+include ("../../includes/classes/auth.class.php");
+include ("../../includes/classes/dateOpers.class.php");
+include ("../../includes/config.inc.php");
+include ("../../includes/functions/funcoes.inc");
+
+ob_clean();
+ob_start();
+
+$conec = new conexao;
+$conec->conecta('MYSQL');
+
+
+//	session_start();
 
 // Defini��es da barra de progresso
 //==============================================================
-define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
+//////define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
 $JpgUseSVGFormat = true;
 
-define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
+/////define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
 //==============================================================
 
 
 ini_set('memory_limit', '-1');
 	
 
-	include("../../includes/mpdf54/mpdf.php");	
-	include ("../../includes/include_geral_III.php");
+//	include("../../includes/mpdf54/mpdf.php");	
+//	include ("../../includes/include_geral_III.php");
 
-	$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
+	//$lnCompet = substr($_POST['mesano'],3,4).substr($_POST['mesano'],0,2);
+
+	$lcString = '';
+	$pcwhere = "";
+	$lcBorda = "";
 
 	$dtinicial = '1900-01-01';	
 	$dtfinal = date('Y-m-d');
@@ -132,7 +156,7 @@ ini_set('memory_limit', '-1');
 		$pcordem	= " order by c.id";
 	    break;
 	  case 2:
-		$pcordem	= " order by c.nometitular";
+		$pcordem	= " order by c.nometitular, z.nome";
 		break;
 	  case 3:
 		$pcordem	= " order by c.registro";
@@ -141,16 +165,17 @@ ini_set('memory_limit', '-1');
 		$pcordem	= " order by c.cidade";
 	  	break;
   	  default:
-		$pcordem	= " order by c.nometitular";
+		$pcordem	= " order by c.nometitular, z.nome";
 	}
 
 	// Come�a aqui a listar os registros
-	$query = "SELECT c.id, c.nometitular, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
+	$query = "SELECT c.id, c.nometitular, z.nome as dependente, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
 	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
-	d.compet_ini, d.compet_fim FROM carne_titular c
+	d.valor_dependente, d.compet_ini, d.compet_fim FROM carne_titular c
 	left Join carne_contratos p on p.idtitular = c.id
 	left Join carne_tipoplano q on q.id = p.plano
 	left Join carne_competenciaplano d on d.idplano = p.plano
+	left join carne_dependente z on z.idtitular = c.id
 	Where c.registro between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere." ".$pcordem;
               
       //print_r($query);
@@ -158,15 +183,16 @@ ini_set('memory_limit', '-1');
       //break;
       
 	// Cabe�alho do regisrtos encontrados
-	$lcString.= "<table style='font-family: serif; font-size: 9pt; color: #000088;' width='800' border='1' cellspacing='1' cellpadding='1'>
+	$lcString.= "<table width='100%' border='1' cellspacing='2' cellpadding='2' align='center'>
 	<tr>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
 	<th scope='col' align='center'>Nome do Cliente</th>
-	<th scope='col' align='center'>Cidade</th>
+	<th scope='col' align='center'>Nome Dependente</th>
 	<th scope='col' align='center'>Telefone</th>	
 	<th scope='col' align='center'>Plano</th>	
 	<th scope='col' align='center'>Data Inicio</th>
-	<th scope='col' align='center'>Vlr Plano</th>
+	<th scope='col' align='center'>Vlr Dependente</th>
+	<th scope='col' align='center'>Vlr Titular</th>
 	</tr>";
        
     $resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
@@ -174,6 +200,7 @@ ini_set('memory_limit', '-1');
 	$inativos = 0;
 	$geral = 0;
 	$vlrtotal = 0;
+	$vlrtotaldep = 0;
 	
 	
 	while($row = mysqli_fetch_array($resultado)){
@@ -186,27 +213,29 @@ ini_set('memory_limit', '-1');
 		$lcString.= "<tr>
 		<td align='center'>".retira_acentos_UTF8($nroreg)."</TD>
 		<td align='left'>".retira_acentos_UTF8($row['nometitular'])."</TD>
-		<td align='center'>".retira_acentos_UTF8($row['cidade'])."</TD>
+		<td align='left'>".retira_acentos_UTF8($row['dependente'])."</TD>
 		<td align='center'>".mask($row['telefoneres'],'(##)####-#####')."</TD>
 		<td align='left'>".$row['descricao']."</TD>
 		<td align='center'>".mask($dtreg,'##/##/####')."</TD>
+		<td align='right'>".$row['valor_dependente']."</TD>
 		<td align='right'>".$row['valor']."</TD>
 		</tr>";
 				
 		$vlrtotal+=$row['valor'];
+		$vlrtotaldep+=$row['valor_dependente'];
 		
 
 		$i++;		
 		
 	}
 	
-	$geral= $i + $inativo;
+	$geral= $i + $inativos;
 	$lcString.= "</table>";
 	
-	//<p>&nbsp;</p>";
+	$lcString.="<p>&nbsp;</p>";
 	
 	// Resumo
-	$lcString.= "<table width='100%' border='0'>
+	$lcString.= "<table width='100%' border='1' cellspacing='1' cellpadding='1'>
   	<tr>
     <th align='center'>RESUMO</th>
     </tr>
@@ -215,34 +244,16 @@ ini_set('memory_limit', '-1');
     <td align='right'>".$geral."</td>    
     </tr>
   	<tr>
-    <td align='left'>Total Geral Valor Plano</td>
+    <td align='left'>Total Geral Plano Titular</td>
     <td align='right'>".number_format($vlrtotal,2,",",".")."</td>    
     </tr>
-    
+	<tr>
+    <td align='left'>Total Geral Plano Dependente</td>
+    <td align='right'>".number_format($vlrtotaldep,2,",",".")."</td>    
+    </tr>
     </table>";
-	
-//print_r($lcString);
-//break;
 
-/*
-$mpdf=new mPDF_('s','A4','','',25,15,21,22,10,10); 
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
-*/
-		
-
-
-//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-
-$date = date("d/m/Y g:i a");
+$date = date("d/m/Y H:i");
 
 
 $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
@@ -252,30 +263,11 @@ $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical
 </tr>
 </table>
 <table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 14pt; color: #000000;'><tr>
-<td width='33%' align='center'>Relat&oacute;rio dos Titulares de Carn&ecirc;</td>
+<td width='33%' align='center'>Relat&oacute;rio dos Titulares e Dependentes de Carn&ecirc;</td>
 </tr>
 </table>".$lcBorda."";
-
-$headerE = "<table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
-<td width='33%'>".$date."</span></td>
-<td width='33%' align='center'><img src='../../logo.png' width='126px' /></td>
-<td width='33%' style='text-align: right;'><span style='font-weight: bold;'>Pag. <span style='font-size:11pt;'>{PAGENO}</span></td>
-</tr>
-</table>
-<table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 14pt; color: #000000;'><tr>
-<td width='33%' align='center'>Relat&oacute;rio dos Titulares de Carn&ecirc;</td>
-</tr>
-</table>".$lcBorda."";
-
 
 $footer = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
-<td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
-</td>
-</table>";
-
-
-$footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
 <div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
 </td>
@@ -303,38 +295,14 @@ echo $dadosXls;
 } else {
 	
 
-//$lcString = $header.$lcString.$footer;
-//print $lcString;
+$html = $header.$lcString.$footer;
 
+//print_r($html);
 
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
+include("../../includes/mpdf/vendor/autoload.php");
 
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
-
-$html = '
-<h1>mPDF</h1>
-<h2>Headers & Footers Method 2</h2>
-<h3>Odd / Right page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-<pagebreak />
-<h3>Even / Left page</h3>
-<p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
-';
-
-$mpdf->packTableData = true;	// required for cacheTables
-$mpdf->simpleTables = false;  // Cannot co-exist with cacheTables
-
-$mpdf->WriteHTML($lcString);
-
+$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
 
 exit;
