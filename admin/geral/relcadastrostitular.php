@@ -1,14 +1,15 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Inform�tica LTDA
+/*      Copyright 2015 MTD Assessoria Hospitalar
 
         Desenvolvedor: Carlos Henrique R Vitta
-		Data: 08/02/2015 09:55
+		Data: 16/05/2023 10:18 GLPI 31364
 
-		* M�dulo Carn� *
+		* Módulo Carnê *
 
-		Relat�rio dos Anal�tico do Cadastro de Titular
+		Relatório Analítico do Cadastro de Titular
 
 */
+
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
@@ -156,7 +157,7 @@ ini_set('memory_limit', '-1');
 		$pcordem	= " order by c.id";
 	    break;
 	  case 2:
-		$pcordem	= " order by c.nometitular, z.nome";
+		$pcordem	= " order by c.nometitular";
 		break;
 	  case 3:
 		$pcordem	= " order by c.registro";
@@ -165,17 +166,16 @@ ini_set('memory_limit', '-1');
 		$pcordem	= " order by c.cidade";
 	  	break;
   	  default:
-		$pcordem	= " order by c.nometitular, z.nome";
+		$pcordem	= " order by c.nometitular";
 	}
 
 	// Come�a aqui a listar os registros
-	$query = "SELECT c.id, c.nometitular, z.nome as dependente, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
+	$query = "SELECT c.id, c.nometitular, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
 	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
 	d.valor_dependente, d.compet_ini, d.compet_fim FROM carne_titular c
 	left Join carne_contratos p on p.idtitular = c.id
 	left Join carne_tipoplano q on q.id = p.plano
 	left Join carne_competenciaplano d on d.idplano = p.plano
-	left join carne_dependente z on z.idtitular = c.id
 	Where c.registro between '".$dtinicial."' and '".$dtfinal."' ".$pcwhere." ".$pcordem;
               
       //print_r($query);
@@ -186,12 +186,10 @@ ini_set('memory_limit', '-1');
 	$lcString.= "<table width='100%' border='1' cellspacing='2' cellpadding='2' align='center'>
 	<tr>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
-	<th scope='col' align='center'>Nome do Cliente</th>
-	<th scope='col' align='center'>Nome Dependente</th>
+	<th scope='col' align='center'>Nome do Titular</th>
 	<th scope='col' align='center'>Telefone</th>	
 	<th scope='col' align='center'>Plano</th>	
 	<th scope='col' align='center'>Data Inicio</th>
-	<th scope='col' align='center'>Vlr Dependente</th>
 	<th scope='col' align='center'>Vlr Titular</th>
 	</tr>";
        
@@ -213,17 +211,13 @@ ini_set('memory_limit', '-1');
 		$lcString.= "<tr>
 		<td align='center'>".retira_acentos_UTF8($nroreg)."</TD>
 		<td align='left'>".retira_acentos_UTF8($row['nometitular'])."</TD>
-		<td align='left'>".retira_acentos_UTF8($row['dependente'])."</TD>
 		<td align='center'>".mask($row['telefoneres'],'(##)####-#####')."</TD>
 		<td align='left'>".$row['descricao']."</TD>
 		<td align='center'>".mask($dtreg,'##/##/####')."</TD>
-		<td align='right'>".$row['valor_dependente']."</TD>
 		<td align='right'>".$row['valor']."</TD>
 		</tr>";
 				
 		$vlrtotal+=$row['valor'];
-		$vlrtotaldep+=$row['valor_dependente'];
-		
 
 		$i++;		
 		
@@ -247,10 +241,6 @@ ini_set('memory_limit', '-1');
     <td align='left'>Total Geral Plano Titular</td>
     <td align='right'>".number_format($vlrtotal,2,",",".")."</td>    
     </tr>
-	<tr>
-    <td align='left'>Total Geral Plano Dependente</td>
-    <td align='right'>".number_format($vlrtotaldep,2,",",".")."</td>    
-    </tr>
     </table>";
 
 $date = date("d/m/Y H:i");
@@ -263,7 +253,7 @@ $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical
 </tr>
 </table>
 <table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 14pt; color: #000000;'><tr>
-<td width='33%' align='center'>Relat&oacute;rio dos Titulares e Dependentes de Carn&ecirc;</td>
+<td width='33%' align='center'>Relat&oacute;rio dos Titulares do Carn&ecirc;</td>
 </tr>
 </table>".$lcBorda."";
 

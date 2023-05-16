@@ -153,8 +153,15 @@
 		print "<option value='2'>Sim</option>";
 		print "</select>";
 
-		print "</TR><TR>";
-		
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Titular/Dependente".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='imprimirambos' id='imprimirambos'>";  
+		print "<option value=1 Selected>Ambos</option>";
+		print "<option value=2>Somente Titular</option>";
+		print "<option value=3>Somente Dependentes</option>";
+		print "</select>";
+
+		print "</TR><TR>";		
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' value='PROCESSAR' name='submit' >";
 
 		print "</TR></TR>";
@@ -259,18 +266,6 @@ function comboTiporel2(Id, pStr) {
 }
 
 </script>
-
-<script type="text/javascript">
-<!--
-	function valida(){
-		var ok = validaForm('calendario1111','','Data Inicial',1);
-		var ok = validaForm('calendario2222','','Data Final',1);
-		return ok;
-	}
-
--->
-</script>
-
 
 <?php 
 print "</body>";
