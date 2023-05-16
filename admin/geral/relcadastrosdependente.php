@@ -288,8 +288,8 @@ echo $dadosXls;
 
 $html = $header.$lcString.$footer;
 
-//print_r($html);
-
+print_r($html);
+/*
 include("../../includes/mpdf/vendor/autoload.php");
 
 $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
@@ -297,7 +297,7 @@ $mpdf->WriteHTML($html);
 $mpdf->Output();
 
 exit;
-
+*/
 }
 
 ?>

@@ -71,7 +71,7 @@ ini_set('memory_limit', '-1');
 	
 
 		if($plano<> -1 ) {
-			$pcwhere.=" and p.plano =".$plano;
+			$pcwhere.=" and p.plano = ".$plano;
 		}
 
 		
@@ -126,7 +126,7 @@ ini_set('memory_limit', '-1');
 			while($row = mysqli_fetch_array($commit)){
 
 				$lcBorda.= "<td align='right'>Tipo de Plano:</TD>
-				<td align='left'>".$row['descricao']."</TD>";
+				<td align='left'>".trim($row['descricao'])."</TD>";
 				
 				$i++;
 			}
@@ -287,14 +287,14 @@ echo $dadosXls;
 
 $html = $header.$lcString.$footer;
 
-//print_r($html);
-
+print_r($html);
+/*
 include("../../includes/mpdf/vendor/autoload.php");
 
 $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
 $mpdf->WriteHTML($html);
 $mpdf->Output();
-
+*/
 exit;
 
 }
