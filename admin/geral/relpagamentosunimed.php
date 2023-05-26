@@ -1,17 +1,5 @@
 <?php
-/*      Copyright 2015 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
-        Desenvolvedor: Carlos Henrique R Vitta
-		Data: 07/01/2015 17:44
-
-		* M�dulo Carn� *
-
-		Essa aplica��o tem como objetivo geral controlar os Titulares e dependentes 
-		que fazem �contribui��o� mensal com a Unidade de Sa�de (Hospital) para obter 
-		um desconto em realiza��o de atendimentos �Particular� ou at� mesmo algum 
-		diferencial em caso de interna��o SUS
-
-*/
 	session_start();
 	
 	include ("../../includes/include_geral.inc.php");
@@ -95,13 +83,32 @@
 		print "</select>";
 
 		print "</TR><TR>";
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Situa&ccedil;&atilde;o Financeira".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='situacao' id='idsituacao' onChange='return comboInadimplente(this.id,this.value)'>";  
+		print "<option value=1>"."Pagos"."</option>";
+		print "<option value=2>"."Inadimplentes"."</option>";
+		print "</select>";
+		print "</TD>";
 
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Inadimplentes a mais de".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		print "<select class='select2' name='nromeses' id='idnromeses' disabled='true'>";  
+		print "<option value='1' Selected>1 M&ecirc;s</option>";
+		print "<option value='2'>2 Meses</option>";
+		print "<option value='3'>3 Meses</option>";
+		print "<option value='4'>4 Meses</option>";
+		print "<option value='5'>5 Meses</option>";
+		print "<option value='6'>6 Meses</option>";
+		print "</select>";
+		print "</TR><TR>";
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Gerar Arquivo EXCEL".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='gerarexecel' id='idgerarexecel'>";  
 		print "<option value='1' Selected>N&atilde;o</option>";
 		print "<option value='2'>Sim</option>";
 		print "</select>";
+		print "</TD";
 		print "</TR><TR>";
 
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' value='PROCESSAR' name='submit' >";
@@ -208,14 +215,12 @@ function comboTiporel2(Id, pStr) {
 function comboInadimplente(Id, pStr) {
 
 	d = document.getElementById('idnromeses');
-	e = document.getElementById('idinativar');
 	f = document.getElementById('idtiporelatorio');
 
 	// Pagos
 	if(document.getElementById('idsituacao').value == 1) {
 		d.disabled=true;
 		d.value=1;
-		e.value=0;
 	}
 			
 	// Inadimplentes
@@ -226,22 +231,6 @@ function comboInadimplente(Id, pStr) {
 	
 }
 
-function comboMeses(Id, pStr) {
-
-	d = document.getElementById('idinativar');
-
-	// Pagos
-	if(document.getElementById('idnromeses').value == 1) {
-		d.disabled=true;
-		d.value=0;
-	}
-			
-	// Inadimplentes
-	if(document.getElementById('idnromeses').value > 1) {
-		d.disabled=false;
-	}
-	
-}
 </script>
 
 <script type="text/javascript">

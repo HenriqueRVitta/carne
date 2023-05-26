@@ -9,8 +9,22 @@
 		if($_POST['tiporelatorio'] == 1) {
 		
         $processado = true;
-		// Redireciono com o metodo POST
-		header("Location: relpagamentos3unimed.php", TRUE, 307);
+		// Inadimplentes
+
+		if(isset($_POST['situacao']) && $_POST['situacao'] == 1){
+
+			// Pagos
+			// Redireciono com o metodo POST
+			header("Location: relpagamentos3unimed.php", TRUE, 307);
+		
+		} else {
+
+			// Inadimplentes
+			// Redireciono com o metodo POST
+			header("Location: relinadimplentes_unimed.php", TRUE, 307);
+			
+		}
+
     			
 		}
 	}
