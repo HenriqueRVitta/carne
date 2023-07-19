@@ -169,8 +169,8 @@ ini_set('memory_limit', '-1');
 	}
 
 	// Come�a aqui a listar os registros
-	$query = "SELECT c.id, c.nometitular, z.nome as dependente, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, c.datanasc, 
-	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), c.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
+	$query = "SELECT c.id, c.nometitular, z.nome as dependente, c.endereco, c.numero, c.bairro, c.cep, c.cidade, c.uf, c.registro, c.datainicio, z.datanasc, 
+	c.telefoneres, c.qtdefilhos, c.situacao, FLOOR(DATEDIFF(NOW(), z.datanasc) / 365) as idade, p.nrocontrato, c.nrocarne, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, 
 	d.valor_dependente, d.compet_ini, d.compet_fim FROM carne_titular c
 	left Join carne_contratos p on p.idtitular = c.id
 	left Join carne_tipoplano q on q.id = p.plano
@@ -187,6 +187,8 @@ ini_set('memory_limit', '-1');
 	<tr>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
 	<th scope='col' align='center'>Nome Dependente</th>
+	<th scope='col' align='center'>Data Nasc.</th>
+	<th scope='col' align='center'>Idade</th>
 	<th scope='col' align='center'>Telefone Titular</th>	
 	<th scope='col' align='center'>Plano Titular</th>	
 	<th scope='col' align='center'>Data Inicio</th>
@@ -207,10 +209,19 @@ ini_set('memory_limit', '-1');
 		
 		if($row['nrocarne'] > 0) { $nroreg = $row['nrocarne']; } else { $nroreg = $row['id']; }
 		
+		$dataNascimento = "";
+		$idadePaciente = "";
+		if ($row['datanasc'] != '1900-01-01 00:00:00'){
+			$dataNascimento = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));;
+			$idadePaciente = $row['idade'];
+		}
+
 		
 		$lcString.= "<tr>
 		<td align='center'>".retira_acentos_UTF8($nroreg)."</TD>
 		<td align='left'>".retira_acentos_UTF8($row['dependente'])."</TD>
+		<td align='center'>".mask($dataNascimento,'##/##/####')."</TD>
+		<td align='center'>".$idadePaciente."</TD>				
 		<td align='center'>".mask($row['telefoneres'],'(##)####-#####')."</TD>
 		<td align='left'>".$row['descricao']."</TD>
 		<td align='center'>".mask($dtreg,'##/##/####')."</TD>
@@ -260,7 +271,7 @@ $header = "<table width='100%' style='border-bottom: 1px solid #000000; vertical
 
 $footer = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Informática LTDA - https://www.mtdsistemas.com.br</a></span></div>
 </td>
 </table>";
 
@@ -288,8 +299,8 @@ echo $dadosXls;
 
 $html = $header.$lcString.$footer;
 
-print_r($html);
-/*
+//print_r($html);
+
 include("../../includes/mpdf/vendor/autoload.php");
 
 $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
@@ -297,7 +308,7 @@ $mpdf->WriteHTML($html);
 $mpdf->Output();
 
 exit;
-*/
+
 }
 
 ?>
