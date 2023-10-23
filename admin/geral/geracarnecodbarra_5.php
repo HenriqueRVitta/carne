@@ -95,7 +95,7 @@ function CodigoBarra($numero){
 	
 	session_start();
 
-	include("../../includes/mpdf54/mpdf.php");	
+	//include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
 	$conec = new conexao;
@@ -115,6 +115,7 @@ function CodigoBarra($numero){
 			$pcwhere.=" and t.id =".$titular;
 		}
 
+/*
 $mpdf = new mPDF_(
              '',    // mode - default ''
              '',    // format - A4, for example, default ''
@@ -127,13 +128,9 @@ $mpdf = new mPDF_(
              6,     // margin header
              0,     // margin footer
              'L');  // L - landscape, P - portrait
+*/
 
-             
-//$mpdf->SetDisplayMode('fullpage');
-
-// Comentado para que todas as paginas fiquem com as mesmas formatacoes
-//$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-
+ 
 $date = date("d/m/Y g:i a");
 
 
@@ -148,10 +145,12 @@ $headerE = "";
 $footer = "";
 $footerE = "";
 
+/*
 $mpdf->SetHTMLHeader($header);
 $mpdf->SetHTMLHeader($headerE,'E');
 $mpdf->SetHTMLFooter($footer);
 $mpdf->SetHTMLFooter($footerE,'E');
+*/
 
 $lcString  = '
 <h1>mPDF</h1>
@@ -348,10 +347,13 @@ $lcString  = '
 	
 	$lcString.= "</table>";
 
-$mpdf->ignore_invalid_utf8 = true;
-$mpdf->WriteHTML($lcString);
+	include("../../includes/mpdf/vendor/autoload.php");
 
-$mpdf->Output();
-exit;
+	$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+	$mpdf->WriteHTML($lcString);
+	$mpdf->Output();
+
+	exit;
+
 
 ?>

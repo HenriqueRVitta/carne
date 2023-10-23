@@ -30,7 +30,7 @@
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$titular = $_POST['titular'];
-	$nrocarne = $_POST['nrocarne'];
+	$nrocarne = ""; //$_POST['nrocarne'];
     $pcwhere = "";
     $codigoinicio = $_POST['codigoinicio'];
 	$codigofim = $_POST['codigofim'];
@@ -204,9 +204,10 @@ $footerE = "";
 
 	include("../../includes/mpdf/vendor/autoload.php");
 
-	$mpdf = new \Mpdf\Mpdf(['debug' => true]);
-	$mpdf->WriteHTML($html);
+	$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+	$mpdf->WriteHTML($lcString);
 	$mpdf->Output();
+
 	exit;
 
 ?>

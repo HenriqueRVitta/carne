@@ -96,7 +96,7 @@ function CodigoBarra($numero){
 	
 	session_start();
 
-	include("../../includes/mpdf54/mpdf.php");	
+	//include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
 	$conec = new conexao;
@@ -108,7 +108,7 @@ function CodigoBarra($numero){
 	$dtinicial = Fdate($_POST['datainicio']);
 	$dtfinal = Fdate($_POST['datafim']);
 	$titular = $_POST['titular'];
-	$nrocarne = $_POST['nrocarne'];
+	$nrocarne = "" ; //$_POST['nrocarne'];
 	$pcwhere = "";
 	
 		if($titular<> -1 ) {
@@ -118,12 +118,13 @@ function CodigoBarra($numero){
 		if(!empty($_POST['nrocarne'])) {
 			$pcwhere.=" and t.nrocarne =".$nrocarne;
 		}
+
 		
 //$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
+/*
 $mpdf=new mPDF_('en-x','A4','','',7,5,10,22,5,5);
-
 $mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-
+*/
 $date = date("d/m/Y g:i a");
 
 
@@ -150,10 +151,12 @@ $headerE = "";
 $footer = "";
 $footerE = "";
 
+/*
 $mpdf->SetHTMLHeader($header);
 $mpdf->SetHTMLHeader($headerE,'E');
 $mpdf->SetHTMLFooter($footer);
 $mpdf->SetHTMLFooter($footerE,'E');
+*/
 
 $lcString  = '
 <h1>mPDF</h1>
@@ -299,10 +302,19 @@ $lcString  = '
 	
 	$lcString.= "</table>";
 
+	include("../../includes/mpdf/vendor/autoload.php");
+
+	$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+	$mpdf->WriteHTML($lcString);
+	$mpdf->Output();
+
+	/*
 	$mpdf->ignore_invalid_utf8 = true;	
 	$mpdf->WriteHTML($lcString);
 
 	$mpdf->Output();
+	*/
+
 	exit;
 
 ?>

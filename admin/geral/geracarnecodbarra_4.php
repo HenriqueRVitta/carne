@@ -344,12 +344,13 @@ $lcString  = '
 			}
 	
 		}
-	
-	include("../../includes/mpdf/vendor/autoload.php");
 
-	$mpdf = new \Mpdf\Mpdf(['debug' => true]);
-	$mpdf->WriteHTML($lcString);
-	$mpdf->Output();
+include("../../includes/mpdf/vendor/autoload.php");
+
+$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+$mpdf->WriteHTML($lcString);
+$mpdf->Output();
+
 
 exit;
 
