@@ -157,7 +157,8 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 	    if($config['modelocarne']=='3'){ $selected3 = " selected"; } else { $selected3 = "";}
 		if($config['modelocarne']=='4'){ $selected4 = " selected"; } else { $selected4 = "";}
 		if($config['modelocarne']=='5'){ $selected5 = " selected"; } else { $selected5 = "";}
-		
+		if($config['modelocarne']=='6'){ $selected6 = " selected"; } else { $selected6 = "";}
+
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Modelo do Carn&ecirc".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='modelocarne' id='idmodelocarne'>";  
@@ -166,6 +167,7 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<option value='3'".$selected3.">Modelo 03</option>";
 		print "<option value='4'".$selected4.">Modelo 04</option>";
 		print "<option value='5'".$selected5.">Modelo 05</option>";		
+		print "<option value='6'".$selected6.">Modelo 06 - Apene</option>";
 		print "</select>";
 		print "</TR><TR>";
 

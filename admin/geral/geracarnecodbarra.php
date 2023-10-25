@@ -151,13 +151,6 @@ $headerE = "";
 $footer = "";
 $footerE = "";
 
-/*
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
-*/
-
 $lcString  = '
 <h1>mPDF</h1>
 <h2>Headers & Footers Method 2</h2>
@@ -308,12 +301,6 @@ $lcString  = '
 	$mpdf->WriteHTML($lcString);
 	$mpdf->Output();
 
-	/*
-	$mpdf->ignore_invalid_utf8 = true;	
-	$mpdf->WriteHTML($lcString);
-
-	$mpdf->Output();
-	*/
 
 	exit;
 

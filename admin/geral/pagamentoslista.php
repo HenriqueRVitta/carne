@@ -124,7 +124,11 @@
 					if(strlen($_POST['search'])==7) {
 						$nPos = 1;
 					}
-					
+
+					if(strlen($_POST['search']) <=6) {
+						$nPos = 5;
+					}
+
 					$carne = trim($_POST['search']);						
 
 					// Implementa��o para o Novo Codigo de barra conforme impressao

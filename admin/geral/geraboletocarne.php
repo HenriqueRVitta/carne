@@ -6,21 +6,21 @@
 	
 	if($_SESSION['modelocarne'] == 1) {
 		
-		// Impressão do Capa
+		// Impressï¿½o do Capa
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
 			// Redireciono com o metodo POST
 			header("Location: geracapacarne.php", TRUE, 307);
 		}
 	
-		// Impressão do carnê	
+		// Impressï¿½o do carnï¿½	
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
 	
 			if($_POST['percvalor'] == 1) {
-				// Impressão com Percentual
+				// Impressï¿½o com Percentual
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarraperc.php", TRUE, 307);
 			} else {
-				// Impressão com Valor
+				// Impressï¿½o com Valor
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarra.php", TRUE, 307);
 			}
@@ -32,21 +32,21 @@
 	
 	if($_SESSION['modelocarne'] == 2) {
 		
-		// Impressão do Capa
+		// Impressï¿½o do Capa
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
 			// Redireciono com o metodo POST
 			header("Location: geracapacarne_2.php", TRUE, 307);
 		}
 	
-		// Impressão do carnê	
+		// Impressï¿½o do carnï¿½	
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
 	
 			if($_POST['percvalor'] == 1) {
-				// Impressão com Percentual
+				// Impressï¿½o com Percentual
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarraperc_2.php", TRUE, 307);
 			} else {
-				// Impressão com Valor
+				// Impressï¿½o com Valor
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarra_2.php", TRUE, 307);
 			}
@@ -57,16 +57,16 @@
 	
 	if($_SESSION['modelocarne'] == 3) {
 		
-		// Impressão do Capa
+		// Impressï¿½o do Capa
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
 			// Redireciono com o metodo POST
 			header("Location: geracapacarne_3.php", TRUE, 307);
 		}
 	
-		// Impressão do carnê	
+		// Impressï¿½o do carnï¿½	
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
 	
-				// Impressão com Valor
+				// Impressï¿½o com Valor
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarra_3.php", TRUE, 307);
 		}
@@ -76,16 +76,16 @@
 	
 	if($_SESSION['modelocarne'] == 4) {
 		
-		// Impressão do Capa
+		// Impressï¿½o do Capa
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
 			// Redireciono com o metodo POST
 			header("Location: geracapacarne_4.php", TRUE, 307);
 		}
 	
-		// Impressão do carnê	
+		// Impressï¿½o do carnï¿½	
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
 	
-				// Impressão com Valor
+				// Impressï¿½o com Valor
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarra_4.php", TRUE, 307);
 		}
@@ -95,19 +95,38 @@
 	
 	if($_SESSION['modelocarne'] == 5) {
 		
-		// Impressão do Capa
+		// Impressï¿½o do Capa
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
 			// Redireciono com o metodo POST
 			header("Location: geracapacarne_5.php", TRUE, 307);
 		}
 	
-		// Impressão do carnê	
+		// Impressï¿½o do carnï¿½	
 		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
 	
-				// Impressão com Valor
+				// Impressï¿½o com Valor
 				// Redireciono com o metodo POST
 				header("Location: geracarnecodbarra_5.php", TRUE, 307);
 		}
 	}
 	
+	// ModeloCarne 6 = Modelo de APENE
+	
+	if($_SESSION['modelocarne'] == 6) {
+		
+		// ImpressÃ£o do Capa
+		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 1) {
+			// Redireciono com o metodo POST
+			header("Location: geracapacarne_6.php", TRUE, 307);
+		}
+	
+		// ImpressÃ£o do carnÃª	
+		if(!empty($_POST['tipoimpressao']) && $_POST['tipoimpressao'] == 2) {
+	
+				// ImpressÃ£o com Valor
+				// Redireciono com o metodo POST
+				header("Location: geracarnecodbarra_6.php", TRUE, 307);
+		}
+	}
+
 ?>

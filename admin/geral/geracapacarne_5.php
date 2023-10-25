@@ -18,7 +18,7 @@
 	}
 
 
-	include("../../includes/mpdf54/mpdf.php");	
+	//include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
 	$conec = new conexao;
@@ -42,23 +42,6 @@
 		*/
 		
 		
-//$mpdf=new mPDF_('en-x','A4','','',12,12,10,30,5,5);
-$mpdf = new mPDF_(
-             'en-x',    // mode - default ''
-             'A4',    // format - A4, for example, default ''
-             0,     // font size - default 0
-             '',    // default font family
-             5,    // margin_left
-             5,    // margin right
-             10,     // margin top
-             0,    // margin bottom
-             6,     // margin header
-             0,     // margin footer
-             'L');  // L - landscape, P - portrait
-             
-
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
-
 $date = date("d/m/Y g:i a");
 
 $header = '
@@ -83,12 +66,6 @@ $header = "";
 $headerE = "";
 $footer = "";
 $footerE = "";
-
-
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
 
 	// Come�a aqui a listar os registros
     $query = "select nome_hosp, end_hosp, num_hosp, bair_hosp, cid_hosp, uf_hosp, cep_hosp, cgc_hosp, ddd1_hosp, fone_hosp from configuracao limit 1";
@@ -199,9 +176,12 @@ $mpdf->SetHTMLFooter($footerE,'E');
 	$lcString.= "</table>
 	</tr></td></table>	";
 	
-$mpdf->WriteHTML($lcString);
+	include("../../includes/mpdf/vendor/autoload.php");
 
-$mpdf->Output();
+	$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+	$mpdf->WriteHTML($lcString);
+	$mpdf->Output();
+
 exit;
 
 ?>
