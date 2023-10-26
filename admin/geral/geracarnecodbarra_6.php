@@ -249,7 +249,7 @@ $date = date("d/m/Y g:i a");
 		<td style='height: 33px; width: 40px; text-align: center; font-weight: bold; font-family: tahoma; font-size: 12pt; color: #000000;' colspan='4' rowspan='3'>Ajude a Apene a viver, ela vive por voc&ecirc;. <br> Sua contribui&ccedil;&atilde;o &eacute; necess&aacute;ria para o bom funcionamento da nossa Policlínica.</td>
 		</tr>
 		<tr style='height: 33px;'>
-		<td style='height: 33px; width: 376px; text-align: left; font-family: serif; font-size: 11pt; color: #000000;' colspan='3'>".$endereco."s</td>
+		<td style='height: 33px; width: 376px; text-align: left; font-family: serif; font-size: 11pt; color: #000000;' colspan='3'>".$endereco."</td>
 		</tr>
 		<tr style='height: 33px;'>
 		<td style='height: 33px; width: 93px; font-size: 18pt;' colspan='2'>Nro: ".$row['nrocarteira']."</td>
