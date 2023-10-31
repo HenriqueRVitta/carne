@@ -153,13 +153,13 @@ ini_set('memory_limit', '-1');
 
 	switch ( $nordem ){
 	  case 1:
-		$pcordem	= " order by c.id";
+		$pcordem	= " order by c.nrocarne";
 	    break;
 	  case 2:
 		$pcordem	= " order by c.nometitular, z.nome";
 		break;
 	  case 3:
-		$pcordem	= " order by c.registro";
+		$pcordem	= " order by p.datacontrato";
 	  	break;
 	  case 4:
 		$pcordem	= " order by c.cidade";
@@ -185,7 +185,7 @@ ini_set('memory_limit', '-1');
 	// Cabe�alho do regisrtos encontrados
 	$lcString.= "<table width='100%' border='1' cellspacing='2' cellpadding='2' align='center'>
 	<tr>
-	<th scope='col' align='center'>Nro Carn&ecirc;</th>
+	<th scope='col' align='center'>Nro Carteira</th>
 	<th scope='col' align='center'>Nome do Cliente</th>
 	<th scope='col' align='center'>Nome Dependente</th>
 	<th scope='col' align='center'>Telefone</th>	
@@ -207,7 +207,7 @@ ini_set('memory_limit', '-1');
 		
 		$dtreg = str_replace('/','',substr(converte_datacomhora($row['datainicio']),0,10));
 		
-		if($row['nrocarne'] > 0) { $nroreg = $row['nrocarne']; } else { $nroreg = $row['id']; }
+		$nroreg = $row['nrocarne'];
 		
 		
 		$lcString.= "<tr>

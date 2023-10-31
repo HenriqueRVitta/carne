@@ -94,7 +94,7 @@
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Ordem Relat&oacute;rio".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='ordem' id='idordem'>";  
-		print "<option value=1>"."Nro Registro"."</option>";
+		print "<option value=1>"."Nro Carnê"."</option>";
 		print "<option value=2 selected>"."Nome Titular"."</option>";
 		print "<option value=3>"."Data Contrato"."</option>";
 		print "<option value=4>"."Cidade"."</option>";
