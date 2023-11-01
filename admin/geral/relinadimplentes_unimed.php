@@ -103,7 +103,7 @@ ob_start();
 	
 	$lntotalpg = 0.00;
 
-		while($row = mysqli_fetch_array($resultado)){
+	while($row = mysqli_fetch_array($resultado)) {
 				
     	$dtregistro = str_replace('/','',substr(converte_datacomhora($row['Data_Inicio']),0,10));
 
@@ -151,7 +151,7 @@ ob_start();
     <th align='center'>RESUMO</th>
     </tr>
   	<tr>
-    <td align='left'>Total do Valor de Inadimplentes</th>
+    <td align='left'>Total do Valor de Inadimplentes/th>
     <td align='right'>".number_format($lntotalpg,2,",",".")."</th>    
     </tr>
   	<tr>
@@ -188,14 +188,14 @@ $headerE = "<table width='100%' style='border-bottom: 1px solid #000000; vertica
 
 $footer = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Inf. LTDA</a></span></div>
 </td>
 </table>";
 
 
 $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Inf. LTDA</a></span></div>
 </td>
 </table>";
 
@@ -249,12 +249,117 @@ $html = '
 
 $html = $header.$lcString.$footer;
 
+/*
 include("../../includes/mpdf/vendor/autoload.php");
-
-
 $mpdf = new \Mpdf\Mpdf(['debug' => true]);
 $mpdf->WriteHTML($html);
 $mpdf->Output();
+*/
+
+print_r($html);
+
+
+
+$header = "<pagebreak /><table width='100%' style='border-bottom: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000088;'><tr>
+<td width='33%'>".$date."</span></td>
+<td width='33%' align='center'><img src='../../logo.png' width='126px' /></td>
+<td width='33%' style='text-align: right;'><span style='font-weight: bold;'>Pag. <span style='font-size:11pt;'>{PAGENO}</span></td>
+</tr>
+</table>
+<table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 14pt; color: #000000;'><tr>
+<td width='33%' align='center'>Relat&oacute;rio Sem Registro de Pagamentos no Carn&ecirc;</td>
+</tr>
+</table>".$lcBorda."";
+
+$footer = "<pagebreak /><table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
+<td width='33%' align='center'>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Inf. LTDA</a></span></div>
+</td>
+</table>";
+
+/* Listo aqui os rgistro que não efetuaram nenhum pagamento UNIMED*/
+$query = "select a.id,a.nometitular, a.datainicio Data_Inicio, d.valor as ValordoPlano, c.plano,
+b.vlrunimed, b.vlrcontribuicao, b.vlrmensal, b.apene, b.tarifa, b.juros, b.utilizacao, b.outros,
+sum(b.vlrpago) TotalPago,
+TIMESTAMPDIFF(MONTH,a.datainicio,now()) TotalMeses,
+count(b.databaixa) MesesPagos, sum(b.vlrpago) TotalPago,
+(TIMESTAMPDIFF(MONTH,a.datainicio,now()) - count(b.databaixa)) MesesInadimplente,
+(d.valor * (TIMESTAMPDIFF(MONTH,a.datainicio,now()) - count(b.databaixa))) as TotalDebito
+from carne_titular a left Join carne_pagamentos b on b.idcliente = a.id
+left join carne_contratos c on c.idtitular = a.id
+left join carne_competenciaplano d on d.idplano = c.plano
+and a.situacao = 'ATIVO' Where c.plano = 2  group by a.nometitular,b.idcliente";
+
+
+// Cabeçalho do regisrtos encontrados sem nenhum pagamento registrado
+$lcString_2= "<pagebreak /><table width='800' align='center' align='center' border='1' cellspacing='1' cellpadding='1'>
+<tr>
+<th scope='col' align='center'>Nome do Cliente</th>
+<th scope='col' align='center'>Desde</th>	
+<th scope='col' align='center'>Nro Carn&ecirc;</th>
+<th scope='col' align='center'>Meses Inadim.</th>
+<th scope='col' align='center'>Vlr Plano</th>
+<th scope='col' align='center'>Vlr do Debito</th>
+</tr>";
+
+$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
+$i=0;
+$qtdeIna = 0;
+
+$lntotalpg = 0.00;
+
+while($row = mysqli_fetch_array($resultado)) {
+		
+$dtregistro = str_replace('/','',substr(converte_datacomhora($row['Data_Inicio']),0,10));
+
+
+	if($row['MesesPagos'] == 0) {
+
+			$totalPago = ($row['vlrunimed']+$row['vlrcontribuicao']+$row['apene']+$row['tarifa']+$row['juros']+$row['utilizacao']+$row['outros']);
+			$vlrDebito = ($totalPago * $row['MesesInadimplente']);
+
+			$lcString_2.= "<tr>
+			<td align='left'>".retira_acentos_UTF8($row['nometitular'])."</TD>
+			<td align='center'>".mask($dtregistro,'##/##/####')."</TD>
+			<td align='center'>".$row['id']."</TD>
+			<td align='center'>".$row['MesesInadimplente']."</TD>
+			<td align='right'>".number_format($totalPago,2,",",".")."</TD>
+			<td align='right'>".number_format($vlrDebito,2,",",".")."</TD>
+			</tr>";
+
+							
+			$lntotalpg+=$vlrDebito;
+			$qtdeIna++;
+							
+			
+		$i++;
+
+	}
+
+
+}	
+
+$lcString_2.= "</table>";
+
+
+	// Resumo
+	$lcString_2.= "<table width='800' align='center' border='0'>
+  	<tr>
+    <th align='center'>RESUMO</th>
+    </tr>
+  	<tr>
+    <td align='left'>Total de Sem Pagamentos</th>
+    <td align='right'>".number_format($lntotalpg,2,",",".")."</th>    
+    </tr>
+  	<tr>
+    <td align='left'>Total de Sem pagamentos listados</th>
+    <td align='right'>".$qtdeIna."</th>    
+    </tr>
+	</table>";
+
+
+$html = $header.$lcString_2.$footer;
+print_r($html);
 
 exit;
 	
