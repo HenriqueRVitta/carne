@@ -35,25 +35,24 @@
 		}
 	}
 	
-/*
+
 	if($processado==false ){
-		// Impress�o do Gr�fico Pizza
-		if($_POST['separacao'] <> -1 && $_POST['tiporelatorio'] == 3) {
+		// Impressao do Grafico Pizza
+		if($_POST['tiporelatorio'] == 3 && $_POST['grafico'] == 1) {
 			$processado = true;
 			// Redireciono com o metodo POST
-			header("Location: relpagamentosgraph.php", TRUE, 307);
+			header("Location: relgraphcadastrotitular_1.php", TRUE, 307);
 		}
 	}
 	
 
 	if($processado==false ){
-		// Impress�o do Gr�fico Barra
-		if($_POST['separacao'] <> -1 && $_POST['tiporelatorio'] == 4) {
+		// Impressao do Grafico Barra
+		if($_POST['tiporelatorio'] == 3 && $_POST['grafico'] == 2) {
 			$processado = true;
 			// Redireciono com o metodo POST
-			header("Location: relpagamentosgraph2.php", TRUE, 307);
+			header("Location: relgraphcadastrotitular_2.php", TRUE, 307);
 		}
 	}
-*/
 
 ?>

@@ -47,13 +47,13 @@
 		$pcordem	= " order by k.mesano";
 		$pcgroup	= " group by k.mesano";
 		$lcColumn	= " k.mesano";
-		$separacao  = "M�s/Ano";
+		$separacao  = "Mês/Ano";
 		break;
 	  case 3:
 		$pcordem	= " order by u.nome";
 		$pcgroup	= " group by u.nome";
 		$lcColumn	= " u.nome";
-		$separacao  = "Usu�rios";
+		$separacao  = "Usuários";
 		break;
 	  case 4:
 		$pcordem	= " order by l.descricao";

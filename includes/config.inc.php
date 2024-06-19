@@ -21,8 +21,8 @@ define ( "SQL_SERVER", "localhost"); // 192.168.108.250 IP ou nome Servidor
 //Nome do banco
 //define ( "SQL_DB", "1433_tres_coracoes"); 
 //define ( "SQL_DB", "1772_promedico"); 
-//exdefine ( "SQL_DB", "carnepromedico");
-define ( "SQL_DB", "sagwindb");
+define ( "SQL_DB", "carnepromedico");
+//define ( "SQL_DB", "sagwindb");
 //define ( "SQL_DB", "carneitaguara");
 //define ( "SQL_DB", "1084_itaguara");
 //define ( "SQL_DB", "1489_saude_harmonia");

@@ -21,6 +21,7 @@
 	$_SESSION['s_page_admin'] = $_SERVER['PHP_SELF'];
 	
 	$dtAtual = date('d/m/Y');
+	$dtInicial = "01/01/".date('Y');
 	
 
 	print "<html xmlns='http://www.w3.org/1999/xhtml' lang='pt-br' xml:lang='pt-br'>";
@@ -44,7 +45,7 @@
 		print "<TD></TD>";
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Inicial Cadastro".":</TD>";
-		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' value = '01/01/1900' onBlur='return doDateVenc(this.id,this.value, 4)'></td>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datainicio' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario1' value = '".$dtInicial."' onBlur='return doDateVenc(this.id,this.value, 4)'></td>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Data Final Cadastro".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='datafim' class='text4' onkeyup=\"maskIt(this,event,'##/##/####')\" id='calendario2' value = '".$dtAtual."' onBlur='return doDateVenc(this.id,this.value, 4)'></td>";
 		
@@ -52,7 +53,7 @@
 				
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo de Plano".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
-		print "<select class='select2' name='plano' id='idplano'>";  
+		print "<select class='select2' name='plano' id='idplano' onClick='return comboPlano(this.id,this.value)'>";  
 		print "<option value=-1>"."Todos"."</option>";
 			$sql="Select id,descricao from carne_tipoplano where status = 0 and unidade =".$_SESSION['s_local']." order by id";
 					$commit = mysqli_query($conec->con,$sql);
@@ -65,7 +66,7 @@
 						$i++;
 					}
 				print "</select>";
-				
+		print "<INPUT type='text' name='nomePlano' id='nomePlano' class='text4' hidden='hidden'>";
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Munic&iacute;pio".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='cidade' id='idcidade'>";  
@@ -213,6 +214,17 @@ return false;
 }else{
 return false;
 }
+}
+
+
+function comboPlano(Id, pStr) {
+
+	var select = document.getElementById("idplano");
+    var value = select.options[select.selectedIndex].text;
+	d = document.getElementById(Id);
+	if(d.value > 0) {
+		document.getElementById('nomePlano').value=value;
+	}
 }
 
 function comboTiporel(Id, pStr) {
