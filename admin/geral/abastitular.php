@@ -920,12 +920,16 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				
 		if($row['sexo']=='M'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($row['sexo']=='F'){ $selected2 = " selected"; } else { $selected2 = "";}
+		if($row['sexo']=='T'){ $selected3 = " selected"; } else { $selected3 = "";}
+		if($row['sexo']=='0'){ $selected4 = " selected"; } else { $selected4 = "";}
 				
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Sexo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='sexo' id='idsexo'>";  
 		print "<option value='M'".$selected1.">Masculino</option>";  
 		print "<option value='F'".$selected2.">Feminino</option>";  
+		print "<option value='T'".$selected3.">Transgenero</option>";  
+		print "<option value='0'".$selected4.">Não Informado</option>";  
 		print "</select>";  
 		print "</TR></TD>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Cep".":</TD>";
@@ -1020,7 +1024,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<option value='7'".$selected7.">Superior Incompleto</option>";  
 		print "<option value='8'".$selected8.">Superior Completo</option>";  
 		print "</select>";  
-		print "</TR></TD>";
+		print "</TD>";
+		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Local Trabalho".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='localtrab' maxlength='45' class='text3' id='idlocaltrab' value='".$row['localtrabalho']."'></td>";
 		print "</TR><TR>";
@@ -1035,7 +1040,6 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
   		print "<input type='radio' name='selcnpj' id='selcnpj' value='2' ".$CheckedCNPJ." onChange='SelecionaCNPJ()'> CNPJ";
   		print "</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='cpf' class='text3' id='idcpf' value='".$row['cpf']."' onkeyup=\"maskIt(this,event,'##############')\" maxlength='14' onChange='validacpfcnpj()'></td>";
-		
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Email ".":</TD>";
 		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='email' maxlength='100' class='text3' id='idemail' value='".$row['email']."'></td>";
@@ -1062,13 +1066,13 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<option value='7'".$selected7.">Amasiado</option>";  
 		print "<option value='8'".$selected8.">Indefinido</option>";  
 		print "</select>";  
-		print "</TR></TD>";
+		print "</TD>";
+		print "</TR><TR>";
 
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Registro".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='prontuario2' maxlength='7' class='text4' onkeyup=\"maskIt(this,event,'#######')\" id='idprontuario2' value='".$row['prontuario']."'>
 		<input type='button' value='Consulta' name='tipo1' class='minibutton2' onClick=\"javascript:popup_consulta('consultapacientes.php?popup=true&nome='+document.getElementById('idnometitular').value)\"></td>";
-
-		print "</TR></TD>";
+		print "</TR></TR>";
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Grupo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 
@@ -1087,7 +1091,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
                         			print ">".$rowB['descricao']."</option>";
 					}
 			print "</select>";
-				
+		print "</TD";
+
 		print "</TR><TR>";
 		
 		if($row['datainicio']=='1900-01-01 00:00:00') {
@@ -1616,6 +1621,11 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nomedep' maxlength='45' id='idnomedep'></td>";
 				print "</TR><TR>";		
 
+				print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."CPF".":</TD>";
+				print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='cpf' class='text2' id='idcpf' value='' onkeyup=\"maskIt(this,event,'###########')\" maxlength='11' onChange='validacpfcnpj()'></td>";
+				print "</TR><TR>";		
+
+
 				print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro da Carteira".":</TD>";
 				print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocarteira' maxlength='45' class='text2' id='idnrocarteira' value=''></td>";
 				print "</TR></TD>";
@@ -1681,22 +1691,22 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			print "</TR><TR>";		
 
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['aeromedico']."' ></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='' ></td>";
 			print "</TR><TR>";		
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['comissao']."'></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value=''></td>";
 			print "</TR><TR>";		
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['coopart']."'></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value=''></td>";
 			print "</TR><TR>";
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['taxabanco']."'></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value=''></td>";
 			print "</TR><TR>";
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['apene']."'></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value=''></td>";
 			print "</TR><TR>";
 			print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
-			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$row['nomeboleto']."'></td>";
+			print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value=''></td>";
 			print "</TR>";
 
 				print "<TR> <TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' class='button' value='Incluir Dependente' name='submit'>";
@@ -1738,7 +1748,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 					print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 					print "</tr>";
 					//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-					print "<TR class='header'><td class='line' width='70%'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar no Boleto"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
+					print "<TR class='header'><td class='line'>"."Cpf"."</TD>"."<td class='line'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
 						"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 					
 					$j=2;
@@ -1757,14 +1767,15 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 						if($row['cobrarnoboleto'] == 1) { $cobrarnoboleto = 'Sim';} else { $cobrarnoboleto = 'Não'; }
 		
 						print "<tr class=".$trClass." id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
-						print "<td class='line'>".$row['nome']."</td>";
-						print "<td class='line'>".$cobrarnoboleto."</td>";
-						print "<td class='line'>".$row['id']."</td>";
-						print "<td class='line'>".$row['nrocarteira']."</td>";
+						print "<td class='line' width='10%'>".$row['cpf']."</td>";						
+						print "<td class='line' width='10%'>".$row['nome']."</td>";
+						print "<td class='line' width='10%'>".$cobrarnoboleto."</td>";
+						print "<td class='line' width='10%'>".$row['id']."</td>";
+						print "<td class='line' width='10%'>".$row['nrocarteira']."</td>";
 						$dtnasc = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
-						print "<td class='line'>".mask($dtnasc,'##/##/####')."</td>";
-						print "<td class='line'>".$row['situacao']."</td>";
-						print "<td class='line'><a onClick=\"redirect('abastitular.php?action=editar&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
+						print "<td class='line' width='10%'>".mask($dtnasc,'##/##/####')."</td>";
+						print "<td class='line' width='10%'>".$row['situacao']."</td>";
+						print "<td class='line' width='10%'><a onClick=\"redirect('abastitular.php?action=editar&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";
 		
 						if(liberamenu('Excluir Dependentes')=="N"){
 							print "<td class='line'><a onClick=''><img height='16' width='16' src='".ICONS_PATH."proibido.jpg' title='Exclus&atilde;o n&atilde;o permitida'></a></TD>";
@@ -1811,7 +1822,11 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($row['id'],6)."' readonly='true'  ></td>";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome Dependente".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nomedep' maxlength='45' id='idnomedep' value='".$row['nome']."'></td>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text2' name='nomedep' maxlength='45' id='idnomedep' value='".$row['nome']."'></td>";
+		print "</TR><TR>";		
+
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."CPF".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='cpf' class='text2' id='idcpf' value='".$row['cpf']."' onkeyup=\"maskIt(this,event,'###########')\" maxlength='11' onChange='validacpfcnpj()'></td>";
 		print "</TR><TR>";		
 
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro da Carteira".":</TD>";
@@ -1820,12 +1835,17 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		
 		if($row['sexo']=='M'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($row['sexo']=='F'){ $selected2 = " selected"; } else { $selected2 = "";}
+		if($row['sexo']=='T'){ $selected3 = " selected"; } else { $selected3 = "";}
+		if($row['sexo']=='0'){ $selected4 = " selected"; } else { $selected4 = "";}
 		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Sexo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='sexo' id='idsexo'>";  
 		print "<option value='M'".$selected1.">Masculino</option>";  
 		print "<option value='F'".$selected2.">Feminino</option>";  
+		print "<option value='T'".$selected3.">Transgenero</option>";  
+		print "<option value='0'".$selected4.">Não Informado</option>";  
+
 		print "</select>";  
 		print "</TR></TR>";		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Parentesco".":</TD>";
@@ -1912,24 +1932,40 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 5021!');
 		$rowDep = mysqli_fetch_array($resultado);
 
+		$aeromedico = "";
+		$comissao = "";
+		$coopart = "";
+		$taxabanco = "";
+		$apene = "";
+		$nomeboleto = "";
+
+		if(!is_null($rowDep)) {
+			$aeromedico = $rowDep['aeromedico'];
+			$comissao = $rowDep['comissao'];
+			$coopart = $rowDep['coopart'];
+			$taxabanco = $rowDep['taxabanco'];
+			$apene = $rowDep['apene'];
+			$nomeboleto = $rowDep['nomeboleto'];
+		}
+
 		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['aeromedico']."' ></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$aeromedico."' ></td>";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['comissao']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$comissao."'></td>";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['coopart']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$coopart."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['taxabanco']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$taxabanco."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$rowDep['apene']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$apene."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$rowDep['nomeboleto']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$nomeboleto."'></td>";
 		print "</TR>";
 
 
@@ -1988,8 +2024,8 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				$lcnome = retira_acentos_ISO($_POST['nomedep']);
 				$lcnome = strtoupper($lcnome);
 				
-				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto)".
-						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].")";
+				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto,cpf)".
+						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].",'".$_POST['cpf']."')";
 							
 				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				if ($resultado == 0)
@@ -2047,8 +2083,9 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$situacao = $_POST['situacao'];
 			$dtinativo = Fdate($_POST['dtinativo']);
 			$obs = $_POST['obs'];
-			
-			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto']." WHERE id=".$_POST['codigo']." ";
+			$cpf = $_POST['cpf'];
+
+			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto'].", cpf = '".$cpf."' WHERE id=".$_POST['codigo']." ";
 			
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 	
@@ -2064,7 +2101,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 
 			$query = "delete from carne_taxasdependente  WHERE iddependente =".$_POST['codigo']." ";
 			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 101!');
-			$row = mysqli_fetch_array($resultado);
+			//$row = mysqli_fetch_array($resultado);
 			
 			$codDep = $_POST['codigo'];
 
@@ -2508,7 +2545,23 @@ print "<div id='div_taxas' class='conteudo' style='display: none'>";
        	$query = "SELECT * FROM carne_taxastitular  WHERE idtitular = ".$codTitular." ";
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
 		$row = mysqli_fetch_array($resultado);
-				
+
+		$aeromedico = "";
+		$comissao = "";
+		$coopart = "";
+		$taxabanco = "";
+		$apene = "";
+		$nomeboleto = "";
+
+		if(!is_null($row)) {
+			$aeromedico = $row['aeromedico'];
+			$comissao = $row['comissao'];
+			$coopart = $row['coopart'];
+			$taxabanco = $row['taxabanco'];
+			$apene = $row['apene'];
+			$nomeboleto = $row['nomeboleto'];
+		}
+
 		print "<BR><b><font size=2 color='blue'>"."Edi&ccedil;&atilde;o de Taxas"."</b></font><BR>";		
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."ID do Titular".":</TD>";
@@ -2518,22 +2571,22 @@ print "<div id='div_taxas' class='conteudo' style='display: none'>";
 		
 		print "<TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Transporte AeroM&eacute;dico".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['aeromedico']."' ></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='aeromedico' class='text4' id='aeromedico' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$aeromedico."' ></td>";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Comiss&atilde;o".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['comissao']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='comissao' id='comissao' class='text4' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$comissao."'></td>";
 		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Coparticipac&atilde;o".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['coopart']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='coopart' class='text4' id='coopart' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$coopart."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Taxa Banco".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['taxabanco']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='taxabanco' class='text4' id='taxabanco' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$taxabanco."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Apene".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$row['apene']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='apene' class='text4' id='apene' onkeypress=\"return formatar_moeda(this,',','.',event);\" value='".$apene."'></td>";
 		print "</TR><TR>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Boleto em Nome de".":</TD>";
-		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$row['nomeboleto']."'></td>";
+		print "<TD width='35%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nomeboleto' placeholder='preencher se nao for o titular' class='text3' id='nomeboleto' maxlength='58' value='".$nomeboleto."'></td>";
 		print "</TR><TR>";
 		print "<TD align='left' width='20%' bgcolor='".BODY_COLOR."'><input type='submit' $clasbutton value='Salvar Taxas' name='submit' $disabled>";
 		print "<input type='hidden' name='cod' value='".$codTitular."'>";

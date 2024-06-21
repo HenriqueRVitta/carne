@@ -37,8 +37,8 @@ session_start();
 print "body
 {
 	position: relative;
-	width: 100%;			
-	margin: 0 auto;		
+	width: 100%;	
+	margin: 10 auto;		
 	border: 0px solid;
 	min-height: 100%;
 

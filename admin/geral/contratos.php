@@ -1,4 +1,5 @@
-<?php header ('Content-type: text/html; charset=ISO-8859-1');
+<?php
+// header ('Content-type: text/html; charset=ISO-8859-1');
 /*      Copyright 2014 MCJ Assessoria Hospitalar e Inform�tica LTDA
 
         Desenvolvedor: Carlos Henrique R Vitta

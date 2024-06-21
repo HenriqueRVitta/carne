@@ -99,7 +99,7 @@
 		$registros = mysqli_num_rows($resultado);
 		
 		if($registros==0) {
-       		$query = "SELECT * FROM carne_dependente";
+       		$query = "SELECT *, '' as nometitular FROM carne_dependente";
 			$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 			$registros = mysqli_num_rows($resultado);
 		}
@@ -121,7 +121,9 @@
 	    	$clasbutton = " class='buttonDisabled'";
 	    }
 		
-		print "<TR><TD><input type='button' $clasbutton id='idBtIncluir' $disabled value='".TRANS('BT_CAD')."' onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=incluir&cellStyle=true');\"></TD></TR>";
+		/* BOTÂO CADASTRAR*/
+		//print "<TR><TD><input type='button' $clasbutton id='idBtIncluir' $disabled value='".TRANS('BT_CAD')."' onClick=\"redirect('".$_SERVER['PHP_SELF']."?action=incluir&cellStyle=true');\"></TD></TR>";
+
 		print "<tr><td colspan='4'>".
 			"<input type='text' class='text3' name='search' id='idSearch' value='".$search."'>&nbsp;";
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
@@ -140,7 +142,7 @@
 			print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line' width='40%'>"."Nome Dependente"."</TD>"."<td class='line' width='30%'>"."TITULAR"."<td class='line' width='10%'>"."Cobrar no Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
+			print "<TR class='header'><td class='line' width='30%'>"."Nome Dependente"."</TD>"."<td class='line' width='10%'>"."CPF"."<td class='line' width='20%'>"."TITULAR"."<td class='line' width='10%'>"."Cobrar Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
@@ -160,6 +162,7 @@
 
 				print "<tr class=".$trClass." id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 				print "<td class='line'>".$row['nome']."</td>";
+				print "<td class='line'>".$row['cpf']."</td>";
 				print "<td class='line'>".$row['nometitular']."</td>";
 				print "<td class='line'>".$cobrarnoboleto."</td>";
 				print "<td class='line'>".$row['id']."</td>";
@@ -197,7 +200,9 @@
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome Dependente".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='45' id='idnome'></td>";
 		print "</TR><TR>";		
-
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."CPF".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='cpf' class='text2' id='idcpf' value='' onkeyup=\"maskIt(this,event,'###########')\" maxlength='11' onChange='validacpfcnpj()'></td>";
+		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro da Carteira".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocarteira' maxlength='45' class='text2' id='idnrocarteira' value=''></td>";
 		print "</TR></TD>";
@@ -285,19 +290,25 @@
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome Dependente".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='45' id='idnome' value='".$row['nome']."'></td>";
 		print "</TR><TR>";		
-
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."CPF".":</TD>";
+		print "<TD width='30%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='cpf' class='text2' id='idcpf' value='".$row['cpf']."' onkeyup=\"maskIt(this,event,'###########')\" maxlength='11' onChange='validacpfcnpj()'></td>";
+		print "</TR><TR>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro da Carteira".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='nrocarteira' maxlength='45' class='text2' id='idnrocarteira' value='".$row['nrocarteira']."'></td>";
 		print "</TR></TD>";
 		
 		if($row['sexo']=='M'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($row['sexo']=='F'){ $selected2 = " selected"; } else { $selected2 = "";}
-		
+		if($row['sexo']=='T'){ $selected3 = " selected"; } else { $selected3 = "";}
+		if($row['sexo']=='0'){ $selected4 = " selected"; } else { $selected4 = "";}
+
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Sexo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='sexo' id='idsexo'>";  
 		print "<option value='M'".$selected1.">Masculino</option>";  
 		print "<option value='F'".$selected2.">Feminino</option>";  
+		print "<option value='T'".$selected3.">Transgenero</option>";  
+		print "<option value='0'".$selected4.">Não Informado</option>";  
 		print "</select>";  
 		print "</TR></TR>";		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Parentesco".":</TD>";
@@ -450,9 +461,10 @@
 			$situacao = $_POST['situacao'];
 			if(empty($_POST['dtinativo'])) { $dtinativo = '1900-01-01 00:00:00'; } else $dtinativo = FDate($_POST['dtinativo']);
 			$obs = $_POST['obs'];
-			
-			$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto)".
-					" values ('".strtoupper($_POST['nome'])."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."',".$_POST['prontuario'].",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].")";
+			$cpf = $_POST['cpf'];
+
+			$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto,cpf)".
+					" values ('".strtoupper($_POST['nome'])."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."',".$_POST['prontuario'].",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].",'".$cpf."')";
 						
 			$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 			if ($resultado == 0)
@@ -488,8 +500,9 @@
 		$situacao = $_POST['situacao'];
 		$dtinativo = Fdate($_POST['dtinativo']);
 		$obs = $_POST['obs'];
-		
-		$query2 = "UPDATE carne_dependente SET nome='".strtoupper($_POST['nome'])."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$_POST['prontuario'].", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto']." WHERE id=".$_POST['codigo']." ";
+		$cpf = $_POST['cpf'];
+
+		$query2 = "UPDATE carne_dependente SET nome='".strtoupper($_POST['nome'])."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$_POST['prontuario'].", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto'].", cpf = '".$cpf."' WHERE id=".$_POST['codigo']." ";
 		
 		$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
@@ -525,6 +538,22 @@
 <script language="JavaScript">
 /* Formata��o para qualquer mascara */
 
+
+function validacpfcnpj() {
+
+	var cpf = document.getElementById("idcpf").value;
+	if(cpf != '') {
+		if(!valida_cpf(document.getElementById('idcpf').value)) {
+			alert('CPF Invalido');
+			document.getElementById("idcpf").value = '';
+			document.getElementById("idcpf").focus();
+		}
+	}
+	
+}
+
+
+}
 
 function formatar(src, mask) 
 {

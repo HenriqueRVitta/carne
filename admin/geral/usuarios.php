@@ -71,9 +71,9 @@
 		}
 
 		if($cond==0) {
-			$query.=" Where unidade =".$_SESSION['s_local']." ORDER BY codigo desc";
+			$query.=" Where unidade =".$_SESSION['s_local']." and ativo = 1 ORDER BY codigo desc";
 		} else {
-			$query.=" and unidade =".$_SESSION['s_local']." ORDER BY nome";
+			$query.=" and unidade =".$_SESSION['s_local']." and ativo = 1 ORDER BY nome";
 		}
 
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
@@ -112,7 +112,7 @@
 			print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line' width='30%'>"."Nome do Usu&aacute;rio"."</TD>"."<td class='line' width='30%' >"."Perfil"."</TD>".
+			print "<TR class='header'><td class='line' width='30%'>"."Usu&aacute;rio"."</TD>"."<td class='line' width='30%' >"."Perfil"."</TD>".
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
@@ -162,8 +162,8 @@
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($maxid['id']+1,6)."' readonly='true' ></td>";
 		print "<TD class='line'><a href='usuarios.php'><img height='22' width='22' src='".ICONS_PATH."voltar.png' title='Voltar'></a></TD>";
 		print "</TR><TR>";		
-		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome do Usu&aacute;rio".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='45' id='idnome'></td>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome ou E-mail Usu&aacute;rio".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='200' id='idnome'></td>";
 
 		print "</TR><TR>";
 
@@ -228,8 +228,8 @@
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."C&oacute;digo".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='codigo' class='text4' id='idcodigo' onkeyup=\"maskIt(this,event,'######')\" value='".strzero($row['codigo'],6)."' readonly='true' ></td>";
 		print "</TR><TR>";		
-		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome do Usu&aacute;rio".":</TD>";
-		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='45' id='idnome' value = '".$row['nome']."'></td>";
+		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome ou E-mail Usu&aacute;rio".":</TD>";
+		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nome' maxlength='200' id='idnome' value = '".$row['nome']."'></td>";
 
 		print "</TR><TR>";
 
@@ -366,7 +366,7 @@
 
 		$erro=false;
 
-		$qryl = "SELECT * FROM usuarios WHERE nome='".$_POST['nome']."'";
+		$qryl = "SELECT * FROM usuarios WHERE nome='".$_POST['nome']."' and ativo = 1";
 		$resultado = mysqli_query($conec->con,$qryl) or die('Erro na Query :'.$qryl);
 		$linhas = mysqli_num_rows($resultado);
 

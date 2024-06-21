@@ -1,9 +1,11 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' />
-	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+	<!-- <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script> -->
+  <script type='text/javascript' src='includes/javascript/jquery1.10.2.min.js'></script>
 	<script type='text/javascript' src='includes/javascript/menu_jquery.js'></script>
 
 <?php 
@@ -203,11 +205,14 @@ error_reporting(E_ALL);
 <ul>
    <li class='active'><a href='#'><span><h3>Op&ccedil;&otilde;es de Menu</h3></span></a></li>
    <li class='has-sub'><a href='#'><span>Cadastros</span></a>
-            <ul>
+          <ul>
                <li class='last'><a href='admin/geral/titular.php' target="centro"><span>Titular</span></a></li>
                <li class='last'><a href='admin/geral/dependente.php' target="centro"><span>Dependentes</span></a></li>
                <li class='last'><a href='admin/geral/contratos.php' target="centro"><span>Contrato</span></a></li>
-               
+          <?php 
+          if(isset($_SESSION['perfilcarne']) && $_SESSION['perfilcarne'] == 1)
+          {
+          ?>
 	         <li class='has-sub'><a href='#'><span>Tabelas Auxiliares</span></a>
 	            <ul>
 	               <li class='last'><a href='admin/geral/tipodependente.php' target="centro"><span>Tipo de Dependente</span></a></li>
@@ -227,9 +232,15 @@ error_reporting(E_ALL);
 	               <li class='last'><a href='admin/geral/relcartaocontribuinte.php' target="centro"><span>Tipo de Plano</span></a></li>
 	            </ul>
 	         </li>
-
-            </ul>
+          <?php 
+          } ?>
+          </ul>
          </li>
+
+         <?php 
+          if(isset($_SESSION['perfilcarne']) && $_SESSION['perfilcarne'] == 1)
+          {
+          ?>
          <li class='has-sub'><a href='#'><span>Financeiro</span></a>
             <ul>
 
@@ -269,7 +280,15 @@ error_reporting(E_ALL);
 
             </ul>
          </li>
+         <?php 
+          }
+          ?>
+
    </li>
+   <?php 
+    if(isset($_SESSION['perfilcarne']) && $_SESSION['perfilcarne'] == 1)
+    {
+   ?>
    <li class='has-sub'><a href='#'><span>Configura&ccedil;&otilde;es</span></a>
             <ul>
                <li><a href='admin/geral/configuracoes.php' target="centro"><span>Parâmetros Sistema</span></a></li>
@@ -282,9 +301,10 @@ error_reporting(E_ALL);
                <li><a href='admin/geral/relauditoria.php' target="centro"><span>Auditor do Sistema</span></a></li>
            </ul>
    </li>
-
+   <?php 
+    }
+   ?>
 </ul>
 </div>
 </body>
 </html>
-

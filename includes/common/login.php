@@ -54,6 +54,7 @@
 				$s_logado=1;
 			}
 
+			$s_perfil_carne = $row['perfilcarne'];
 			$s_nivel_desc = $row['nivel_nome'];
 			$s_area = $row['AREA'];
 			$s_uid = $row['user_id'];
@@ -103,6 +104,7 @@
 				$formatBarMural = 0;
 			}
 			
+			$_SESSION['perfilcarne'] = $s_perfil_carne;
 			$_SESSION['percentualfiltro'] = $rowFormatBar['percentualfiltro'];
 			$_SESSION['nfseprefeitura'] = $rowFormatBar['nfseprefeitura'];
 			$_SESSION['vlrbasecarne'] = $rowFormatBar['vlrbasecarne'];
@@ -197,7 +199,8 @@
 			$s_nivel = 1;
 			$s_coduser = $row['codigo'];
 			$s_codvendedor = $row['vendedor'];
-
+			$s_perfil_carne = $row['perfilcarne'];
+			
 			if ($s_nivel<4){ //Verifica se nÃƒÂ£o esta desabilitado
 				$s_logado=1;
 			}
@@ -238,6 +241,7 @@
 				$formatBarMural = 0;
 			}
 
+			$_SESSION['perfilcarne'] = $s_perfil_carne;
 			$_SESSION['percentualfiltro'] = $rowFormatBar['percentualfiltro'];			
 			$_SESSION['nfseprefeitura'] = $rowFormatBar['nfseprefeitura'];
 			$_SESSION['vendedor'] = $s_codvendedor;

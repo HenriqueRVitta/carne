@@ -129,7 +129,7 @@ if(!conexaointernet()){
 
 
 echo "<table class='topo' border='0' id='cabecalho'>";
-echo "<tr><td ><img src='logo.png' height='95' width='350'></td>";
+echo "<tr><td ><img src='logo.png' height='95' width='250'></td>";
 echo "<td align='left'><a href='http://chamados.mtdsistemas.com.br' target='_blank' style='color:blue; text-decoration: underline;'>CHAMADOS</a></td>";
 echo "<td align='right'><font color='#1E90FF'>".$USER_TYPE.":</font><b> ".$uLogado."</b></td><td align='right'>|</td>".$pnglogin;
 echo "</tr></table>";
@@ -208,7 +208,7 @@ if ($_SESSION['s_logado']) {
 			$typedUser = "";
 		}
 
-		print "<tr><td ><input type='text' class='helplogin' name='login' value='".$typedUser."' id='idLogin' tabindex='1' placeholder=' Usu&aacute;rio'></td><td rowspan='2'></td></tr>". //class='help'
+		print "<tr><td ><input type='text' class='helplogin' name='login' value='".$typedUser."' id='idLogin' tabindex='1' placeholder=' Usu&aacute;rio ou e-mail'></td><td rowspan='2'></td></tr>". //class='help'
 			"<tr><td><input type='password' class='helplogin' name='password'  id='idSenha' tabindex='2' placeholder=' Senha' spellcheck='false'></td></tr>".
 			"<tr><td>";
 
@@ -412,7 +412,8 @@ var GLArray = new Array();
 
 	function valida(){
 
-		var ok = validaForm('idLogin','ALFAFULL','Usuário',1)
+		//var ok = validaForm('idLogin','ALFAFULL','Usuário',1)
+		var ok = true;
 		if (ok) var ok = validaForm('idSenha','ALFAFULL','Senha',1);
 		if (ok) var ok = validaForm('idlocal','COMBO','Unidade',1);
 		return ok;

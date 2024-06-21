@@ -275,12 +275,16 @@ $selectedAmbos = "selected";
 				
 		if($row['sexo']=='M'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($row['sexo']=='F'){ $selected2 = " selected"; } else { $selected2 = "";}
+		if($row['sexo']=='T'){ $selected3 = " selected"; } else { $selected3 = "";}
+		if($row['sexo']=='0'){ $selected4 = " selected"; } else { $selected4 = "";}
 				
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Sexo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='sexo' id='idsexo'>";  
 		print "<option value='M'".$selected1.">Masculino</option>";  
 		print "<option value='F'".$selected2.">Feminino</option>";  
+		print "<option value='T'".$selected3.">Transgenero</option>";  
+		print "<option value='0'".$selected4.">Não Informado</option>";  
 		print "</select>";  
 		print "</TR></TD>";		
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Cep".":</TD>";
