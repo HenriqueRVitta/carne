@@ -7,7 +7,7 @@ if($contador==1){
 
 //configurando o arquivo de remessa
 $config['codigo_empresa'] = $convenio; //'1054508';
-$config['razao_social'] = substr($dadosboleto["cedente"],0,29); //'Agnetech Soluções empresariais';
+$config['razao_social'] = substr($dadosboleto["cedente"],0,29); //'Agnetech Soluï¿½ï¿½es empresariais';
 $config['numero_remessa'] = $remessa; //'2165';
 $config['data_gravacao'] = date('d').date('m').date('y'); //'280815';
 
@@ -30,12 +30,16 @@ $arquivo->config($config);
 	$cep = substr($rowcliente['cep'],0,5);
 	$sufixoCep = substr($rowcliente['cep'],5,3);
 
-	//agencia é 4 digitos
+	//agencia ï¿½ 4 digitos
 	$agencia = formata_numero($dadosboleto["agencia"],4,0);
-	//conta é 6 digitos
+	//conta ï¿½ 6 digitos
 	$conta = formata_numero($dadosboleto["conta"],6,0);
 	//dv da conta
 	$conta_dv = formata_numero($dadosboleto["conta_dv"],1,0);
+
+	$cCPF_CNPJ = "CPF";
+	if(strlen($dadosboleto["cpf"]) > 11)
+		$cCPF_CNPJ = "CNPJ";
 
 	//adicionando boleto
 	$boleto['agencia'] 						= $agencia;
@@ -45,7 +49,7 @@ $arquivo->config($config);
 	$boleto['conta_dv'] 					= $conta_dv;
 	$boleto['carteira'] 					= '009';
 	$boleto['numero_controle'] 				= $rowcliente['id'];
-	$boleto['habilitar_debito_compensacao'] = false; // true para sair 237(bradesco) na poseicao 063 a 065, caso o cliente Beneficiário tenha optado pelo débito automático em Conta do Pagador
+	$boleto['habilitar_debito_compensacao'] = false; // true para sair 237(bradesco) na poseicao 063 a 065, caso o cliente Beneficiï¿½rio tenha optado pelo dï¿½bito automï¿½tico em Conta do Pagador
 	$boleto['habilitar_multa'] 				= false; // true para Identificativos de Multa
 	$boleto['percentual_multa'] 			= '0';
 	$boleto['nosso_numero'] 				= $NossoNumero; //'61551964';
@@ -61,7 +65,7 @@ $arquivo->config($config);
 	$boleto['valor_desconto'] 				= '0';
 	$boleto['valor_iof'] 					= '0';
 	$boleto['valor_abatimento_concedido'] 	= '0';
-	$boleto['tipo_inscricao_pagador'] 		= 'CPF';
+	$boleto['tipo_inscricao_pagador'] 		= $cCPF_CNPJ;
 	$boleto['numero_inscricao'] 			= $dadosboleto["cpf"];
 	$boleto['nome_pagador'] 				= $dadosboleto["sacado"];
 	$boleto['endereco_pagador'] 			= $dadosboleto["endereco1"];

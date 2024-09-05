@@ -12,15 +12,6 @@
 
 	session_start();
 
-// Defini��es da barra de progresso
-//==============================================================
-define("_JPGRAPH_PATH", '../../includes/mpdf54/'); // must define this before including mpdf.php file
-$JpgUseSVGFormat = true;
-
-define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolute URI - not a file system path
-//==============================================================
-	
-	include("../../includes/mpdf54/mpdf.php");	
 	include ("../../includes/include_geral_III.php");
 
 	$conec = new conexao;
@@ -37,7 +28,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 		
 
 	// Inicio Dados Cabecalho	
-	$lcBorda.="<table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'>
+	$lcBorda="<table width='100%' style='vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'>
 	<tr>
 	<td align='right'>Data Inicial:</TD>
 	<td align='left'>".$_POST['datainicio']."</TD>
@@ -67,37 +58,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 	$lcBorda.= "</tr>
 	</table>";
 
-	
-	if($_POST['separacao'] <> -1 ) {
 
-	$nsepara = $_POST['separacao'];
-	$lcBorda.= "<table border='0' cellspacing='2' cellpadding='2'>";
-	
-		switch ( $nsepara ){
-		  case 1:
-			$lcBorda.= "<td align='right'>Separa&ccedil;&atilde;o:</TD>
-			<td align='left'>Cidade</TD>";
-			break;
-		  case 2:
-			$lcBorda.= "<td align='right'>Separa&ccedil;&atilde;o:</TD>
-			<td align='left'>M&ecirc;s/Ano</TD>";
-		  	break;
-		  case 3:
-			$lcBorda.= "<td align='right'>Separa&ccedil;&atilde;o:</TD>
-			<td align='left'>Usu&aacute;rio</TD>";
-		  	break;
-		  case 4:
-			$lcBorda.= "<td align='right'>Separa&ccedil;&atilde;o:</TD>
-			<td align='left'>Local Pagto</TD>";
-		  	break;
-		  default:
-			$lcBorda.= "<td align='right'>Separa&ccedil;&atilde;o:</TD>
-			<td align='left'>Cidade</TD>";
-		}
-
-		$lcBorda.= "</table>";
-			
-	}
 	// Fim Dados Cabecalho
 
 		$pcwhere	= "";
@@ -125,7 +86,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
       //break;
       
 	// Cabe�alho do regisrtos encontrados
-	$lcString.= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
+	$lcString= "<table width='800' border='1' cellspacing='1' cellpadding='1'>
 	<tr>
 	<th scope='col' align='center'>Local de Pagamento</th>
 	<th scope='col' align='center'>Qtde</th>
@@ -157,12 +118,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
 				
 			}
 		
-		// Tratamento para quando for Mes/Ano
-		if($_POST['separacao'] <> 2) {
-			$lcCampo = retira_acentos_UTF8($row['filtro']);
-		} else {
-			$lcCampo = invertecomp($row['filtro'],1);
-		}
+		$lcCampo = retira_acentos_UTF8($row['filtro']);
 		
 		$lcString.= "<tr>
 		<td align='left'>".$lcCampo."</TD>
@@ -292,11 +248,7 @@ define('_MPDF_URI','../../includes/mpdf54/'); 	// must be  a relative or absolut
     <td align='left'>Respons&aacute;vel Setor Financeiro</td>
     </tr>    
     </table>";
-	
-//$mpdf=new mPDF_('en-x','A4','','',32,25,47,47,10,10); 
-$mpdf=new mPDF_('en-x','A4','','',12,12,40,45,1,5);
 
-$mpdf->mirrorMargins = 1;	// Use different Odd/Even headers and footers and mirror margins
 
 $date = date("d/m/Y g:i a");
 
@@ -332,30 +284,16 @@ $headerE = "<table width='100%' style='border-bottom: 1px solid #000000; vertica
 
 $footer = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Informática LTDA</a></span></div>
 </td>
 </table>";
 
 
 $footerE = "<table width='100%' style='border-top: 1px solid #000000; vertical-align: bottom; font-family: serif; font-size: 9pt; color: #000000;'><tr>
 <td width='33%' align='center'>
-<div align='center'><span style='font-size:9pt;'>MCJ - Assessoria Hosp. & Inf. LTDA  Rua da Bahia, 570 - Conj. 902 - Centro - 30.160-010  Belo Horizonte-MG  Fone (31)3214-0600</a></span></div>
+<div align='center'><span style='font-size:9pt;'>MTD - Assessoria e Sistemas de Informática LTDA</a></span></div>
 </td>
 </table>";
-
-$mpdf->StartProgressBarOutput();
-$mpdf->mirrorMargins = 1;
-$mpdf->SetDisplayMode('fullpage','two');
-$mpdf->useGraphs = true;
-$mpdf->list_number_suffix = ')';
-$mpdf->hyphenate = true;
-$mpdf->debug  = true;
-
-
-$mpdf->SetHTMLHeader($header);
-$mpdf->SetHTMLHeader($headerE,'E');
-$mpdf->SetHTMLFooter($footer);
-$mpdf->SetHTMLFooter($footerE,'E');
 
 
 $html = '
@@ -368,9 +306,20 @@ $html = '
 <p>Nulla felis erat, imperdiet eu, ullamcorper non, nonummy quis, elit. Suspendisse potenti. Ut a eros at ligula vehicula pretium. Maecenas feugiat pede vel risus. Nulla et lectus. Fusce eleifend neque sit amet erat. Integer consectetuer nulla non orci. Morbi feugiat pulvinar dolor. Cras odio. Donec mattis, nisi id euismod auctor, neque metus pellentesque risus, at eleifend lacus sapien et risus. Phasellus metus. Phasellus feugiat, lectus ac aliquam molestie, leo lacus tincidunt turpis, vel aliquam quam odio et sapien. Mauris ante pede, auctor ac, suscipit quis, malesuada sed, nulla. Integer sit amet odio sit amet lectus luctus euismod. Donec et nulla. Sed quis orci. </p>
 ';
 
-$mpdf->WriteHTML($lcString);
 
+$html = $header.$lcString.$footer;
+
+echo $html;
+/*
+include("../../includes/mpdf/vendor/autoload.php");
+
+$mpdf = new \Mpdf\Mpdf(['debug' => true]);
+$mpdf->WriteHTML($html);
 $mpdf->Output();
+*/
+exit;
+
+
 exit;
     
 ?>

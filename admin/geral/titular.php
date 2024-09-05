@@ -55,9 +55,9 @@ $selectedAmbos = "selected";
        	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
-       	$query = "SELECT * FROM carne_titular ";
+       	$query = "SELECT A.*,B.Descricao FROM carne_titular A Left Join carne_tipopessoa B on B.Id = A.tipopessoa ";
 		if (isset($_GET['cod'])) {
-			$query.= " WHERE id = ".$_GET['cod']." ";
+			$query.= " WHERE A.id = ".$_GET['cod']." ";
 			$cond=1;
 		}
 
@@ -65,10 +65,10 @@ $selectedAmbos = "selected";
 			
 			if($_POST['status'] != 'AMBOS'){
 				if($cond==0) {
-					$query.=" Where situacao ='".$_POST['status']."'";
+					$query.=" Where A.situacao ='".$_POST['status']."'";
 					$cond=1;
 				} else {
-					$query.=" and situacao ='".$_POST['status']."'";
+					$query.=" and A.situacao ='".$_POST['status']."'";
 				}
 				
 			 if($_POST['status'] = 'ATIVO') { 
@@ -90,13 +90,13 @@ $selectedAmbos = "selected";
 			if(is_numeric($_POST['search'])) {
 				
 				if($_SESSION['s_utilizacontrato']=='Nao') {
-					$query.= " where nrocarne = ".trim(substr($_POST['search'],0,4))."";
+					$query.= " where A.nrocarne = ".trim(substr($_POST['search'],0,4))."";
 				} else {
-					$query.= " where id = ".trim(substr($_POST['search'],0,8))."";					
+					$query.= " where A.id = ".trim(substr($_POST['search'],0,8))."";					
 				}
 
 			} else {
-				$query.= " where lower(nometitular) like lower(('%".noHtml($_POST['search'])."%')) or lower(cidade) like lower(('%".noHtml($_POST['search'])."%'))";
+				$query.= " where lower(A.nometitular) like lower(('%".noHtml($_POST['search'])."%')) or lower(cidade) like lower(('%".noHtml($_POST['search'])."%'))";
 			}
 			
 			//$query.= " where lower(nometitular) like lower(('%".noHtml($_POST['search'])."%')) or lower(cidade) like lower(('%".noHtml($_POST['search'])."%'))";
@@ -105,9 +105,9 @@ $selectedAmbos = "selected";
 		}
 
 		if($cond==0) {
-			$query.=" Where unidade =".$_SESSION['s_local']." ORDER BY id desc";
+			$query.=" Where A.unidade =".$_SESSION['s_local']." ORDER BY A.id desc";
 		} else {
-			$query.=" and unidade =".$_SESSION['s_local']." ORDER BY nometitular";
+			$query.=" and A.unidade =".$_SESSION['s_local']." ORDER BY A.nometitular";
 		}
 
 		if (isset($_POST['status'])) {
@@ -129,7 +129,7 @@ $selectedAmbos = "selected";
 			$query = $_SESSION['where'];
 		}
 								
-		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÃƒâ€¡Ãƒâ€šO DA QUERY DE CONSULTA 1!');
+		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÃO DA QUERY DE CONSULTA 1!'.$query);
 		$registros = mysqli_num_rows($resultado);
 
 
@@ -180,7 +180,7 @@ $selectedAmbos = "selected";
 			print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line' width='5%'>"."Cod."."</TD>"."<td class='line' width='50%'>"."Cliente"."</TD>"."<td class='line' width='10%'>"."Status"."<td class='line' width='10%'>"."Nro Carteira"."</TD>"."<td class='line' width='5%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Fone Contato"."</TD>"."<td class='line'>"."Munic&iacute;pio"."</TD>".
+			print "<TR class='header'><td class='line' width='5%'>"."Cod."."</TD>"."<td class='line' width='50%'>"."Cliente"."</TD>"."<td class='line' width='10%'>"."Status"."<td class='line' width='10%'>"."Nro Carteira"."</TD>"."<td class='line' width='5%'>"."Nro Contrato"."</TD>"."<td class='line' width='20%'>"."Fone Contato"."</TD>"."<td class='line'>"."Tipo Pessoa"."</TD>".
 				"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 			
 			$j=2;
@@ -230,7 +230,7 @@ $selectedAmbos = "selected";
 				if(empty($row['cidade'])) {
 					$municipio = "N&atilde;o informado";
 				}
-				print "<td class='line'>".$municipio."</td>";
+				print "<td class='line'>".$row['Descricao']."</td>";
 				
 				print "<td class='line'><a onClick=\"redirect('abastitular.php?action=alter&cod=".$row['id']."&cellStyle=true')\"><img height='16' width='16' src='".ICONS_PATH."edit.png' title='".TRANS('HNT_EDIT')."'></a></td>";				
 			

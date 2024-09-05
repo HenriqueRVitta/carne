@@ -1,3 +1,106 @@
+ALTER TABLE carne_pagamentos ADD COLUMN valor_desconto DECIMAL(12,2) NOT NULL DEFAULT '0.00' AFTER valor_taxas;
+
+ALTER TABLE carne_titular ADD COLUMN nomevendedor VARCHAR(100) NOT NULL DEFAULT ''
+
+ALTER TABLE carne_pagamentos ADD COLUMN tipopagamento INTEGER NOT NULL DEFAULT '0'
+
+ALTER TABLE carne_dependente ADD COLUMN grupo INTEGER NOT NULL DEFAULT '0'
+
+ALTER TABLE carnepromedico.carne_titular ADD COLUMN emailenviado TEXT NOT NULL COMMENT 'Email enviado em massa'' AFTER situacaocontrato,
+ ADD INDEX Index_situacaocontrato USING BTREE(situacaocontrato);
+
+ALTER TABLE usuarios ADD COLUMN email VARCHAR(250) NOT NULL DEFAULT ''
+
+ALTER TABLE carne_titular MODIFY COLUMN email VARCHAR(250) NOT NULL DEFAULT ''
+
+ALTER TABLE carne_titular ADD COLUMN situacaocontrato INTEGER NOT NULL DEFAULT '0'
+
+CREATE TABLE carne_situacaocontrato (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Descricao VARCHAR(45) NOT NULL,
+  Unidade INTEGER NOT NULL DEFAULT '0',
+  Inativo TINYINT(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (Id))
+
+ALTER TABLE carne_tipodependente ADD COLUMN inativo TINYINT(1) NOT NULL DEFAULT '0'
+
+ALTER TABLE carne_localpagto ADD COLUMN inativo TINYINT(1) NOT NULL DEFAULT '0'
+
+ALTER TABLE cadastro_unidades ADD COLUMN email VARCHAR(250) NOT NULL DEFAULT '';
+
+ALTER TABLE carne_grupo ADD COLUMN inativo TINYINT(1) NOT NULL DEFAULT '0' AFTER `descricao`
+
+ALTER TABLE carne_titular ADD INDEX Index_motivocancelado USING BTREE(`idmotivocancelado`);
+
+ALTER TABLE carne_dependente ADD INDEX Index_motivocancelado USING BTREE(`idmotivocancelado`);
+
+ALTER TABLE carne_titular ADD COLUMN idmotivocancelado INTEGER NOT NULL DEFAULT '0' AFTER motivocancelado;
+
+ALTER TABLE carne_dependente ADD COLUMN idmotivocancelado INTEGER NOT NULL DEFAULT '0' AFTER motivocancelado
+
+ALTER TABLE carne_dependente ADD COLUMN `motivocancelado` TEXT AFTER `dtinativo`
+
+CREATE TABLE carne_motivocancelado (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Descricao VARCHAR(45),
+  Inativo TINYINT(1) NOT NULL DEFAULT '0',
+  Unidade INTEGER NOT NULL DEFAULT '1',
+  PRIMARY KEY  USING BTREE(Id`)
+)
+
+ALTER TABLE carne_inadimplentes ADD COLUMN Unidade INTEGER NOT NULL DEFAULT '1' AFTER UltimoContato,
+ ADD COLUMN Inclusao VARCHAR(250),
+ ADD COLUMN Inativo VARCHAR(250)
+
+CREATE TABLE carne_inadimplentes (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Cpf VARCHAR(45),
+  Protestado VARCHAR(45),
+  Nome VARCHAR(100),
+  Telefone1 VARCHAR(45),
+  Telefone2 VARCHAR(45),
+  Adesao DATETIME,
+  Atualizacao VARCHAR(45) NOT NULL DEFAULT 'PLANO MORTO',
+  BaixaInicial DATETIME,
+  BaixaFinal DATETIME,
+  UltimoMesCarne VARCHAR(45),
+  TotalParcelas INTEGER NOT NULL DEFAULT '0',
+  ValorParcela DECIMAL(12,2) NOT NULL DEFAULT '0.00',
+  ValorProtesto DECIMAL(12,2) NOT NULL DEFAULT '0.00',
+  Observacao TEXT,
+  ContratoCidade VARCHAR(45),
+  Ligacao VARCHAR(45),
+  Atualizado VARCHAR(45) NOT NULL DEFAULT 'OK',
+  Assertiva VARCHAR(45),
+  UltimoContato TEXT,
+  PRIMARY KEY (Id),
+  INDEX Index_Cpf USING BTREE(Cpf),
+  INDEX Index_Nome USING BTREE(Nome))
+  
+ALTER TABLE carne_dependente ADD INDEX Index_idtitular USING BTREE(`idtitular`);
+
+ALTER TABLE carne_contratos ADD INDEX Index_IdPlano USING BTREE(`plano`);
+
+ALTER TABLE carne_contratos ADD INDEX Index_IdTitular USING BTREE(`idtitular`);
+
+ALTER TABLE carne_titular ADD COLUMN motivocancelado TEXT DEFAULT NULL AFTER `situacao`;
+
+ALTER TABLE carne_tipopessoa ADD COLUMN Unidade INTEGER NOT NULL DEFAULT '1';
+
+ALTER TABLE carne_titular ADD COLUMN tipopessoa INTEGER NOT NULL DEFAULT '0' AFTER `nometitular`,
+ ADD INDEX `Index_tipopessoa` USING BTREE(`tipopessoa`);
+
+ALTER TABLE carne_dependente ADD COLUMN tipopessoa INTEGER NOT NULL AFTER `parentesco`,
+ ADD INDEX `Index_tipoPessoa` USING BTREE(`tipopessoa`);
+
+INSERT INTO carne_tipopessoa (Id,Descricao) values (1,'TITULAR/FUNCIONÁRIO'),(2,'RESPONSÁVEL'),(3,'DEPENDENTE'),(61,'CANCELADO')
+
+CREATE TABLE carne_tipopessoa (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Descricao VARCHAR(45) NOT NULL DEFAULT '',
+  Ativo VARCHAR(45) NOT NULL DEFAULT '1',
+  PRIMARY KEY (Id))
+
 ALTER TABLE usuarios MODIFY COLUMN nome VARCHAR(250) NOT NULL DEFAULT '';
 
 ALTER TABLE carne_dependente ADD COLUMN cpf VARCHAR(45) NOT NULL DEFAULT ''

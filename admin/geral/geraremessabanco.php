@@ -281,7 +281,7 @@ if(isset($_POST['mesano'])) {
 			$totalGeral = number_format($row['valor']+$row['valor_dependente']+$totalTaxas, 2, ',', '');
 			
 			$Print.="<tr class='".$trClass."' id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
-			$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['id']."' </td>";
+			$Print.="<td class='line' width='5%'><input type='checkbox' name='selecionado[]' ".$Checked." value='".$row['id']."'></td>";
 			$Print.="<td class='line' width='10%'>".$row['cpf']."</td>";
 			$Print.="<td class='line' width='30%'>".$row['nometitular']."</td>";
 			$Print.="<td class='line' width='10%'>".$row['mesano']."</td>";

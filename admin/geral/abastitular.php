@@ -669,6 +669,24 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome do Cliente".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nometitular' maxlength='45' id='idnometitular'></td>";
 		print "</TR><TR>";		
+		
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo Pessoa".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		
+		print "<select class='select2' name='tipopessoa' id='idtipopessoa' onBlur='return Dados(this.value)'>";  
+					print "<option value=-1>"."Selecione Tipo Pessoa"."</option>";
+					$sql="Select Id,Descricao from carne_tipopessoa where Ativo = 1 and Unidade = ".$_SESSION['s_local'];
+
+					$commit = mysqli_query($conec->con,$sql);
+					$i=0;
+					while($row = mysqli_fetch_array($commit)){
+						print "<option value=".$row['Id'].">".$row['Descricao']."</option>";
+						$i++;
+					}
+				print "</select>";
+		
+		print "</TD></TR><TR>";
+		
 		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Sexo".":</TD>";
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 		print "<select class='select2' name='sexo' id='idsexo'>";  
@@ -917,7 +935,30 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nome do Cliente".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' class='text3' name='nometitular' maxlength='45' id='idnometitular' value='".trim($row['nometitular'])."'></td>";
 		print "</TR><TR>";
+
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo Pessoa".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+
+		
+		print "<select class='select2' name='tipopessoa' id='idtipopessoa'>";  
+		$sql="select Id, Descricao from carne_tipopessoa where Id =".$row['tipopessoa']."";
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
+		print "<option value=-1>"."Selecione Tipo Pessoa"."</option>";
+				$sql="select Id, Descricao from carne_tipopessoa where Unidade =".$_SESSION['s_local']." order by Id";
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
+						print "<option value=".$rowB["Id"]."";
+                        			if ($rowB['Id'] == $rowR['Id'] ) {
+                            				print " selected";
+                        			}
+                        			print ">".$rowB['Descricao']."</option>";
+					}
+			print "</select>";
 				
+		print "</TD></TR><TR>";		
+
+		
 		if($row['sexo']=='M'){ $selected1 = " selected"; } else { $selected1 = "";}
 		if($row['sexo']=='F'){ $selected2 = " selected"; } else { $selected2 = "";}
 		if($row['sexo']=='T'){ $selected3 = " selected"; } else { $selected3 = "";}
@@ -1309,9 +1350,13 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 						$somenteresponsavel = $_POST['somenteresponsavel'];
 					} 
 
+					$tipopessoa = 0;
+					if(isset($_POST['tipopessoa'])) { 
+						$tipopessoa = $_POST['tipopessoa'];
+					} 
 					
-					$query = "INSERT INTO carne_titular (nometitular,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne,somenteresponsavel) ".
-							" values ('".$lcnome."','".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."',".$somenteresponsavel.")";
+					$query = "INSERT INTO carne_titular (nometitular,tipopessoa,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne,somenteresponsavel) ".
+							" values ('".$lcnome."',".$tipopessoa.",'".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."',".$somenteresponsavel.")";
 
 					$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					if ($resultado == 0)
@@ -1463,7 +1508,12 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 					$somenteresponsavel = $_POST['somenteresponsavel'];
 				} 
 			
-				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."',endereco='".$lcEndereco."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$lcBairro."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$lclocaltrab."', profissao='".$lcprofissao."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$lcnomemae."', nomepai='".$lcnomepai."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano.", somenteresponsavel = ".$somenteresponsavel." WHERE id=".$_POST['alteratitular']." ";
+				$tipopessoa = 0;
+				if(isset($_POST['tipopessoa'])) { 
+					$tipopessoa = $_POST['tipopessoa'];
+				} 
+
+				$query2 = "UPDATE carne_titular SET nometitular='".$lcnome."', tipopessoa=".$tipopessoa.",endereco='".$lcEndereco."', datanasc='".$nascimento."', datainicio='".$datainicio."', numero='".$_POST['numero']."', cep='".$cep."', bairro='".$lcBairro."', cidade='".$_POST['cidade']."', codcidade='"."', uf='".$_POST['uf']."', telefoneres='".$foneres."', telefonecom='".$fonecom."', celular='".$celular."', qtdefilhos=".$_POST['qtdefilhos'].", escolaridade='".$_POST['escolaridade']."', localtrabalho='".$lclocaltrab."', profissao='".$lcprofissao."', identidade='".$_POST['identidade']."', cpf='".$_POST['cpf']."', estadocivil='".$_POST['estcivil']."', sexo='".$_POST['sexo']."', nomemae='".$lcnomemae."', nomepai='".$lcnomepai."', email='".strtolower($_POST['email'])."', unidade='".$_SESSION['s_local']."', prontuario='".$prontuario."',nrocarne=".$nrocarne.", situacao='".$_POST['situacao']."', grupo=".$_POST['grupo'].", cpfcnpj = ".$selCPFCNPJ.", nrocarteira = '".$_POST['nrocarteira']."', dtinativo = '".$dtinativo."', obs = '".$obs."', vendedor = ".$_POST['vendedor'].", ultimomescarne = '".$ultimomescarne."', valorplano = ".$valorplano.", somenteresponsavel = ".$somenteresponsavel." WHERE id=".$_POST['alteratitular']." ";
 				
 				$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 
@@ -1651,6 +1701,24 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 							}
 						print "</select>";
 				print "</TR><TR>";
+
+				print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo Pessoa".":</TD>";
+				print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+				
+				print "<select class='select2' name='tipopessoa' id='idtipopessoa' onBlur='return Dados(this.value)'>";  
+							print "<option value=-1>"."Selecione Tipo Pessoa"."</option>";
+							$sql="Select Id,Descricao from carne_tipopessoa where Ativo = 1 and Unidade = ".$_SESSION['s_local'];
+		
+							$commit = mysqli_query($conec->con,$sql);
+							$i=0;
+							while($row = mysqli_fetch_array($commit)){
+								print "<option value=".$row['Id'].">".$row['Descricao']."</option>";
+								$i++;
+							}
+						print "</select>";
+				
+				print "</TD></TR><TR>";
+
 				print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Registro".":</TD>";
 				print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='prontuario' maxlength='7' class='text4' onkeyup=\"maskIt(this,event,'#######')\" id='idprontuario' value=''></td>";
 				print "</TR><TR>";
@@ -1715,7 +1783,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				print "</TR>";
 
 		// Come�a aqui a listar os dependentes		
-   		$query = "SELECT * FROM carne_dependente WHERE idtitular = ".$_GET['cod']." ";
+   		$query = "SELECT A.*,b.Descricao FROM carne_dependente A Left Join carne_tipopessoa B on B.Id = A.tipopessoa WHERE A.idtitular = ".$_GET['cod']." ";
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA QUERY !'.$query);
 		$registros = mysqli_num_rows($resultado);
 
@@ -1748,7 +1816,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 					print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 					print "</tr>";
 					//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-					print "<TR class='header'><td class='line'>"."Cpf"."</TD>"."<td class='line'>"."Nome Dependente"."</TD>"."<td class='line'>"."Cobrar Boleto"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
+					print "<TR class='header'><td class='line'>"."Cpf"."</TD>"."<td class='line'>"."Nome Dependente"."</TD>"."<td class='line'>"."Tipo Pessoa"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Nro Carteira"."</TD>"."<td class='line'>"."Data Nasc"."</TD>"."<td class='line'>"."STATUS"."</TD>".
 						"<td class='line'>".TRANS('COL_EDIT')."</TD><td class='line'>".TRANS('COL_DEL')."</TD></tr>";
 					
 					$j=2;
@@ -1769,7 +1837,7 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 						print "<tr class=".$trClass." id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 						print "<td class='line' width='10%'>".$row['cpf']."</td>";						
 						print "<td class='line' width='10%'>".$row['nome']."</td>";
-						print "<td class='line' width='10%'>".$cobrarnoboleto."</td>";
+						print "<td class='line' width='10%'>".$row['Descricao']."</td>";
 						print "<td class='line' width='10%'>".$row['id']."</td>";
 						print "<td class='line' width='10%'>".$row['nrocarteira']."</td>";
 						$dtnasc = str_replace('/','',substr(converte_datacomhora($row['datanasc']),0,10));
@@ -1866,7 +1934,28 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
                         			print ">".$rowB['descricao']."</option>";
 					}
 			print "</select>";
-		print "</TR><TR>";
+		print "</TD></TR><TR>";
+
+		print "<TD width='5%' align='left' bgcolor='".TD_COLOR."'>"."Tipo Pessoa".":</TD>";
+		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+		
+		print "<select class='select2' name='tipopessoa' id='idtipopessoa'>";  
+		$sql="select id,nome,tipopessoa from carne_dependente where id =".$_GET['cod']."";
+		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
+		$rowR = mysqli_fetch_array($commit);		
+		print "<option value=-1>"."Selecione Tipo Pessoa"."</option>";
+				$sql="select Id, Descricao from carne_tipopessoa where Unidade =".$_SESSION['s_local']." order by Id";
+				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
+							while($rowB = mysqli_fetch_array($commit)){
+						print "<option value=".$rowB["Id"]."";
+                        			if ($rowB['Id'] == $rowR['tipopessoa'] ) {
+                            				print " selected";
+                        			}
+                        			print ">".$rowB['Descricao']."</option>";
+					}
+			print "</select>";
+		print "</TD></TR><TR>";
+
 		print "<TD width='20%' align='left' bgcolor='".TD_COLOR."'>"."Nro Registro".":</TD>";
 		print "<TD width='20%' align='left' bgcolor='".BODY_COLOR."'><INPUT type='text' name='prontuario' maxlength='7' class='text4' onkeyup=\"maskIt(this,event,'#######')\" id='idprontuario' value='".$row['prontuario']."'></td>";
 		print "</TR><TR>";
@@ -2023,9 +2112,13 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 				
 				$lcnome = retira_acentos_ISO($_POST['nomedep']);
 				$lcnome = strtoupper($lcnome);
-				
-				$query = "INSERT INTO carne_dependente (nome,parentesco,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto,cpf)".
-						" values ('".$lcnome."','".$_POST['parentesco']."','".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].",'".$_POST['cpf']."')";
+				$tipopessoa = 0;
+				if(isset($_POST['tipopessoa'])){
+					$tipopessoa = $_POST['tipopessoa'];
+				}
+
+				$query = "INSERT INTO carne_dependente (nome,parentesco,tipopessoa,sexo,datanasc,registro,idtitular,prontuario,nrocarteira,situacao,dtinativo,obs,cobrarnoboleto,cpf)".
+						" values ('".$lcnome."','".$_POST['parentesco']."',".$tipopessoa.",'".$_POST['sexo']."','".$nascimento."','".$registro."','".$_POST['idtitular']."',".$prontuario.",'".$_POST['nrocarteira']."','".$situacao."','".$dtinativo."','".$obs."',".$_POST['cobrarnoboleto'].",'".$_POST['cpf']."')";
 							
 				$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 				if ($resultado == 0)
@@ -2084,8 +2177,11 @@ print "<div id='div_consulta' class='conteudo' style='display: none'>";
 			$dtinativo = Fdate($_POST['dtinativo']);
 			$obs = $_POST['obs'];
 			$cpf = $_POST['cpf'];
-
-			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto'].", cpf = '".$cpf."' WHERE id=".$_POST['codigo']." ";
+			$tipopessoa = 0;
+			if(isset($_POST['tipopessoa'])){
+				$tipopessoa = $_POST['tipopessoa'];
+			}
+			$query2 = "UPDATE carne_dependente SET nome='".$lcnome."',parentesco='".$_POST['parentesco']."', tipopessoa=".$tipopessoa.", sexo='".$_POST['sexo']."', datanasc='".$nascimento."', prontuario=".$prontuario.", nrocarteira = '".$_POST['nrocarteira']."', situacao = '".$situacao."', dtinativo = '".$dtinativo."', obs = '".$obs."', cobrarnoboleto = ".$_POST['cobrarnoboleto'].", cpf = '".$cpf."' WHERE id=".$_POST['codigo']." ";
 			
 			$resultado2 = mysqli_query($conec->con,$query2) or die('Erro na query: '.$query2);
 	

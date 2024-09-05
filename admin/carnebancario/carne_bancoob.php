@@ -152,56 +152,56 @@ For ($x=$MesIni; $x<=$MesFim; $x++) {
  	}
 		
  
- 	
-$dirarquivoremessa = $rowconfig['dirarquivoremessa']; 
-$carteiracobranca = $rowconfig['carteiracobranca'];
 		
-	
-// DADOS DO BOLETO PARA O SEU CLIENTE
-$dias_de_prazo_para_pagamento = 7;
-$taxa_boleto = 0;
-$data_venc = $DataVencimento; //"14/05/2013";//date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
-
-$valor_cobrado = $rowcliente['valor']; // "1,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
-
-// Soma o valor dos dependentes com o Titular
-if($nQtdeDep > 0) {
-	$valor_cobrado = $rowcliente['valor'] + ($rowcliente['valor_dependente'] * $nQtdeDep);
-}
-
-// Valor Negociado com o Cliente
-if($rowcliente['vlrfixonegociado'] == 2 && $rowcliente['valorplano'] > 0){
-	$valor_cobrado = $rowcliente['valorplano'];
-}
-
+	$dirarquivoremessa = $rowconfig['dirarquivoremessa']; 
+	$carteiracobranca = $rowconfig['carteiracobranca'];
+			
 		
-$valor_cobrado = str_replace(",", ".",$valor_cobrado);
-$valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+	// DADOS DO BOLETO PARA O SEU CLIENTE
+	$dias_de_prazo_para_pagamento = 7;
+	$taxa_boleto = 0;
+	$data_venc = $DataVencimento; //"14/05/2013";//date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
 
-if(!function_exists('formata_numdoc'))
-{
-	function formata_numdoc($num,$tamanho)
-	{
-		while(strlen($num)<$tamanho)
-		{
-			$num="0".$num; 
-		}
-	return $num;
+	$valor_cobrado = $rowcliente['valor']; // "1,00"; // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+
+	// Soma o valor dos dependentes com o Titular
+	if($nQtdeDep > 0) {
+		$valor_cobrado = $rowcliente['valor'] + ($rowcliente['valor_dependente'] * $nQtdeDep);
 	}
-}
 
-$IdDoSeuSistemaAutoIncremento = $numero_documento; //'2'; // Deve informar um numero sequencial a ser passada a função abaixo, Até 6 dígitos
-$agencia = $rowconfig['nroagencia']; // Num da agencia, sem digito
-$agencia_dv = $rowconfig['digitoagencia']; // Digito Verificador da agencia
-$conta = $rowconfig['nroconta']; // Num da conta, sem digito
-$conta_dv = $rowconfig['digitoconta']; // Digito do nro da conta
-$convenio = $rowconfig['nrocontrato']; //Número do convênio indicado no frontend
+	// Valor Negociado com o Cliente
+	if($rowcliente['vlrfixonegociado'] == 2 && $rowcliente['valorplano'] > 0){
+		$valor_cobrado = $rowcliente['valorplano'];
+	}
 
-$NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
-$qtde_nosso_numero = strlen($NossoNumero);
-$sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
-$cont=0;
-$calculoDv = 0;
+			
+	$valor_cobrado = str_replace(",", ".",$valor_cobrado);
+	$valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+
+	if(!function_exists('formata_numdoc'))
+	{
+		function formata_numdoc($num,$tamanho)
+		{
+			while(strlen($num)<$tamanho)
+			{
+				$num="0".$num; 
+			}
+		return $num;
+		}
+	}
+
+	$IdDoSeuSistemaAutoIncremento = $numero_documento; //'2'; // Deve informar um numero sequencial a ser passada a função abaixo, Até 6 dígitos
+	$agencia = $rowconfig['nroagencia']; // Num da agencia, sem digito
+	$agencia_dv = $rowconfig['digitoagencia']; // Digito Verificador da agencia
+	$conta = $rowconfig['nroconta']; // Num da conta, sem digito
+	$conta_dv = $rowconfig['digitoconta']; // Digito do nro da conta
+	$convenio = $rowconfig['nrocontrato']; //Número do convênio indicado no frontend
+
+	$NossoNumero = formata_numdoc($IdDoSeuSistemaAutoIncremento,7);
+	$qtde_nosso_numero = strlen($NossoNumero);
+	$sequencia = formata_numdoc($agencia,4).formata_numdoc(str_replace("-","",$convenio),10).formata_numdoc($NossoNumero,7);
+	$cont=0;
+	$calculoDv = 0;
 	for($num=0;$num<=strlen($sequencia);$num++)
 	{
 		$cont++;
@@ -244,90 +244,90 @@ $calculoDv = 0;
 	}
 	$dadosboleto["nosso_numero"] = $NossoNumero . $Dv;
 
-/*************************************************************************
- * +++
- *************************************************************************/
+	/*************************************************************************
+	 * +++
+	 *************************************************************************/
 
 
-$dadosboleto["numero_documento"] = $numero_documento; //"12";	// Num do pedido ou do documento
-$dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
-$dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
-$dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
-$dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
+	$dadosboleto["numero_documento"] = $numero_documento; //"12";	// Num do pedido ou do documento
+	$dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
+	$dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
+	$dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
+	$dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
 
-// DADOS DO SEU CLIENTE
-$dadosboleto["sacado"] = substr($rowcliente['nometitular'],0,40);
-$dadosboleto["endereco1"] = $rowcliente['endereco']." ".$rowcliente['numero']." ".$rowcliente['bairro'];
-$dadosboleto["endereco2"] = $rowcliente['cidade']."-".$rowcliente['uf']." Cep:".$rowcliente['cep'];
-$dadosboleto["cpf"] = str_replace('.', '', $rowcliente['cpf']);
-$dadosboleto["cpf"] = str_replace('-', '', $dadosboleto["cpf"]);
-$dadosboleto["cpf"] = trim($dadosboleto["cpf"]);
-$dadosboleto["bairro"] = $rowcliente['bairro'];
-$dadosboleto["cep"] = $rowcliente['cep'];
-$dadosboleto["cidade"] = $rowcliente['cidade'];
-$dadosboleto["uf"] = $rowcliente['uf'];
-
-
-if($totaltaxasparcitular > 0) {
-	$valor_boleto = str_replace(",", ".",$valor_boleto);
-	$dadosboleto["valor_boleto"] = number_format($valor_boleto + $totaltaxasparcitular, 2, ',', '');
-}
-if(!empty($nomeNoBoleto)) {
-	$dadosboleto["sacado"] = substr($nomeNoBoleto,0,40);
-}
+	// DADOS DO SEU CLIENTE
+	$dadosboleto["sacado"] = substr($rowcliente['nometitular'],0,40);
+	$dadosboleto["endereco1"] = $rowcliente['endereco']." ".$rowcliente['numero']." ".$rowcliente['bairro'];
+	$dadosboleto["endereco2"] = $rowcliente['cidade']."-".$rowcliente['uf']." Cep:".$rowcliente['cep'];
+	$dadosboleto["cpf"] = str_replace('.', '', $rowcliente['cpf']);
+	$dadosboleto["cpf"] = str_replace('-', '', $dadosboleto["cpf"]);
+	$dadosboleto["cpf"] = trim($dadosboleto["cpf"]);
+	$dadosboleto["bairro"] = $rowcliente['bairro'];
+	$dadosboleto["cep"] = $rowcliente['cep'];
+	$dadosboleto["cidade"] = $rowcliente['cidade'];
+	$dadosboleto["uf"] = $rowcliente['uf'];
 
 
-// INFORMACOES PARA O CLIENTE
-//$dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
-$dadosboleto["demonstrativo1"] = $rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
-$dadosboleto["demonstrativo2"] = $rowconfig['infocliente2']; //"Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
-$dadosboleto["demonstrativo3"] = $rowconfig['infocliente3']; //"BoletoPhp - http://www.boletophp.com.br";
-
-// INSTRUÇÕES PARA O CAIXA
-$dadosboleto["instrucoes1"] = $rowconfig['instrucaocaixa1']; //"- Sr. Caixa, cobrar multa de 2% após o vencimento";
-$dadosboleto["instrucoes2"] = $rowconfig['instrucaocaixa2']; //"- Receber até 10 dias após o vencimento";
-$dadosboleto["instrucoes3"] = $rowconfig['instrucaocaixa3']; //"- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br";
-$dadosboleto["instrucoes4"] = ""; //"&nbsp; Emitido pelo sistema Projeto BoletoPhp - www.boletophp.com.br";
-
-// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
-$dadosboleto["quantidade"] = ""; //01";
-$dadosboleto["valor_unitario"] = ""; //10";
-$dadosboleto["aceite"] = "N";		
-$dadosboleto["especie"] = "R$";
-$dadosboleto["especie_doc"] = "DS"; // Duplicata Serviços
+	if($totaltaxasparcitular > 0) {
+		$valor_boleto = str_replace(",", ".",$valor_boleto);
+		$dadosboleto["valor_boleto"] = number_format($valor_boleto + $totaltaxasparcitular, 2, ',', '');
+	}
+	if(!empty($nomeNoBoleto)) {
+		$dadosboleto["sacado"] = substr($nomeNoBoleto,0,40);
+	}
 
 
-// ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
-// DADOS ESPECIFICOS DO SICOOB
-$dadosboleto["modalidade_cobranca"] = "02";
-$dadosboleto["numero_parcela"] = "901";
+	// INFORMACOES PARA O CLIENTE
+	//$dadosboleto["demonstrativo1"] = "Pagamento referente a ".$rowcliente['descricao']; //$rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
+	$dadosboleto["demonstrativo1"] = $rowconfig['infocliente1']; //Pagamento de Compra na Loja Nonononono";
+	$dadosboleto["demonstrativo2"] = $rowconfig['infocliente2']; //"Mensalidade referente a nonon nonooon nononon<br>Taxa bancária - R$ ".number_format($taxa_boleto, 2, ',', '');
+	$dadosboleto["demonstrativo3"] = $rowconfig['infocliente3']; //"BoletoPhp - http://www.boletophp.com.br";
+
+	// INSTRUÇÕES PARA O CAIXA
+	$dadosboleto["instrucoes1"] = $rowconfig['instrucaocaixa1']; //"- Sr. Caixa, cobrar multa de 2% após o vencimento";
+	$dadosboleto["instrucoes2"] = $rowconfig['instrucaocaixa2']; //"- Receber até 10 dias após o vencimento";
+	$dadosboleto["instrucoes3"] = $rowconfig['instrucaocaixa3']; //"- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br";
+	$dadosboleto["instrucoes4"] = ""; //"&nbsp; Emitido pelo sistema Projeto BoletoPhp - www.boletophp.com.br";
+
+	// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
+	$dadosboleto["quantidade"] = ""; //01";
+	$dadosboleto["valor_unitario"] = ""; //10";
+	$dadosboleto["aceite"] = "N";		
+	$dadosboleto["especie"] = "R$";
+	$dadosboleto["especie_doc"] = "DS"; // Duplicata Serviços
 
 
-// DADOS DA SUA CONTA - BANCO SICOOB
-$dadosboleto["agencia"] = $agencia; // Num da agencia, sem digito
-$dadosboleto["agencia_dv"] = $agencia_dv; // Digito do Num da agencia
-
-$dadosboleto["conta"] = $conta; // Num da conta, sem digito
-$dadosboleto["conta_dv"] = $conta_dv; 	// Digito do Num da conta
+	// ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
+	// DADOS ESPECIFICOS DO SICOOB
+	$dadosboleto["modalidade_cobranca"] = "02";
+	$dadosboleto["numero_parcela"] = "901";
 
 
-// DADOS PERSONALIZADOS - Bradesco
-$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente N�meros)
-$dadosboleto["conta_cedente_dv"] = $conta_dv; // Digito da ContaCedente do Cliente
+	// DADOS DA SUA CONTA - BANCO SICOOB
+	$dadosboleto["agencia"] = $agencia; // Num da agencia, sem digito
+	$dadosboleto["agencia_dv"] = $agencia_dv; // Digito do Num da agencia
 
-// DADOS PERSONALIZADOS - SICOOB
-$dadosboleto["convenio"] = $convenio; // Num do convênio - REGRA: No máximo 7 dígitos
+	$dadosboleto["conta"] = $conta; // Num da conta, sem digito
+	$dadosboleto["conta_dv"] = $conta_dv; 	// Digito do Num da conta
 
-if($bancoEmissor=='Sicoob') {
-	$dadosboleto["carteira"] = "01";  // C�digo da Carteira: pode ser 01-Simples com Registro 03-Garantida Caucionada
-}
 
-// SEUS DADOS
-$dadosboleto["identificacao"] = retira_acentos_UTF8($rowempresa['razao']);
-$dadosboleto["cpf_cnpj"] = $rowempresa['cnpj'];
-$dadosboleto["endereco"] = $rowempresa['linhacab'];
-$dadosboleto["cidade_uf"] = "";
-$dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
+	// DADOS PERSONALIZADOS - Bradesco
+	$dadosboleto["conta_cedente"] = $conta; // ContaCedente do Cliente, sem digito (Somente N�meros)
+	$dadosboleto["conta_cedente_dv"] = $conta_dv; // Digito da ContaCedente do Cliente
+
+	// DADOS PERSONALIZADOS - SICOOB
+	$dadosboleto["convenio"] = $convenio; // Num do convênio - REGRA: No máximo 7 dígitos
+
+	if($bancoEmissor=='Sicoob') {
+		$dadosboleto["carteira"] = "01";  // C�digo da Carteira: pode ser 01-Simples com Registro 03-Garantida Caucionada
+	}
+
+	// SEUS DADOS
+	$dadosboleto["identificacao"] = retira_acentos_UTF8($rowempresa['razao']);
+	$dadosboleto["cpf_cnpj"] = $rowempresa['cnpj'];
+	$dadosboleto["endereco"] = $rowempresa['linhacab'];
+	$dadosboleto["cidade_uf"] = "";
+	$dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 
 
 	if($bancoEmissor=='Sicoob') {
@@ -365,10 +365,12 @@ $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
 
 	$text = $GLOBALS['cabecalho'].$GLOBALS['detalhes'].$GLOBALS['rodape'];
 	$arquivogravacaoUrl = '';
-	
+
+	$dirarquivoremessa = '../boleto/remessas/';
+
 	for ($i = 1; $i < 99; $i++) {
 	$seq = str_pad($i, 2, '0', STR_PAD_LEFT);
-	$arquivogravacao = $dirarquivoremessa.'/'.'CB'.date('d').date('m').$seq;
+	$arquivogravacao = $dirarquivoremessa.'CB'.date('d').date('m').$seq;
 	$arquivogravacaoUrl = 'CB'.date('d').date('m').$seq;
 	
 		if(!file_exists($arquivogravacao.".REM")) {
@@ -398,7 +400,7 @@ $dadosboleto["cedente"] = retira_acentos_UTF8($rowempresa['razao']);
     $width = 600;
     $height = 600;
 
-    $lcFileUrl = 'remessas/'.$arquivogravacaoUrl.".REM";
+    $lcFileUrl = $dirarquivoremessa.$arquivogravacaoUrl.".REM";
     
     // A linha abaixo ir� abrir uma janela popup com $width de largura e $height de altura, centralizada na tela
     printf( "<script>window.open( '%s' , '_blank' , 'width=%d,height=%d,left='+( ( screen.availWidth / 2 ) - %f ) + ' , top='+( ( screen.availHeight / 2 ) - %f) + '' );</script>" , 'downloadremessa.php?arquivo='.$lcFileUrl."" , $width , $height , $width / 2 , $height / 2 );

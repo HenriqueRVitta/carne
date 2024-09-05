@@ -190,7 +190,10 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 		print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
 
 		print "<select class='select2' name='localpagto' id='localpagto'>";  
-		$sql="select id,descricao from carne_localpagto where id =".$localpagto."";
+		$lcWhereLocal = "";
+		if(!empty($localpagto))
+			$lcWhereLocal = " where id =".$localpagto."";
+		$sql="select id,descricao from carne_localpagto ".$lcWhereLocal;
 		$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);
 		$rowR = mysqli_fetch_array($commit);		
 		print "<option value=-1>"."Selecione Local"."</option>";
@@ -198,9 +201,11 @@ header ('Content-type: text/html; charset=ISO-8859-1');
 				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
 							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["id"]."";
+								if(!empty($localpagto)) {
                         			if ($rowB['id'] == $rowR['id'] ) {
-                            				print " selected";
-                        			}
+										print " selected";
+									}
+								}
                         			print ">".$rowB['descricao']."</option>";
 					}
 			print "</select>";

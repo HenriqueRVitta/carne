@@ -61,18 +61,27 @@
        	$maxid = mysqli_fetch_array($resultado);
        	
        	$cond=0;
-       	$query = "SELECT * FROM carne_titular ";
+       	$query = "SELECT A.*,C.descricao FROM carne_titular A".
+		" left Join carne_contratos B on B.idtitular = A.id".
+		" Left Join carne_tipoplano C on C.id = B.plano ";
 		if (isset($_GET['cod'])) {
-			$query.= " WHERE id = ".$_GET['cod']." ";
+			$query.= " WHERE A.id = ".$_GET['cod']." ";
 			$cond=1;
 		}
 
+		$plano = "";
+		$whereplano = "";
+		if(isset($_POST['plano']) && $_POST['plano'] <> "-1"){
+			$grupo = $_POST['plano'];
+			$whereplano = " and B.plano = ".$_POST['plano'];
+		}
+	
 		if ((isset($_POST['search'])) && !empty($_POST['search'])) {
-			$query.= " where lower(nometitular) like lower(('%".noHtml($_POST['search'])."%')) or lower(cidade) like lower(('%".noHtml($_POST['search'])."%'))";
+			$query.= " where lower(A.nometitular) like lower(('%".noHtml($_POST['search'])."%')) or lower(A.cidade) like lower(('%".noHtml($_POST['search'])."%'))";
 			$cond=2;
 			
 		} else {
-			$query.=" Where unidade =".$_SESSION['s_local']." ORDER BY id desc";
+			$query.=" Where A.unidade =".$_SESSION['s_local']." ".$whereplano." ORDER BY A.nometitular";
 		}
 
 		$resultado = mysqli_query($conec->con,$query) or die('ERRO NA EXECUÇÂO DA QUERY DE CONSULTA 1!');
@@ -98,11 +107,26 @@
 		
 		
 		print "<TR><TD class='line'>"."Digite o nome do Titular"."</TD></TR>";
-		print "<tr><td colspan='4'>".
+		print "<tr><td colspan='3'>".
 			"<input type='text' class='text3' name='search' id='idSearch' value='".$search."' placeholder='Digite o nome do cliente'>&nbsp;";
 			print "<input type='submit' name='BT_SEARCH' class='button' value='".TRANS('BT_FILTER')."'>".
-			"</td></tr>";
-		
+			"</td>";
+			print "<TD width='10%' align='left' bgcolor='".BODY_COLOR."'>";
+			print "<select class='select2' name='plano' id='plano'>";  
+					print "<option value=-1>"."Selecione o Plano"."</option>";
+						$sql="Select id,descricao from carne_tipoplano where unidade = ".$_SESSION['s_local'];
+						$commit = mysqli_query($conec->con,$sql);
+						$i=0;
+						while($row = mysqli_fetch_array($commit)){
+							$selectedPlano = "";
+							if($plano == $row['id']){
+								$selectedPlano = " selected";
+							}
+							print "<option value=".$row['id'].$selectedPlano.">".$row['descricao']."</option>";
+							$i++;
+						}
+					print "</select>";
+			print "</TR><TR></TD>";			
 		if (mysqli_num_rows($resultado) == 0)
 		{
 			echo "<tr><td colspan='4'>".mensagem(TRANS('MSG_NOT_REG_CAD'))."</td></tr>";
@@ -118,7 +142,7 @@
 			print "<B>".TRANS('FOUND')." <font color=red>".$PAGE->NUMBER_REGS."</font> ".TRANS('RECORDS_IN_SYSTEM').". ".TRANS('SHOWING_PAGE')." ".$PAGE->PAGE." (".$PAGE->NUMBER_REGS_PAGE." ".TRANS('RECORDS').")</B></TD>";
 			print "</tr>";
 			//------------------------------------------------------------- INICIO ALTERACAO --------------------------------------------------------------
-			print "<TR class='header'><td class='line'>"."Cliente"."</TD>"."<td class='line'>"."C&oacute;digo"."</TD>"."<td class='line'>"."Fone Contato"."</TD>"."<td class='line'>"."Nro Contrato"."</TD>".
+			print "<TR class='header'><td class='line'>"."Cliente"."</TD>"."<td class='line'>"."Plano"."</TD>"."<td class='line'>"."Fone Contato"."</TD>"."<td class='line'>"."Nro Contrato"."</TD>".
 				"<td class='line' align='center'><h3>"." Contrato "."</h3></TD></tr>";
 			
 			$j=2;
@@ -136,7 +160,7 @@
 
 				print "<tr class=".$trClass." id='linhax".$j."' onMouseOver=\"destaca('linhax".$j."','".$_SESSION['s_colorDestaca']."');\" onMouseOut=\"libera('linhax".$j."','".$_SESSION['s_colorLinPar']."','".$_SESSION['s_colorLinImpar']."');\"  onMouseDown=\"marca('linhax".$j."','".$_SESSION['s_colorMarca']."');\">";
 				print "<td class='line'>".$row['nometitular']."</td>";
-				print "<td class='line'>".$row['id']."</td>";
+				print "<td class='line'>".$row['descricao']."</td>";
 				if(!empty($row['celular'])) { 
 					print "<td class='line'>".mask($row['celular'],'(##)####-#####')." Cel</td>"; 
 				} else {
