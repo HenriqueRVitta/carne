@@ -240,7 +240,7 @@ ob_start();
 	}
 	
 	// Come�a aqui a listar os registros
-       $query = "SELECT c.id, c.nometitular, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim, ".
+       $query = "SELECT c.id, c.cpf, c.nometitular, c.cidade, p.nrocontrato, p.plano, p.diavencto, p.datacontrato, q.descricao, q.percdesc, d.valor, d.compet_ini, d.compet_fim, ".
        " k.id as idpagto, k.nrocarne, k.mesano, k.databaixa, l.descricao as desclocal, k.localpagto, sum(k.vlrpago) as vlrpago, u.nome FROM carne_titular c ".
        " left Join carne_contratos p on p.idtitular = c.id ".
        " left Join carne_tipoplano q on q.id = p.plano ".
@@ -256,6 +256,7 @@ ob_start();
 	<th scope='col' align='center'>Nome do Cliente</th>
 	<th scope='col' align='center'>Taxa %</th>
 	<th scope='col' align='center'>Local Pagto</th>
+	<th scope='col' align='center'>CPF</th>
 	<th scope='col' align='center'>Nro Carn&ecirc;</th>
 	<th scope='col' align='center'>Compet.</th>
 	<th scope='col' align='center'>Data Pagto</th>
@@ -278,6 +279,7 @@ ob_start();
 		<td align='left'>".retira_acentos_UTF8($row['nometitular'])."</TD>
 		<td align='center'>".$row['percdesc']."</TD>
 		<td align='left'>".retira_acentos_UTF8($row['desclocal'])."</TD>
+		<td align='center'>".$row['cpf']."</TD>
 		<td align='center'>".$row['nrocarne']."</TD>
 		<td align='center'>".invertecomp($row['mesano'],1)."</TD>
 		<td align='center'>".mask($dtpagto,'##/##/####')."</TD>
