@@ -6,6 +6,10 @@
 
 		* Modulo Carne *
 */
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+error_reporting(E_ALL);
 
 	session_start();
 	
@@ -1355,8 +1359,8 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 						$tipopessoa = $_POST['tipopessoa'];
 					} 
 					
-					$query = "INSERT INTO carne_titular (nometitular,tipopessoa,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne,somenteresponsavel) ".
-							" values ('".$lcnome."',".$tipopessoa.",'".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."',".$somenteresponsavel.")";
+					$query = "INSERT INTO carne_titular (nometitular,tipopessoa,endereco,numero,cep,bairro,cidade,codcidade,uf,telefoneres,telefonecom,celular,datanasc,qtdefilhos,escolaridade,localtrabalho,profissao,identidade,cpf,estadocivil,sexo,nomemae,nomepai,email,unidade,nrocontrato,registro,prontuario,nrocarne,grupo,datainicio,situacao,cpfcnpj,nrocarteira,dtinativo,obs,vendedor,ultimomescarne,somenteresponsavel,emailenviado) ".
+							" values ('".$lcnome."',".$tipopessoa.",'".$lcnomeEndereco."','".$_POST['numero']."','".$cep."','".strtoupper($_POST['bairro'])."','".strtoupper($_POST['cidade'])."','".$codcidade."','".$_POST['uf']."','".$foneres."','".$fonecom."','".$celular."','".$nascimento."',".$_POST['qtdefilhos'].",'".$_POST['escolaridade']."','".$_POST['localtrab']."','".$_POST['profissao']."','".$_POST['identidade']."','".$_POST['cpf']."','".$_POST['estcivil']."','".$_POST['sexo']."','".$lcnomeMae."','".$lcnomePai."','".strtolower($_POST['email'])."','".$_SESSION['s_local']."',".$zero.",'".$registro."','".$prontuario."',".$nrocarne.",'".$_POST['grupo']."','".$datainicio."','".$_POST['situacao']."','".$selCPFCNPJ."','".$_POST['nrocarteira']."','".$dtinativo."','".$obs."',".$_POST['vendedor'].",'".$ultimomescarne."',".$somenteresponsavel.",'')";
 
 					$resultado = mysqli_query($conec->con,$query) or die('Erro no Insert '.$query);
 					if ($resultado == 0)
