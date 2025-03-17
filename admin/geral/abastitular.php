@@ -953,9 +953,11 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 				$commit = mysqli_query($conec->con,$sql) or die ('Erro na Query '.$sql);;
 							while($rowB = mysqli_fetch_array($commit)){
 						print "<option value=".$rowB["Id"]."";
-                        			if ($rowB['Id'] == $rowR['Id'] ) {
+									if(!is_null($rowR['Id'])) {
+										if ($rowB['Id'] == $rowR['Id'] ) {
                             				print " selected";
-                        			}
+	                        			}
+									}
                         			print ">".$rowB['Descricao']."</option>";
 					}
 			print "</select>";
@@ -1263,25 +1265,30 @@ print "<div id='div_cadastro' class='conteudo' style='display: none'>";
 		
 		// Vari�veis convertidas
 		if(isset($_POST['codigo']) && $_POST['submit'] <> 'Salvar Contrato') {
-				
+
+			$nascimento = "";
+			$cep = "";
+			$foneres = "";
+			$fonecom = "";
+			$celular = "";
+		
+			if(isset($_POST['dtnasctitular'])){
 				$nascimento = Fdate($_POST['dtnasctitular']);
-				$zero = 0;
-				$registro = date("Y-m-d H:i:s");
-				$codcidade = '';
 				$cep = str_replace("-", "", $_POST['cep']);
-				$cep = str_replace(".", "", $cep );
-	
+				$cep = str_replace(".", "", $cep );				
 				$foneres = str_replace("-", "", $_POST['foneres']);
 				$foneres = str_replace("(", "", $foneres);
 				$foneres = str_replace(")", "", $foneres);
-	
 				$fonecom = str_replace("-", "", $_POST['fonecom']);
 				$fonecom = str_replace("(", "", $fonecom);
 				$fonecom = str_replace(")", "", $fonecom);
-				
 				$celular = str_replace("-", "", $_POST['celular']);
 				$celular = str_replace("(", "", $celular);
 				$celular = str_replace(")", "", $celular);
+			}
+				$zero = 0;
+				$registro = date("Y-m-d H:i:s");
+				$codcidade = '';
 				
 				if(isset($_POST['datainicial'])) { $datainicio = Fdate($_POST['datainicial']); } else { $datainicio = '1900-01-01 00:00:00'; } 
 				if(empty($_POST['nrocarne'])) { $nrocarne = 0; } else $nrocarne = $_POST['nrocarne'];
@@ -2525,8 +2532,11 @@ print "<div id='div_contrato' class='conteudo' style='display: none'>";
 
 		// Vari�veis convertidas
 		if(isset($_POST['codigo'])) {
-				
+			$dtcontrato = "1900-01-01 00:00:00";	
+			if(isset($_POST['dtcontrato'])){
 				$dtcontrato = Fdate($_POST['dtcontrato']);
+			}
+				
 				$zero = 0;
 				$registro = date("Y-m-d H:i:s");
 		}
